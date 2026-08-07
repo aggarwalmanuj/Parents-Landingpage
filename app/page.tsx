@@ -474,8 +474,8 @@ export default function Home() {
                   className="mt-8"
                   src="/take/reportsummary.png"
                   alt="The live result screen, showing a completed score with the pattern reflected back to the participant."
-                  width={1792}
-                  height={815}
+                  width={1893}
+                  height={848}
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   caption="The live result screen"
                   event="result_screen"
@@ -694,27 +694,35 @@ export default function Home() {
               <Reveal as="figure" delay={250} className="lg:col-span-5">
                 <div className="relative mx-auto w-full max-w-md">
                   <span aria-hidden className="take-halo" />
-                  <div className="take-back relative w-[86%] origin-bottom-left">
+                  <div className="take-back relative w-[88%] origin-bottom-left">
                     <div className="overflow-hidden rounded-md border border-line shadow-[var(--elev-3)]">
                       <Image
                         src="/take/reportpdf.png"
                         alt="A page from the optional detailed breakdown, composed around the parent's own answers."
-                        width={988}
-                        height={769}
+                        width={957}
+                        height={896}
                         sizes="(max-width: 1024px) 60vw, 30vw"
                         className="block h-auto w-full"
                       />
                     </div>
                   </div>
                   {/* Negative margin overlaps the cards; absolute positioning
-                      left too much vertical dead space at narrow widths. */}
-                  <div className="take-front relative -mt-[18%] ml-auto w-[78%] origin-top-right">
+                      left too much vertical dead space at narrow widths.
+
+                      The overlap is -9%, not the -18% this composition used
+                      when the back card was a wide 4:3 page. The updated
+                      breakdown capture is nearly square, so the deeper overlap
+                      buried its score ring and the first two pillars — the
+                      part that makes it read as a result rather than as a
+                      generic document. -9% still reads as a stack while
+                      leaving the back card's top third clear. */}
+                  <div className="take-front relative -mt-[9%] ml-auto w-[74%] origin-top-right">
                     <div className="overflow-hidden rounded-md border border-line-strong shadow-[var(--elev-3-lift)]">
                       <Image
                         src="/take/reportsummary.png"
                         alt="The result summary, reflecting the parent's own described pattern back to them."
-                        width={1792}
-                        height={815}
+                        width={1893}
+                        height={848}
                         sizes="(max-width: 1024px) 55vw, 26vw"
                         className="block h-auto w-full"
                       />
