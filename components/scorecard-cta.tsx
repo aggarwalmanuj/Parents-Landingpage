@@ -1,0 +1,92 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+import { trackEvent, type CtaLocation } from "@/lib/analytics";
+import { getStoredFirstTouch } from "@/lib/attribution";
+import { trackCustom } from "@/lib/fbpixel";
+import {
+  buildScorecardUrl,
+  CAMPAIGN_ID,
+  LP_SLUG,
+  SCORECARD_BASE_URL,
+} from "@/lib/scorecard";
+
+type ScorecardCtaProps = {
+  children: React.ReactNode;
+  /** Which page block this CTA sits in, required for funnel attribution. */
+  location: CtaLocation;
+  /** "primary" = near-white ink pill, "signal" = teal accent pill (sparingly). */
+  variant?: "primary" | "signal" | "ghost";
+  size?: "md" | "lg";
+  className?: string;
+  /** Forwarded to the anchor. Set to -1 to remove a hidden CTA from tab order. */
+  tabIndex?: number;
+};
+
+// The URL depends on client-only state (localStorage / cookies). Nothing
+// external changes it after first read, so subscribe is a no-op.
+const subscribe = () => () => {};
+
+export function ScorecardCta({
+  children,
+  location,
+  variant = "primary",
+  size = "md",
+  className = "",
+  tabIndex,
+}: ScorecardCtaProps) {
+  // SSR and the first hydration render emit the bare entry point (no mismatch,
+  // and a fast pre-hydration click still lands correctly); the client snapshot
+  // then enriches the href with stored attribution + the stable visitor ref.
+  // Deliberately a same-tab anchor with NO rel="noreferrer": the scorecard reads
+  // the referrer as a secondary signal (lp/ref stay the source of truth).
+  const href = useSyncExternalStore(
+    subscribe,
+    buildScorecardUrl,
+    () => SCORECARD_BASE_URL
+  );
+
+  // Funnel-visibility ping. cta_click (with location) is the doc-specified
+  // funnel event; ScorecardClick is kept as the legacy Meta custom event that
+  // existing ad optimization reads. Neither is a standard Lead/Purchase, 
+  // those fire on the scorecard and would double-count. Fire-and-forget so it
+  // never blocks the navigation that follows.
+  const handleClick = () => {
+    trackEvent("cta_click", { location });
+    if (typeof window !== "undefined" && window.fbq) {
+      trackCustom("ScorecardClick", {
+        lp: LP_SLUG,
+        location,
+        utm_campaign: getStoredFirstTouch().utmCampaign ?? CAMPAIGN_ID,
+      });
+    }
+  };
+
+  const variantClass =
+    variant === "signal"
+      ? "btn-signal"
+      : variant === "ghost"
+        ? "btn-ghost"
+        : "btn-primary";
+
+  return (
+    <a
+      href={href}
+      onClick={handleClick}
+      tabIndex={tabIndex}
+      data-cta-location={location}
+      className={`btn ${variantClass} ${size === "lg" ? "btn-lg" : ""} ${className}`}
+    >
+      {children}
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        aria-hidden
+      >
+        <path d="M1 7h11M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </a>
+  );
+}

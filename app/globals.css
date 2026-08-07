@@ -1,0 +1,1217 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   AI MERGE: Belief Score brand system.
+   The "Marine" theme: deep navy ground + ONE teal accent (--signal), used
+   sparingly. Editorial voice: Fraunces display + Inter UI. Exact tokens,
+   do not approximate. A light "Aurora" variant lives in [data-theme="aurora"].
+=========================================================================== */
+
+:root,
+[data-palette="marine"] {
+  /* Marine brand tokens. Ground deepened to match the Retargeting page's
+     darker marine canvas (bg #0a232e + darker cards/surfaces); the teal accent
+     family is unchanged. --muted-foreground is intentionally kept at the B2B
+     value (#95b5c4, not the retarget page's darker #7fa0ae) so faint captions
+     and eyebrows stay above WCAG AA on the deeper ground. */
+  --background: #0a232e;
+  --foreground: #b6cdd8;
+  --ink: #eff5f8;
+  --card: #103039;
+  --popover: #103039;
+  --secondary: #103642;
+  --muted-surface: #16414f;
+  --muted-foreground: #95b5c4;
+  --accent: #2a6b85;
+  --border: #204b5c;
+  --input: #2c6b87;
+  --signal: #5ec8d6;
+  --destructive: #dc2626;
+  --glow: 94 200 214;
+  --shadow-ink: 2, 12, 18;
+  --radius: 0.75rem;
+  color-scheme: dark;
+
+  /* Aliases bridging the exact names to the utility-token names the
+     components already use (bg-bg, text-fg, bg-surface, border-line, …). */
+  --bg: var(--background);
+  --fg: var(--ink);                  /* headings + primary text */
+  /* Text on accent-filled buttons. White (not navy) so accent buttons clear
+     WCAG AA: on --accent #2a6b85 white = 5.93:1 vs navy's 2.45:1. */
+  --accent-contrast: #ffffff;
+  --surface: var(--card);
+  --surface-2: var(--secondary);
+  --border-strong: var(--input);
+  --muted: var(--foreground);        /* body copy */
+  --faint: var(--muted-foreground);  /* eyebrows, captions */
+  --accent-soft: color-mix(in srgb, var(--accent) 32%, var(--background));
+  --ring: var(--signal);
+
+  /* Motion language */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Polish ease + duration: the single curve used by every hover affordance
+     (buttons, pills, cards, video) so interactions feel like one system. */
+  --ease-polish: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-polish: 250ms;
+  --dur-fast: 160ms;
+  --dur-med: 360ms;
+  --dur-slow: 700ms;
+
+  /* Hairline that reads as an edge rather than an outline. Used on floating
+     surfaces (chips, video frame, banner) where the token border is too loud. */
+  --border-soft: rgba(255, 255, 255, 0.08);
+
+  /* Shadows tuned to the navy ground (lean on borders + ink shadow) */
+  --shadow-sm: 0 1px 2px rgba(var(--shadow-ink), .35);
+  --shadow-md: 0 12px 30px -20px rgba(var(--shadow-ink), .45);
+  --shadow-lg: 0 22px 50px -28px rgba(var(--shadow-ink), .55);
+  /* Elevation = deep soft dark for the drop, plus a trace of cyan standing in
+     for light bouncing back off the surround. The cyan term is deliberately
+     near-threshold: the *light* in this design comes from the blurred ambient
+     layers behind elements, never from a ring drawn on their edge. */
+  --elev-1: 0 10px 40px rgba(var(--shadow-ink), .2),
+    0 0 30px rgb(var(--glow) / .04);
+  --elev-2: 0 16px 60px rgba(var(--shadow-ink), .24),
+    0 0 44px rgb(var(--glow) / .045);
+  /* The premium-shadow recipe: a very wide, low-alpha dark drop carrying the
+     elevation, plus a broad cyan term standing in for bounced light. Wide and
+     faint beats tight and dark, a short blur radius reads as a hard edge no
+     matter how low its alpha. */
+  --elev-3: 0 20px 80px rgba(var(--shadow-ink), .28),
+    0 0 60px rgb(var(--glow) / .05);
+  --elev-3-lift: 0 25px 90px rgba(var(--shadow-ink), .3),
+    0 0 80px rgb(var(--glow) / .08);
+
+  /* Glass: a 1px specular line along the top edge, as if the ambient light
+     were catching the bevel. Pairs with a translucent fill + backdrop blur. */
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+/* Optional light section variant, same teal family. */
+[data-theme="aurora"] {
+  --background: #eaf0f4;
+  --foreground: #3e5b6a;
+  --ink: #0f2c3b;
+  --card: #ffffff;
+  --popover: #ffffff;
+  --secondary: #d5e0e7;
+  --muted-foreground: #557280;
+  /* Darkened one step (#2a8f9e→#217e8c) so white button text clears AA (4.74:1).
+     Aurora is a dormant optional variant; Marine is the rendered default. */
+  --accent: #217e8c;
+  --accent-contrast: #ffffff;
+  --border: #c1cfd8;
+  --input: #c1cfd8;
+  --signal: #2a8f9e;
+  --glow: 72 185 198;
+  --shadow-ink: 15, 44, 59;
+  /* White hairlines and specular highlights vanish on the light ground, 
+     invert both to ink so glass still reads as glass. */
+  --border-soft: rgba(15, 44, 59, 0.1);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, .5);
+  color-scheme: light;
+}
+
+/* White wordmark sits on the navy ground, no inversion in Marine. */
+.brand-logo {
+  filter: none;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+  --color-signal: var(--signal);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-card: var(--card);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --radius-pill: 999px;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  /* Safety net against incidental horizontal scroll (glow/ken-burns bleed,
+     long tokens). `clip` does not establish a scroll container, so it never
+     breaks the sticky header the way `overflow-x: hidden` can. */
+  overflow-x: clip;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  /* Base copy runs a notch larger than the 16px default: the audience skews
+     older, so comfortable reading size is a conversion lever, not just polish. */
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  /* Mirror the html clip so no decorative bleed can produce a horizontal
+     scrollbar on any device. */
+  overflow-x: clip;
+}
+
+/* Never let a form control render below 16px: iOS auto-zooms the viewport on
+   focus otherwise, which reads as a broken mobile page. */
+input,
+textarea,
+select {
+  font-size: max(1rem, 16px);
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--background);
+}
+
+/* Visible, high-contrast teal focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Typography: Fraunces display + italic emphasis, Inter for everything else
+--------------------------------------------------------------------------- */
+
+.text-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-size: clamp(2rem, 1.4rem + 3vw, 4.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  /* The spotlight catching the type itself. Well below the threshold of
+     "glowing text", it only stops the headline reading as flat ink sitting
+     on top of a lit background. */
+  text-shadow: 0 0 35px rgb(var(--glow) / .05);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+.text-headline {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-size: clamp(1.6rem, 1.25rem + 1.7vw, 2.7rem);
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+.text-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+/* The signature move: a Fraunces italic emphasis line under a statement. */
+.text-emphasis {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+.text-body-lg {
+  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.2rem);
+  line-height: 1.7;
+}
+.text-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+/* ---------------------------------------------------------------------------
+   Buttons: pill, uppercase, wide tracking. Never wrap.
+--------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: clamp(0.7rem, 0.66rem + 0.18vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  /* Never let a long label's intrinsic (nowrap) width push the button, and the
+     page, wider than its container: this was the source of horizontal overflow
+     on narrow phones. The button may shrink to its box; full-width variants
+     below re-enable wrapping so the label stays legible. */
+  max-width: 100%;
+  min-width: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-polish) var(--ease-polish),
+    color var(--dur-polish) var(--ease-polish),
+    border-color var(--dur-polish) var(--ease-polish),
+    box-shadow var(--dur-polish) var(--ease-polish),
+    transform var(--dur-polish) var(--ease-polish);
+}
+/* Full-width buttons (the mobile CTA layout uses `w-full`) get a slightly
+   tighter box and are allowed to wrap onto two short lines rather than force
+   horizontal overflow. Line height tightened so a two-line label still looks
+   like one pill. */
+.btn.w-full {
+  white-space: normal;
+  padding-left: 1.1rem;
+  padding-right: 1.1rem;
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+}
+.btn-lg {
+  padding: 1rem 2rem;
+}
+.btn-lg.w-full {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+/* Primary: near-white pill, navy text; inverts to outline on hover. */
+.btn-primary {
+  background: var(--ink);
+  color: var(--background);
+  border: 1px solid var(--ink);
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: var(--elev-2);
+}
+
+/* Featured: the teal accent pill. Used sparingly. Rests with a whisper of
+   glow so the lift on hover is a change in degree, not an effect switching on. */
+/* Featured: the teal accent pill, lit from behind rather than outlined. The
+   button's own fill is NOT brightened, the bloom does the work.
+
+   Implemented as stacked box-shadows rather than a blurred ::before behind the
+   button, because the hover lift uses `transform`, and transform makes the
+   button a stacking context. Inside its own stacking context a `z-index: -1`
+   pseudo-element paints ABOVE the element's background instead of below it, so
+   that approach would wash teal across the button face the moment it was
+   hovered. Shadows are always drawn outside the border box, so they cannot.
+
+   What separates this from a "glowing border" is the geometry: no spread, and
+   blur radii 3-6× the button's height, so the falloff is a diffuse bloom with
+   no traceable edge. A tight blur here would read as neon. */
+.btn-signal {
+  background: var(--signal);
+  color: var(--background);
+  border: 1px solid var(--signal);
+  /* The brightest point on the page, but only just, the eye needs a leader,
+     not a lamp. Three stops: a warm near field, a mid spread, a wide outer
+     spill. Bright at the core and falling off fast is what reads as light;
+     the same energy spread evenly reads as haze. */
+  box-shadow:
+    0 0 42px rgb(var(--glow) / .13),
+    0 8px 30px rgb(var(--glow) / .07),
+    0 0 96px rgb(var(--glow) / .045);
+}
+.btn-signal:hover {
+  background: transparent;
+  color: var(--signal);
+  border-color: color-mix(in srgb, var(--signal) 75%, white);
+  transform: translateY(-2px);
+  /* +20% on each stop. Hover raises the ambient level; it does not switch a
+     new effect on, the difference should be felt, not watched. */
+  box-shadow:
+    0 0 50px rgb(var(--glow) / .17),
+    0 10px 36px rgb(var(--glow) / .09),
+    0 0 112px rgb(var(--glow) / .06);
+}
+
+/* Ghost: hairline outline that fills with ink on hover. */
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--background);
+  transform: translateY(-2px);
+  box-shadow: var(--elev-1);
+}
+
+/* ---------------------------------------------------------------------------
+   Editorial details: chapter mark, hairline, hero glow, ken-burns
+--------------------------------------------------------------------------- */
+
+.chapter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.chapter-rule {
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  background: var(--border);
+}
+.chapter-dot {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--signal);
+  animation: chapter-pulse 2.4s var(--ease-in-out) infinite;
+}
+@keyframes chapter-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(var(--glow) / .5); }
+  70% { box-shadow: 0 0 0 0.5rem rgb(var(--glow) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--glow) / 0); }
+}
+
+/* 1px divider, a positioned hairline, not a heavy border. */
+.hairline {
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---------------------------------------------------------------------------
+   Ambient lighting
+
+   The page reads as though lit by hidden cyan sources sitting outside the
+   viewport. Three rules keep it felt rather than seen:
+
+   1. Light lives on its own layer BEHIND content (z-index: -1), never as a
+      ring on an element's border. A border glow reads as neon; a blurred
+      field behind an object reads as illumination.
+   2. Every source is a radial gradient fading to `transparent`, so there is
+      no terminating edge to catch the eye. Soft stops do this more cheaply
+      than filter: blur() on a full-page element, which would cost a
+      composite layer the size of the document.
+   3. Peak opacity stays in the 2-8% band. If a glow announces itself, it is
+      too strong, the target is a page that feels deeper without the visitor
+      being able to say why.
+--------------------------------------------------------------------------- */
+
+/* Document-anchored sources: they scroll with the content they light, so each
+   stays registered to the element it belongs to. Percentages are relative to
+   this layer's own box, which spans the top of <main>.
+
+   These are tuned to read as ONE illuminated column, not four separate lamps.
+   Two things do that: a continuous low wash running the full height underneath
+   everything, and node radii wide enough that each one's falloff is still
+   contributing where the next one begins. Sources that fully decay before the
+   next starts are what make lighting look like isolated blobs. */
+.ambient-field {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(2400px, 240vh);
+  pointer-events: none;
+  z-index: -1;
+  /* Three-stop falloff (8% → 4% → transparent at 75%) is the shape that reads
+     as natural light; a two-stop gradient falls off too fast and rings. The
+     hero's own node is handled by .spotlight-hero, so these carry the CTA, the
+     lower page, and the column that connects them. */
+  background:
+    /* behind the primary CTA block below the video */
+    radial-gradient(
+      760px 520px at 50% 46%,
+      rgb(var(--glow) / .028) 0%,
+      rgb(var(--glow) / .014) 35%,
+      transparent 75%
+    ),
+    /* carries into the lower page so the light never stops on a line */
+    radial-gradient(
+      1150px 820px at 50% 78%,
+      rgb(var(--glow) / .022) 0%,
+      rgb(var(--glow) / .011) 35%,
+      transparent 75%
+    ),
+    /* the connector: a single tall, very faint column joining every source
+       into one continuous path rather than a row of separate glows */
+    radial-gradient(620px 1500px at 50% 30%, rgb(var(--glow) / .02), transparent 78%);
+}
+
+/* The signature spotlight: one large soft orb centred behind the hero, washing
+   down across the headline, the paragraph and the top of the video. Deliberately
+   a single flat-tinted circle at a very large blur, no gradient stops to band,
+   no edge to catch, and cheap enough to leave static. */
+.spotlight-hero {
+  position: absolute;
+  left: 50%;
+  /* Pulled down from -14rem so the orb's centre lands on the headline rather
+     than above it, previously the brightest part of the spotlight sat off the
+     top of the section and only its upper falloff reached the type. */
+  top: -8rem;
+  height: 860px;
+  /* Capped at 100vw so this decorative orb never adds document width on narrow
+     phones (150vw pushed ~98px past each edge at 390px). overflow-x:clip hides
+     the scrollbar, but keeping the element itself within the viewport avoids
+     any phantom horizontal scroll width entirely. */
+  width: min(900px, 100vw);
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: rgb(var(--glow) / .05);
+  filter: blur(180px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Viewport-anchored lighting. Fixed, so both layers stay registered to the
+   screen rather than the document: the vignette always hugs the screen edge,
+   and the top-right key light stays behind the sticky header CTA at every
+   scroll position. The light is listed FIRST so it paints above the vignette, 
+   the corner it occupies is exactly where the vignette darkens hardest, and
+   in the other order the vignette would cancel it out.
+
+   The header CTA was previously the one lit object on the page with no source
+   behind it, which is why it read as a glowing chip rather than as something
+   being illuminated. This is the room light it was missing.
+
+   Vignette falloff starts at 55%, anything tighter reads as a lens effect. */
+.page-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(
+      620px 420px at 84% 2%,
+      rgb(var(--glow) / .05) 0%,
+      rgb(var(--glow) / .024) 35%,
+      transparent 72%
+    ),
+    radial-gradient(
+      125% 95% at 50% 42%,
+      transparent 55%,
+      rgba(var(--shadow-ink), .12) 82%,
+      rgba(var(--shadow-ink), .24) 100%
+    );
+}
+
+/* Non-hero media (screenshots, stills). Same depth language as the video
+   frame, without the key light behind it, those sit inside lit sections and
+   would compete with the CTA if they carried their own source. */
+.media-frame {
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--elev-2), var(--glass-highlight);
+}
+
+/* A true light source behind a CTA, for the places where the button should
+   visibly illuminate its surroundings rather than just carry a bloom.
+
+   It lives on a WRAPPER, never on the button itself. Two reasons:
+   1. The button's hover lift uses `transform`, which makes it a stacking
+      context, a `z-index: -1` pseudo-element inside would flip to painting
+      above the button's own background and wash its face.
+   2. `isolation: isolate` keeps the light self-contained, so it can never sink
+      behind an ancestor's background. That matters in the sticky header, which
+      creates its own stacking context and paints a translucent fill that would
+      otherwise swallow the glow.
+   The wrapper has no background of its own, so a pseudo-element painting
+   "above" it is a no-op, the button still covers the centre and only the
+   spill beyond its edges is visible. That is what makes it read as light
+   behind an object rather than a ring drawn around one. */
+.cta-halo {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+}
+.cta-halo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  /* Flat tint + heavy blur + scale, rather than a gradient with a small blur.
+     The blur radius is what removes every trace of the source's own shape, 
+     at 64px the pill silhouette is gone and only light remains. Scaling past
+     the button is what makes it a source behind the object instead of an
+     outline around it. */
+  background: rgb(var(--glow) / .09);
+  filter: blur(64px);
+  /* Wider than tall: the spill reads better spreading sideways from a pill
+     than ballooning above and below it. */
+  transform: scale(1.6, 1.35);
+  opacity: 0.6;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity var(--dur-polish) var(--ease-polish);
+}
+.cta-halo:hover::before {
+  opacity: 0.82;
+}
+
+/* The key light: a large, heavily blurred source sitting UNDER the hero video.
+   Offset downward (55%) so the card appears to float above the light rather
+   than be wrapped by it. This one earns its filter: blur(), it is the only
+   source close enough to content that gradient stops alone would band. */
+/* Soft glow bloom behind the hero video, concentrated at the top-center of the
+   frame (matches the Retargeting page's clean single-glow treatment). A single
+   radial gradient blurred so no shape survives; the light reads as coming from
+   just above the video rather than wrapping the whole card. */
+.hero-glow {
+  position: absolute;
+  inset: -12%;
+  background: radial-gradient(
+    circle at 50% 40%,
+    rgb(var(--glow) / 0.22),
+    transparent 62%
+  );
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.9;
+  transition: opacity var(--dur-polish) var(--ease-polish);
+}
+.vsl-stage:hover .hero-glow {
+  opacity: 1;
+}
+
+/* Section atmosphere. A pair of very soft, heavily blurred orbs behind a
+   section's content, borrowed from the funnel's landing composition so the
+   two properties read as one product. Pure decoration: `pointer-events: none`
+   and z-index below the content, so it can never intercept a click or affect
+   layout. Deliberately weaker than .hero-glow (0.07/0.05 vs 0.22) - this is
+   depth, not a light source, and at hero strength it would compete with the
+   CTA halo for attention. */
+.section-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.section-orbs::before,
+.section-orbs::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(80px);
+}
+.section-orbs::before {
+  width: 30rem;
+  height: 30rem;
+  top: -6rem;
+  right: -8rem;
+  background: rgb(var(--glow) / 0.07);
+}
+.section-orbs::after {
+  width: 26rem;
+  height: 26rem;
+  bottom: -8rem;
+  left: -7rem;
+  background: rgb(var(--glow) / 0.05);
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-orbs { opacity: 0.6; }
+}
+
+/* Floating annotation chips around the hero VSL (reference-layout detail).
+   Inverted (near-white on navy) so they pop against both page and video. */
+.vsl-chip {
+  align-items: center;
+  padding: 0.6rem 1.15rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(6px);
+  /* Ink drop + specular edge only, no cyan: the chips sit right beside the CTA
+     and the video, and light here would compete with the two objects the
+     ambient system exists to single out. */
+  box-shadow: 0 8px 22px rgba(var(--shadow-ink), .16), var(--glass-highlight);
+  color: var(--background);
+  font-size: 0.84rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    transform var(--dur-polish) var(--ease-polish),
+    box-shadow var(--dur-polish) var(--ease-polish),
+    background-color var(--dur-polish) var(--ease-polish);
+}
+.vsl-chip:hover {
+  background: var(--ink);
+  box-shadow: 0 12px 30px rgba(var(--shadow-ink), .2);
+}
+
+/* Compact credibility chips under the hero VSL, and the hero badge above the
+   headline. Sits a shade lighter than the card so it floats rather than plates. */
+.cred-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: color-mix(in srgb, var(--card) 45%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--glass-highlight);
+  color: var(--foreground);
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition:
+    border-color var(--dur-polish) var(--ease-polish),
+    background-color var(--dur-polish) var(--ease-polish);
+}
+
+/* Hero VSL frame: layered depth (soft ink drop + a low teal bloom) so the
+   player reads as an object sitting above the page, not a hole cut into it. */
+/* The card carries elevation only, depth, plus the specular top edge. Its
+   light comes from .hero-glow sitting behind and below it, so the frame is
+   never outlined in cyan. */
+.vsl-frame {
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--elev-3), var(--glass-highlight);
+  transition:
+    transform var(--dur-polish) var(--ease-polish),
+    box-shadow var(--dur-polish) var(--ease-polish),
+    border-color var(--dur-polish) var(--ease-polish);
+}
+.vsl-frame:hover {
+  transform: scale(1.01);
+  border-color: color-mix(in srgb, var(--signal) 20%, var(--border-soft));
+  box-shadow: var(--elev-3-lift), var(--glass-highlight);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vsl-frame:hover {
+    transform: none;
+  }
+}
+
+@keyframes ken-burns {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
+}
+.ken-burns {
+  animation: ken-burns 14s var(--ease-in-out) infinite alternate;
+}
+
+/* ---------------------------------------------------------------------------
+   Micro-interactions
+--------------------------------------------------------------------------- */
+
+.pressable {
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+.pressable:active {
+  transform: scale(0.97);
+}
+
+/* Card lift on hover */
+.liftable {
+  transition:
+    transform var(--dur-polish) var(--ease-polish),
+    box-shadow var(--dur-polish) var(--ease-polish),
+    border-color var(--dur-polish) var(--ease-polish);
+}
+.liftable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elev-1);
+  border-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+}
+
+/* Scroll reveal: staggered section entrances */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Logo marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 120s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Modal + step transitions */
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes step-in-back {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.anim-overlay-in { animation: overlay-in var(--dur-med) var(--ease-out) both; }
+.anim-dialog-in { animation: dialog-in var(--dur-med) var(--ease-out) both; }
+.anim-step-in { animation: step-in 280ms var(--ease-out) both; }
+.anim-step-in-back { animation: step-in-back 280ms var(--ease-out) both; }
+.anim-pop-in { animation: pop-in 480ms var(--ease-out) both; }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    var(--surface) 40%,
+    var(--surface-2) 50%,
+    var(--surface) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 0.5rem;
+}
+
+.progress-fill {
+  transition: width 400ms var(--ease-in-out);
+}
+
+/* Input recipe */
+.field {
+  width: 100%;
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--foreground) 25%, transparent);
+  border-radius: 4px;
+  color: var(--ink);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+.field::placeholder {
+  color: color-mix(in srgb, var(--foreground) 45%, transparent);
+}
+.field:hover {
+  border-color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+.field:focus,
+.field:focus-within {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+/* Static list marker: the chapter-dot's pulse is reserved for section marks;
+   list bullets stay still. */
+.list-dot {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--signal);
+  opacity: 0.85;
+}
+
+/* Testimonial reel: snap scrolling with the scrollbar hidden (arrows +
+   swipe are the affordance). */
+.reel-scroller {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.reel-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Quoted example language inside map stages / the sample result panel. */
+.map-stage-body blockquote {
+  border-left: 2px solid var(--signal);
+  padding-left: 0.85rem;
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Score visual: the 0-100 dial + scored dimension bars, matching how the live
+   product renders a result. --score is set inline (0-100).
+--------------------------------------------------------------------------- */
+.score-dial {
+  --score: 0;
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: conic-gradient(
+    var(--signal) calc(var(--score) * 1%),
+    var(--muted-surface) 0
+  );
+  box-shadow: var(--elev-1);
+}
+.score-dial-inner {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 999px;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.score-bar {
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--muted-surface);
+  overflow: hidden;
+}
+.score-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--signal);
+}
+
+/* The reinforcing-loop chain: reads as one sequence, wraps gracefully. */
+.loop-chain {
+  color: var(--ink);
+  line-height: 2;
+}
+.loop-chain span {
+  color: var(--signal);
+}
+
+/* ---------------------------------------------------------------------------
+   FAQ accordion (native <details>, exclusive-open via the name attribute)
+--------------------------------------------------------------------------- */
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.faq-item + .faq-item {
+  margin-top: 0.75rem;
+}
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  min-height: 44px; /* mobile tap-target floor */
+  cursor: pointer;
+  list-style: none;
+  font-weight: 500;
+  color: var(--ink);
+}
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-right: 1.5px solid var(--muted-foreground);
+  border-bottom: 1.5px solid var(--muted-foreground);
+  transform: rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.faq-item[open] summary::after {
+  transform: rotate(225deg);
+}
+.faq-item[open] {
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--border));
+}
+.faq-body {
+  padding: 0 1.4rem 1.25rem;
+  color: var(--foreground);
+}
+.faq-body > * + * {
+  margin-top: 0.75rem;
+}
+
+/* Error shake */
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.anim-nudge { animation: nudge 240ms var(--ease-in-out); }
+
+/* Skip link */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  transition: transform var(--dur-fast) var(--ease-out);
+  background: var(--signal);
+  color: var(--background);
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion: keep state changes, drop movement
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .marquee-track,
+  .ken-burns,
+  .chapter-dot {
+    animation: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border: color-mix(in srgb, var(--foreground) 50%, transparent);
+    --border-strong: color-mix(in srgb, var(--foreground) 70%, transparent);
+    --muted: var(--ink);
+  }
+}
+
+/* ===========================================================================
+   Editorial section grammar (adapted from the scorecard-funnel landing).
+
+   The scorecard funnel composes each section the same way: a tracked-uppercase
+   roman-numeral chapter mark, a Fraunces headline whose second clause drops to
+   italic, an animated hairline rule, then the content. That rhythm is what
+   makes a long page read as chapters rather than as a stack of cards, so it is
+   ported here in full — but expressed in THIS page's Marine tokens (--ink,
+   --signal, --border, --glow) rather than the funnel's own palette variables.
+   Nothing below introduces a second color system.
+=========================================================================== */
+
+/* Chapter mark: "III · The walkthrough". Sits above every section headline. */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--faint);
+}
+
+/* Fraunces italic, used for the second clause of a section headline. Named
+   separately from .text-emphasis because it is applied to a block element
+   (a <span class="block">) rather than an inline emphasis run. */
+.font-serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+}
+
+/* Section headline. One step below .text-display (the hero H1) so the fold
+   keeps its hierarchy across a 13-section page. */
+.text-section {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  font-size: clamp(1.95rem, 1.4rem + 2.2vw, 3.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+/* The rule under a chapter head, drawn in from the left when revealed. */
+@keyframes hairline-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.hairline-anim {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: hairline-grow 1.1s var(--ease-out) both;
+  animation-delay: 200ms;
+}
+
+/* Word-by-word headline entrance. The component sets --i per word so the
+   stagger scales without per-element CSS. */
+@keyframes word-rise {
+  from { opacity: 0; transform: translateY(0.6em); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0);     filter: blur(0); }
+}
+.word-rise {
+  display: inline-block;
+  opacity: 0;
+  animation: word-rise 1s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Editorial numbered rows (the "what's inside your score" and "how it works"
+   lists). The number pulls right and a hairline mark extends on hover. */
+.row-interactive {
+  transition: padding-left var(--dur-med) var(--ease-out);
+}
+.row-interactive:hover {
+  padding-left: 0.5rem;
+}
+.row-interactive .row-num {
+  transition:
+    color var(--dur-med) var(--ease-out),
+    transform var(--dur-med) var(--ease-out);
+}
+.row-interactive:hover .row-num {
+  color: var(--ink);
+  transform: translateX(4px);
+}
+.row-interactive .row-mark {
+  width: 0;
+  height: 1px;
+  background: var(--signal);
+  display: inline-block;
+  transition: width var(--dur-slow) var(--ease-out);
+}
+.row-interactive:hover .row-mark {
+  width: 2.5rem;
+}
+
+/* Small living signal inside a chapter mark. */
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.75; }
+  50%      { transform: scale(1.4); opacity: 0.35; }
+}
+.pulse-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--signal);
+  animation: dot-pulse 2.6s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+/* Pointer-following pull on a CTA, capped at ±10px by the component. */
+.magnetic {
+  transform: translate3d(calc(var(--mx, 0) * 1px), calc(var(--my, 0) * 1px), 0);
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
+/* ---------------------------------------------------------------------------
+   Browser chrome frame (the funnel's MacWindow), used to present the real
+   product screenshots as artifacts rather than as loose images.
+--------------------------------------------------------------------------- */
+.mac-window {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--elev-3);
+}
+.mac-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+}
+.mac-dot {
+  height: 0.625rem;
+  width: 0.625rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 25%, transparent);
+}
+
+/* Story-style progress segments in the walkthrough chrome bar. */
+@keyframes wt-seg {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.wt-seg-bar {
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.wt-seg-done { transform: scaleX(1); }
+.wt-seg-fill { animation: wt-seg 6500ms linear both; }
+
+/* The deliverables deck: overlapping artifact cards with a signal halo. */
+.take-halo {
+  position: absolute;
+  inset: -12% -8% -8% -8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--glow) / 0.16), transparent 68%);
+  filter: blur(48px);
+  pointer-events: none;
+}
+.take-back  { transform: rotate(-2.2deg); }
+.take-front { transform: rotate(1.8deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hairline-anim,
+  .word-rise,
+  .wt-seg-fill {
+    animation: none;
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+  .magnetic { transform: none; }
+  .pulse-dot { animation: none; }
+}
