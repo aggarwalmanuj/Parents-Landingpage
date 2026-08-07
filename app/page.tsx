@@ -18,6 +18,7 @@ import {
 } from "@/components/structured-data";
 import { VslPlayer } from "@/components/vsl-player";
 import { WalkthroughSection } from "@/components/walkthrough";
+import { ZoomableShot } from "@/components/zoomable-shot";
 import type { CtaLocation } from "@/lib/analytics";
 import { ESSENTIAL_FAQS, toFaqEntries } from "@/lib/faq";
 import { ROUTES } from "@/lib/site";
@@ -162,7 +163,12 @@ function CtaBlock({
           <span className="hidden sm:inline">{CTA_LABEL}</span>
         </ScorecardCta>
       </span>
-      <p className="text-center text-sm text-faint">{microcopy}</p>
+      {/* px-2 + balance: at 390px the four dot-separated clauses ran the full
+          width and broke against the viewport edge. Balancing splits them into
+          two even lines instead of three ragged ones. */}
+      <p className="text-balance px-2 text-center text-sm text-faint">
+        {microcopy}
+      </p>
     </div>
   );
 }
@@ -293,7 +299,11 @@ export default function Home() {
             eyebrow, headline, VSL, CTA, trust line, credibility line. No
             supporting paragraph between the headline, the VSL and the CTA. */}
         <section id="hero" className="relative overflow-hidden">
-          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-10 pt-12 text-center sm:px-8 sm:pt-16">
+          {/* Tighter top/bottom on phones. The hero stacks eyebrow, a
+              four-line headline, a three-line subhead and a 16:9 video before
+              the CTA is reached; at the desktop rhythm that pushed the button
+              well past a second screen on a 390px viewport. */}
+          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-7 pt-8 text-center sm:px-8 sm:pb-10 sm:pt-16">
             <Reveal>
               <p className="cred-chip">
                 AI Merge · Free Parenting Belief Score
@@ -304,7 +314,7 @@ export default function Home() {
                   promise ("before the next conversation"), which is the whole
                   proposition: this is about the moment that has not happened
                   yet, not the one that already went wrong. */}
-              <h1 id="hero-headline" className="text-display mt-8">
+              <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
                 See what&rsquo;s shaping your response{" "}
                 <span className="text-emphasis">
                   before the next conversation.
@@ -312,7 +322,7 @@ export default function Home() {
               </h1>
             </Reveal>
             <Reveal delay={140}>
-              <p className="mt-6 max-w-2xl text-body-lg text-muted">
+              <p className="mt-5 max-w-2xl text-balance text-body-lg text-muted sm:mt-6">
                 Answer five questions about one real parenting moment. Get a
                 free, personalised Parenting Belief Score built from your own
                 words.
@@ -457,21 +467,19 @@ export default function Home() {
                     assessment interface. TODO(launch): re-capture from the
                     parenting question set so the words on screen match the
                     words on this page. */}
-                <figure className="mt-8">
-                  <div className="overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
-                    <Image
-                      src="/take/reportsummary.png"
-                      alt="The live result screen, showing a completed score with the pattern reflected back to the participant."
-                      width={1792}
-                      height={815}
-                      sizes="(max-width: 1024px) 100vw, 40vw"
-                      className="block h-auto w-full"
-                    />
-                  </div>
-                  <figcaption className="mt-3 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
-                    The live result screen
-                  </figcaption>
-                </figure>
+                {/* Zoomable: at this width the UI inside the capture is far
+                    below reading size, and an unreadable proof is decoration.
+                    Tapping opens it full-viewport. */}
+                <ZoomableShot
+                  className="mt-8"
+                  src="/take/reportsummary.png"
+                  alt="The live result screen, showing a completed score with the pattern reflected back to the participant."
+                  width={1792}
+                  height={815}
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  caption="The live result screen"
+                  event="result_screen"
+                />
               </Reveal>
 
               {/* What the score returns. */}
@@ -540,7 +548,11 @@ export default function Home() {
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
               <Reveal as="div" delay={150} className="lg:col-span-7">
                 {/* The four questions, set as the page's one quiet crescendo. */}
-                <ul className="grid gap-3 sm:grid-cols-2">
+                {/* Two-up from the smallest width. These are four short
+                    questions, not four statements: stacking them one per row on
+                    a phone pushed the paragraph that answers them a full screen
+                    down, which broke the beat the copy depends on. */}
+                <ul className="grid grid-cols-2 gap-2.5 sm:gap-3">
                   {[
                     "Will they be okay?",
                     "Am I doing enough?",
@@ -549,7 +561,7 @@ export default function Home() {
                   ].map((q) => (
                     <li
                       key={q}
-                      className="rounded-xl border border-line bg-bg px-5 py-4 font-serif-italic text-lg text-ink"
+                      className="flex items-center rounded-xl border border-line bg-bg px-4 py-4 font-serif-italic text-[15px] leading-snug text-ink sm:px-5 sm:text-lg"
                     >
                       {q}
                     </li>
@@ -574,23 +586,44 @@ export default function Home() {
                 </div>
               </Reveal>
 
-              <Reveal as="div" delay={250} className="lg:col-span-5">
-                <AssetSlot
-                  priority="Asset slot · optional"
-                  title="Recognition image"
-                  spec="3:2 · 1200×800 · warm natural light"
-                >
-                  <p>
-                    Optional supporting visual. If used: adult-only or
-                    object-only frame, ordinary domestic setting, calm and
-                    unstaged.
-                  </p>
-                  <p>
-                    No children in frame — the product examines the parent, and
-                    child imagery contradicts that on a page whose whole job is
-                    establishing who is being scored.
-                  </p>
-                </AssetSlot>
+              {/* Recognition image. The document's constraint is strict and this
+                  frame satisfies it: adult only, no child anywhere in shot,
+                  ordinary domestic setting, unstaged. The product examines the
+                  parent, so child imagery here would contradict the one thing
+                  this section exists to establish — who is being scored.
+
+                  The source is a tall 2:3 portrait. It is given a 4:5 frame and
+                  cropped with object-cover rather than being letterboxed: at
+                  full portrait height it would tower over the text column it
+                  sits beside and pull the eye off the argument. object-top
+                  keeps the figure and the window (the subject) in frame while
+                  the crop takes from the empty floor at the bottom. */}
+              <Reveal as="figure" delay={250} className="lg:col-span-5">
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
+                  <Image
+                    src="/images/recognition.jpg"
+                    alt="A parent standing at a window in an ordinary room, looking out, mid-thought."
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 40vw"
+                    className="object-cover object-top"
+                  />
+                  {/* Scrim: the photo is markedly lighter and warmer than the
+                      navy ground, so without this it reads as a bright rectangle
+                      pasted onto the page. A bottom-weighted gradient in the
+                      background colour settles it into the section and gives the
+                      caption a ground to sit on. */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, color-mix(in srgb, var(--background) 12%, transparent) 0%, color-mix(in srgb, var(--background) 30%, transparent) 55%, color-mix(in srgb, var(--background) 88%, transparent) 100%)",
+                    }}
+                  />
+                </div>
+                <figcaption className="mt-4 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+                  The moment before the response
+                </figcaption>
               </Reveal>
             </div>
 
