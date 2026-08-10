@@ -236,10 +236,21 @@ export function WalkthroughSection() {
                   </div>
                 </div>
 
-                {/* Crossfade stack. All five images are rendered and toggled by
+                {/* Crossfade stack. All five slides are rendered and toggled by
                     opacity so switching never shows a blank frame while the
-                    next file decodes. */}
-                <div className="relative aspect-[16/9] w-full bg-surface">
+                    next file decodes.
+
+                    The stage is a GRID with every slide in the same cell
+                    (.wt-stage), not `aspect-[16/9]` + `object-cover`. That
+                    combination cropped every capture to a fixed 16:9 window:
+                    fine for the three wide screens, destructive for the
+                    near-square breakdown page (957x896), which lost roughly a
+                    third of its content — including the pillar rows that make
+                    it worth showing. Letting the stage take the height of the
+                    captures shows each one whole, and the fixed cell means
+                    switching between different native ratios still never
+                    reflows the page. */}
+                <div className="wt-stage relative w-full bg-surface">
                   {STEPS.map((s, i) => (
                     <Image
                       key={s.n}
@@ -251,12 +262,13 @@ export function WalkthroughSection() {
                       // when the section scrolls in.
                       priority={i === 0}
                       sizes="(max-width: 1024px) 100vw, 58vw"
-                      className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${
-                        i === active ? "opacity-100" : "opacity-0"
+                      className={`block h-auto w-full transition-opacity duration-700 ${
+                        i === active ? "opacity-100" : "pointer-events-none opacity-0"
                       }`}
                       aria-hidden={i !== active}
                     />
                   ))}
+                  <span aria-hidden className="wt-vignette absolute inset-0" />
                 </div>
               </div>
 

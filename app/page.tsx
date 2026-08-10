@@ -4,7 +4,12 @@ import { FaqItem } from "@/components/faq-item";
 import { LandingAnalytics } from "@/components/landing-analytics";
 import { MacWindow } from "@/components/mac-window";
 import { MobileStickyCta } from "@/components/mobile-sticky-cta";
-import { MagneticButton, WordReveal } from "@/components/motion";
+import { WordReveal } from "@/components/motion";
+import {
+  PILLAR_ORDER,
+  PillarDial,
+  SAMPLE_SUBSCORES,
+} from "@/components/pillar-dial";
 import { Reveal } from "@/components/reveal";
 import { ScorecardCta } from "@/components/scorecard-cta";
 import { SectionViewTracker } from "@/components/section-view-tracker";
@@ -675,11 +680,6 @@ export default function Home() {
                   ))}
                 </ol>
 
-                <Reveal delay={200} className="mt-10">
-                  <MagneticButton className="inline-block">
-                    <CtaBlock location="whats_inside" />
-                  </MagneticButton>
-                </Reveal>
               </div>
 
               {/* The deliverables deck: two real artifacts overlapped so the
@@ -734,6 +734,53 @@ export default function Home() {
                 </figcaption>
               </Reveal>
             </div>
+
+            {/* The four scored dimensions.
+
+                Without these the page describes the result only in prose,
+                and the reader meets the four dimensions for the first time
+                inside a screenshot they cannot read. Naming them here in the
+                page's own voice is what makes the capture legible when they
+                reach it.
+
+                This is also the one place the page spends colour beyond the
+                teal --signal: four categorical hues, one per dimension, each
+                paired with an icon and a text label so colour is never the
+                only encoding. */}
+            <Reveal delay={150}>
+              <div className="hairline-anim hairline my-12 sm:my-14" />
+            </Reveal>
+
+            <Reveal delay={150}>
+              <p className="eyebrow mb-7">
+                <span className="mr-3 inline-block h-px w-6 align-middle bg-line-strong" />
+                The four dimensions your score reads
+              </p>
+            </Reveal>
+
+            <ul className="grid list-none gap-4 sm:grid-cols-2 sm:gap-5">
+              {PILLAR_ORDER.map((key, i) => (
+                <Reveal as="li" key={key} delay={i * 80}>
+                  <PillarDial dimension={key} value={SAMPLE_SUBSCORES[key]} />
+                </Reveal>
+              ))}
+            </ul>
+
+            <Reveal delay={200}>
+              {/* The document forbids presenting the score as a grade, and a
+                  row of numbers invites exactly that reading unless it is
+                  named. This says plainly what a low number means, and lists
+                  what the score does NOT rate. */}
+              <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-faint">
+                Illustrative values. A lower number means more room to move on
+                this pattern. It is not a grade, and it does not rate you as a
+                parent, your child, or your family.
+              </p>
+            </Reveal>
+
+            <Reveal delay={220}>
+              <CtaBlock location="whats_inside" className="mt-10" />
+            </Reveal>
           </div>
         </section>
 

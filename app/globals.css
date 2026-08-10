@@ -86,6 +86,28 @@
   /* Glass: a 1px specular line along the top edge, as if the ambient light
      were catching the bevel. Pairs with a translucent fill + backdrop blur. */
   --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, .06);
+
+  /* -------------------------------------------------------------------------
+     PILLAR COLOURS — the four scored dimensions.
+
+     A CATEGORICAL palette: colour identifies WHICH dimension, never its rank
+     or its value. A low Energy Alignment is not "worse red" than a high one —
+     amber means Energy Alignment at any value. Order and assignment are fixed.
+
+     Hues sit ~90deg apart in one lightness band so they separate against the
+     navy card (#103039) and stay tellable apart under the common colour-vision
+     deficiencies. These match the dimensions shown in the live result capture,
+     so the page and the product name the same four things in the same colours.
+
+     Colour is never the only encoding — every use ships with a text label.
+     This is also the ONLY place the page spends colour beyond the single teal
+     --signal accent: the four dials, and nothing else. Spread wider it would
+     stop reading as data and start reading as decoration.
+  ------------------------------------------------------------------------- */
+  --pillar-1: #2bb3cf; /* Direction Clarity  · teal   */
+  --pillar-2: #e8703f; /* Identity Alignment · orange */
+  --pillar-3: #a79ef0; /* Decision Readiness · violet */
+  --pillar-4: #e0a52e; /* Energy Alignment   · amber  */
 }
 
 /* Optional light section variant, same teal family. */
@@ -1247,4 +1269,25 @@ select {
 }
 @media (prefers-reduced-motion: reduce) {
   .shot-dialog[open] { animation: none; }
+}
+
+/* Walkthrough stage: every slide occupies the SAME grid cell, so the stack
+   crossfades in place and the stage takes the height of the tallest capture
+   instead of a hard-coded ratio that would crop them. Replaces the previous
+   `aspect-[16/9]` + `object-cover`, which cut roughly a third off the
+   near-square breakdown page. */
+.wt-stage {
+  display: grid;
+}
+.wt-stage > * {
+  grid-area: 1 / 1;
+}
+
+/* The captures are edge-to-edge inside the window chrome, so a faint inner
+   shadow keeps them seated in the frame rather than looking clipped by it. */
+.wt-vignette {
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--shadow-ink), 0.04),
+    inset 0 -36px 60px -40px rgba(var(--shadow-ink), 0.55);
 }
