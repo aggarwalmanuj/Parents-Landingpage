@@ -1124,6 +1124,12 @@ select {
   opacity: 0;
   animation: word-rise 1s var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 90ms);
+  /* The component emits each word WITH its trailing space, but
+     `display: inline-block` makes the browser collapse a space sitting at the
+     end of the box — so the closing headline rendered as "Youalreadyknow".
+     `pre-wrap` preserves that space while still allowing the headline to wrap
+     between words. */
+  white-space: pre-wrap;
 }
 
 /* Editorial numbered rows (the "what's inside your score" and "how it works"

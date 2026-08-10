@@ -135,6 +135,33 @@ const TRUST_LOGOS = [
   { src: "/logos/un.png", alt: "United Nations" },
 ];
 
+/* Block 10: participant quotes.
+
+   Both are from the broader AI Merge work, and the disclaimer under the cards
+   says exactly that rather than implying they came from this free score.
+
+   Chosen against one hard filter: each describes a shift the SPEAKER noticed
+   in THEMSELVES. Nothing here claims another person changed, which is the same
+   boundary the rest of the page holds — a parenting testimonial that promised
+   a child would behave differently would break the product's central claim on
+   the one section meant to make it believable.
+
+   TODO(launch): verify exact wording, name or approved anonymity, role, and
+   written consent for display on THIS funnel before launch. */
+const TESTIMONIALS = [
+  {
+    quote: "There's a stress part of my brain that has gone silent.",
+    name: "Nick H.",
+    role: "Video Producer",
+  },
+  {
+    quote:
+      "It shifted something within. It's something I'm going to be reading over and over again.",
+    name: "Oliver",
+    role: "Real Estate",
+  },
+];
+
 /* Zone A microcopy. The document specifies this line under every primary CTA.
    The document shipped a [VERIFIED TIME] placeholder here; the measured figure
    is ten minutes, confirmed by the owners, so it is now stated plainly. */
@@ -226,45 +253,6 @@ function ChapterRule({ className = "my-12 sm:my-16" }: { className?: string }) {
     <Reveal as="div" delay={150} className={className}>
       <div className="hairline-anim hairline" />
     </Reveal>
-  );
-}
-
-/**
- * Asset placeholder. The document specifies several images that do not exist
- * yet and explicitly forbids inventing them (the participant-proof block in
- * particular: "Do not invent"). Rather than ship a stock photo that
- * contradicts the page's own rules, each slot renders as a labelled,
- * production-ready brief carrying the document's priority, constraints, and
- * dimensions — so the gap is visible to the team and honest to a visitor.
- */
-function AssetSlot({
-  priority,
-  title,
-  spec,
-  children,
-  aspect = "aspect-[4/3]",
-}: {
-  priority: string;
-  title: string;
-  /** Dimensions / format line. */
-  spec: string;
-  /** The production brief. */
-  children: React.ReactNode;
-  aspect?: string;
-}) {
-  return (
-    <figure
-      className={`flex w-full flex-col justify-center rounded-xl border border-dashed border-line-strong bg-surface/60 p-6 text-left sm:p-8 ${aspect}`}
-    >
-      <figcaption className="eyebrow mb-4 text-signal">{priority}</figcaption>
-      <p className="text-title">{title}</p>
-      <div className="mt-3 space-y-2 text-sm leading-relaxed text-faint">
-        {children}
-      </div>
-      <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-        {spec}
-      </p>
-    </figure>
   );
 }
 
@@ -477,10 +465,10 @@ export default function Home() {
                     Tapping opens it full-viewport. */}
                 <ZoomableShot
                   className="mt-8"
-                  src="/take/reportsummary.png"
+                  src="/take/reportsummary.jpg"
                   alt="The live result screen, showing a completed score with the pattern reflected back to the participant."
-                  width={1893}
-                  height={848}
+                  width={1920}
+                  height={1200}
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   caption="The live result screen"
                   event="result_screen"
@@ -697,10 +685,10 @@ export default function Home() {
                   <div className="take-back relative w-[88%] origin-bottom-left">
                     <div className="overflow-hidden rounded-md border border-line shadow-[var(--elev-3)]">
                       <Image
-                        src="/take/reportpdf.png"
+                        src="/take/reportpdf.jpg"
                         alt="A page from the optional detailed breakdown, composed around the parent's own answers."
-                        width={957}
-                        height={896}
+                        width={1920}
+                        height={1200}
                         sizes="(max-width: 1024px) 60vw, 30vw"
                         className="block h-auto w-full"
                       />
@@ -719,10 +707,10 @@ export default function Home() {
                   <div className="take-front relative -mt-[9%] ml-auto w-[74%] origin-top-right">
                     <div className="overflow-hidden rounded-md border border-line-strong shadow-[var(--elev-3-lift)]">
                       <Image
-                        src="/take/reportsummary.png"
+                        src="/take/reportsummary.jpg"
                         alt="The result summary, reflecting the parent's own described pattern back to them."
-                        width={1893}
-                        height={848}
+                        width={1920}
+                        height={1200}
                         sizes="(max-width: 1024px) 55vw, 26vw"
                         className="block h-auto w-full"
                       />
@@ -936,34 +924,105 @@ export default function Home() {
         </section>
 
         {/* ============== Block 10 · Participant proof ==============
-            The document is explicit: "Empty until real proof exists. Do not
-            invent." So this renders the collection brief, not testimonials. */}
-        <section className="border-t border-line bg-surface py-16 sm:py-24">
-          <div className="mx-auto max-w-3xl px-5 sm:px-8">
-            <AssetSlot
-              priority="Empty until real proof exists"
-              title="Participant proof"
-              spec="Three consented quotes · collect immediately post-launch"
-              aspect="aspect-auto"
-            >
-              <p>
-                Do not invent. Collect three consented quotes immediately
-                post-launch.
+            Two quotes, typographic, following the Coaches page's v3.0
+            treatment — which is worth restating because it is a decision, not
+            a layout.
+
+            That page HAS a twelve-clip video wall in its repo and deliberately
+            does not render it: twelve faces sitting directly above a caption
+            conceding the speakers may not be from this audience and may not be
+            describing this product reads as weaker than no proof at all. The
+            rule it settled on is at most two clips chosen for relevance, and
+            text only if none qualify. None qualify here yet, so this is text.
+
+            The quotes are from the broader AI Merge work, and the disclaimer
+            says so. They describe a shift the SPEAKER noticed in themselves —
+            never a change in another person — which is the same boundary this
+            whole page holds.
+
+            No stock portraits: a face beside a quote from someone who is not
+            that person is manufactured proof, and this audience is precisely
+            the one that would feel it. So the visual is typography — an
+            oversized quote glyph and a rule in the pillar colour.
+
+            TODO(launch): replace with consented PARENT quotes as soon as they
+            exist. Priority order from the document: recognised their own
+            pattern · identified a useful possible belief · made one
+            participant-controlled choice · repeated a different response ·
+            became less dependent on external guidance. Never use a testimonial
+            that promises child change. <TestimonialReel /> is still in the
+            repo for when consented clips exist. */}
+        <section className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
+          <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+            <div className="mx-auto max-w-2xl text-center">
+              <Reveal>
+                <p className="eyebrow mb-6">In their words</p>
+              </Reveal>
+              <Reveal delay={60}>
+                <h2 className="text-section">
+                  <span className="block">What people have noticed</span>
+                  <span className="block font-serif-italic">
+                    working through AI Merge.
+                  </span>
+                </h2>
+              </Reveal>
+            </div>
+
+            <ul className="mt-12 grid list-none gap-5 md:grid-cols-2">
+              {TESTIMONIALS.map((t, i) => {
+                const color = [
+                  "var(--pillar-1)",
+                  "var(--pillar-3)",
+                ][i];
+                return (
+                  <Reveal as="li" key={t.name} delay={i * 80}>
+                    <figure
+                      className="relative flex h-full flex-col overflow-hidden rounded-2xl border bg-card p-7 pt-8 sm:p-8 sm:pt-9"
+                      style={{
+                        borderColor: `color-mix(in srgb, ${color} 28%, var(--border))`,
+                      }}
+                    >
+                      {/* Coloured top rule + oversized glyph: the card's only
+                          ornament, and the only thing carrying the pillar hue
+                          outside the four dials. */}
+                      <span
+                        aria-hidden
+                        className="absolute inset-x-0 top-0 h-0.5"
+                        style={{ background: color, opacity: 0.65 }}
+                      />
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[9rem] leading-none"
+                        style={{ color, opacity: 0.1 }}
+                      >
+                        &rdquo;
+                      </span>
+                      <blockquote className="text-title relative flex-1">
+                        &ldquo;{t.quote}&rdquo;
+                      </blockquote>
+                      <figcaption className="relative mt-6 flex items-center gap-2.5 text-sm">
+                        <span
+                          aria-hidden
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ background: color }}
+                        />
+                        <span className="font-medium text-fg">{t.name}</span>
+                        <span className="text-faint">· {t.role}</span>
+                      </figcaption>
+                    </figure>
+                  </Reveal>
+                );
+              })}
+            </ul>
+
+            <Reveal delay={120}>
+              <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-faint">
+                Individual experiences vary. These accounts reflect experiences
+                across the broader AI Merge work rather than the free Parenting
+                Belief Score, and do not guarantee that another participant will
+                receive the same result.
               </p>
-              <p>
-                Priority order: 1. parent recognised their own pattern · 2.
-                parent identified a useful possible belief · 3. parent made one
-                participant-controlled choice · 4. parent repeated a different
-                response · 5. parent became less dependent on external guidance.
-              </p>
-              <p className="text-ink">
-                Never use testimonials that promise child change.
-              </p>
-              <p>
-                Interim option: a completed-score count, once the number
-                isn&rsquo;t embarrassing.
-              </p>
-            </AssetSlot>
+            </Reveal>
           </div>
         </section>
 
