@@ -14,24 +14,42 @@
 // reader, and defaults to paused under prefers-reduced-motion and on touch
 // (where the pause-on-hover guard can never fire).
 //
-// The screenshots are the shared AI Merge assessment interface, so they show
-// the real flow. TODO(launch): re-capture with the parenting question set once
-// that flow is live, so the copy on screen matches the copy on this page.
+// Three steps are real captures of the shared AI Merge assessment interface.
+// Two are NOT, deliberately: steps 02 and 03 used to be public/take/question.jpg
+// and public/take/beat.jpg, which came from the business vertical of the same
+// assessment — a question about "a structural bottleneck" illustrated with two
+// people in suits, and a reflection telling the participant "the next step is
+// not 'a call'". Shown to a parent about to describe a family moment, they read
+// as a different product entirely, so they were removed and replaced with drawn
+// screens in the product's own language (components/visuals/sim-screens.tsx).
+//
+// TODO(launch): re-capture ALL five with the parenting question set once that
+// flow is live, and swap the two drawn steps back to <Image>.
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Pause, Play } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { SectionViewTracker } from "@/components/section-view-tracker";
+import { ScreenQuestion, ScreenReflection } from "@/components/visuals/sim-screens";
 import { trackEvent } from "@/lib/analytics";
 
 type Step = {
   n: string;
   title: string;
   meta: string;
-  img: string;
-  w: number;
-  h: number;
+  /** A real capture. Mutually exclusive with `render`. */
+  img?: string;
+  w?: number;
+  h?: number;
+  /** A drawn screen, for steps whose real capture is off-vertical. */
+  render?: () => React.ReactNode;
   alt: string;
   what: string;
   why: string;
@@ -53,9 +71,7 @@ const STEPS: ReadonlyArray<Step> = [
     n: "02",
     title: "Describe what happens",
     meta: "Five questions",
-    img: "/take/question.jpg",
-    w: 1920,
-    h: 1200,
+    render: ScreenQuestion,
     alt: "A question screen showing a single open question with room to type your answer in your own words.",
     what: "Five short questions, in your own words. No polished explanation required.",
     why: "There is no right answer and nothing to study. You are describing what actually happened.",
@@ -64,9 +80,7 @@ const STEPS: ReadonlyArray<Step> = [
     n: "03",
     title: "See it reflected back",
     meta: "As you go",
-    img: "/take/beat.jpg",
-    w: 1920,
-    h: 1200,
+    render: ScreenReflection,
     alt: "A reflection screen where the assessment mirrors back what you have just described.",
     what: "Between questions, what you have described is reflected back to you in plain language.",
     why: "This is usually where the pattern first becomes visible — named, rather than merely felt.",
@@ -97,30 +111,53 @@ const STEPS: ReadonlyArray<Step> = [
 
 const ADVANCE_MS = 6500;
 
+/**
+ * Read a media query as React state.
+ *
+ * useSyncExternalStore rather than useState + useEffect. The effect version
+ * called setState synchronously in the effect body on every mount, which is a
+ * cascading render (and what react-hooks/set-state-in-effect flags). This
+ * subscribes to the MediaQueryList directly instead, which is exactly what the
+ * hook is for.
+ *
+ * The server snapshot returns `true` for both queries this component uses, so
+ * SSR emits the paused, reduced-motion state — the safe default, and the same
+ * markup the previous implementation produced. The real values arrive on
+ * hydration.
+ */
+function useMediaQuery(query: string): boolean {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    [query]
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => true
+  );
+}
+
 export function WalkthroughSection() {
   const [active, setActive] = useState(0);
-  const [userPlaying, setUserPlaying] = useState(false);
   const [interacting, setInteracting] = useState(false);
-  const [reduced, setReduced] = useState(true);
+
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  // Touch devices: pause-on-hover can never fire there, so autoplay would yank
+  // the slide away mid-read.
+  const hoverless = useMediaQuery("(hover: none)");
+
+  // `null` means the visitor has not touched the control, so the media queries
+  // decide. Deriving it this way (rather than syncing state in an effect) means
+  // a system setting that changes mid-session is honoured immediately, and an
+  // explicit choice is never silently overwritten by that change.
+  const [userOverride, setUserOverride] = useState<boolean | null>(null);
+  const userPlaying = userOverride ?? (!reduced && !hoverless);
 
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
-  // Start auto-advance after mount unless the visitor prefers reduced motion,
-  // or is on a touch device (where pause-on-hover never fires, so autoplay
-  // would yank the slide away mid-read). Done in an effect so SSR output stays
-  // deterministic and the OS setting is honoured.
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const hoverless = window.matchMedia("(hover: none)");
-    setReduced(mq.matches);
-    setUserPlaying(!mq.matches && !hoverless.matches);
-    const onChange = (e: MediaQueryListEvent) => {
-      setReduced(e.matches);
-      setUserPlaying(!e.matches && !hoverless.matches);
-    };
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   const running = userPlaying && !interacting;
 
@@ -213,25 +250,28 @@ export function WalkthroughSection() {
                   >
                     aimerge.live / your-score
                   </span>
-                  {/* Story-style progress segments. aria-hidden because the
-                      real, labelled controls are the step list below; these
-                      would otherwise duplicate every step for a screen
-                      reader. */}
+                  {/* Story-style progress segments.
+
+                      Spans, not buttons. They are aria-hidden (the real,
+                      labelled control is the step tablist below, and these
+                      would duplicate every step for a screen reader) and they
+                      were also only 4px tall — a click target a tenth of the
+                      44px floor, which nobody aims at on purpose and which
+                      every accessibility sweep flags. Removing the interaction
+                      is the right fix rather than inflating a decorative bar:
+                      the tablist beside it already selects any step. */}
                   <div className="ml-auto flex items-center gap-1.5" aria-hidden>
                     {STEPS.map((s, i) => (
-                      <button
+                      <span
                         key={s.n}
-                        type="button"
-                        tabIndex={-1}
-                        onClick={() => select(i)}
-                        className="relative h-1 w-6 overflow-hidden rounded-full bg-line sm:w-8"
+                        className="relative block h-1 w-6 overflow-hidden rounded-full bg-line sm:w-8"
                       >
                         <span
                           className={`wt-seg-bar absolute inset-0 rounded-full bg-signal ${
                             i < active ? "wt-seg-done" : ""
                           } ${i === active && running ? "wt-seg-fill" : ""}`}
                         />
-                      </button>
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -251,23 +291,45 @@ export function WalkthroughSection() {
                     switching between different native ratios still never
                     reflows the page. */}
                 <div className="wt-stage relative w-full bg-surface">
-                  {STEPS.map((s, i) => (
-                    <Image
-                      key={s.n}
-                      src={s.img}
-                      alt={s.alt}
-                      width={s.w}
-                      height={s.h}
-                      // Only the first slide is eager: it is the one visible
-                      // when the section scrolls in.
-                      priority={i === 0}
-                      sizes="(max-width: 1024px) 100vw, 58vw"
-                      className={`block h-auto w-full transition-opacity duration-700 ${
-                        i === active ? "opacity-100" : "pointer-events-none opacity-0"
-                      }`}
-                      aria-hidden={i !== active}
-                    />
-                  ))}
+                  {STEPS.map((s, i) => {
+                    const hidden = i !== active;
+                    // One shared wrapper for both slide kinds, so a drawn
+                    // screen and a captured one crossfade identically and both
+                    // occupy the same grid cell. `pointer-events-none` on the
+                    // inactive ones stops an invisible slide swallowing clicks.
+                    const cls = `block w-full transition-opacity duration-700 ${
+                      hidden ? "pointer-events-none opacity-0" : "opacity-100"
+                    }`;
+                    if (s.render) {
+                      const Slide = s.render;
+                      return (
+                        <div
+                          key={s.n}
+                          className={cls}
+                          aria-hidden={hidden}
+                          role="img"
+                          aria-label={s.alt}
+                        >
+                          <Slide />
+                        </div>
+                      );
+                    }
+                    return (
+                      <Image
+                        key={s.n}
+                        src={s.img as string}
+                        alt={s.alt}
+                        width={s.w as number}
+                        height={s.h as number}
+                        // Only the first slide is eager: it is the one visible
+                        // when the section scrolls in.
+                        priority={i === 0}
+                        sizes="(max-width: 1024px) 100vw, 58vw"
+                        className={`${cls} h-auto`}
+                        aria-hidden={hidden}
+                      />
+                    );
+                  })}
                   <span aria-hidden className="wt-vignette absolute inset-0" />
                 </div>
               </div>
@@ -286,8 +348,9 @@ export function WalkthroughSection() {
                 {!reduced && (
                   <button
                     type="button"
-                    onClick={() => setUserPlaying((p) => !p)}
-                    className="inline-flex shrink-0 items-center gap-2 rounded-pill border border-line px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] text-faint transition-colors hover:text-ink"
+                    onClick={() => setUserOverride(!userPlaying)}
+                    // min-h-11 = 44px, the tap-target floor. Was 34px tall.
+                    className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-pill border border-line px-3 py-1.5 text-[12px] uppercase tracking-[0.16em] text-faint transition-colors hover:text-ink"
                   >
                     {userPlaying ? (
                       <>
@@ -346,7 +409,7 @@ export function WalkthroughSection() {
                           <span className="row-mark" aria-hidden />
                           <span className="text-title">{s.title}</span>
                         </span>
-                        <span className="mt-1 block text-[11px] uppercase tracking-[0.18em] text-faint">
+                        <span className="mt-1 block text-[12px] uppercase tracking-[0.14em] text-faint">
                           {s.meta}
                         </span>
                       </span>

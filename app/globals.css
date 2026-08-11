@@ -99,15 +99,44 @@
      deficiencies. These match the dimensions shown in the live result capture,
      so the page and the product name the same four things in the same colours.
 
-     Colour is never the only encoding — every use ships with a text label.
-     This is also the ONLY place the page spends colour beyond the single teal
-     --signal accent: the four dials, and nothing else. Spread wider it would
-     stop reading as data and start reading as decoration.
+     Colour is never the only encoding — every use ships with an ICON and a
+     TEXT LABEL.
+
+     TWO TOKENS PER DIMENSION, because they have different jobs. Getting this
+     split wrong is what breaks the palette, and it already happened here once:
+
+       --pillar-N      GRAPHICS ONLY — ring strokes, bar fills, icon glyphs,
+                       borders, tints. WCAG asks 3:1 of a graphical object.
+                       These are the funnel's DIMENSION_COLORS *verbatim*, and
+                       they are what the real captures on this page render, so
+                       our dials and those screenshots are one palette rather
+                       than two near-misses.
+
+       --pillar-N-ink  the SAME hue lifted until it clears 4.5:1 as small text
+                       on our card. Needed only because this ground is a step
+                       darker than the funnel's (#0a232e / #103039 vs
+                       #0f2c3b / #163a4d). Use it ONLY where a coloured label
+                       is genuinely the design — the assessment's own entry
+                       screen renders its pillar chips that way.
+
+     HISTORY, so this is not "fixed" back the wrong way: --pillar-N previously
+     held the -ink values. The cause was PillarDial setting the series colour on
+     a 9px over-line; that failed contrast, and the palette was lifted to
+     compensate — moving all four hues away from the product they exist to
+     match. The correct fix is the one now in place: text wears a text token,
+     the ring carries the hue, and the graphics tokens stay exact. Do not
+     "improve" these values. A visitor sees the captured chips and our dials
+     within one scroll, and any drift reads as two different products.
   ------------------------------------------------------------------------- */
-  --pillar-1: #2bb3cf; /* Direction Clarity  · teal   */
-  --pillar-2: #e8703f; /* Identity Alignment · orange */
-  --pillar-3: #a79ef0; /* Decision Readiness · violet */
-  --pillar-4: #e0a52e; /* Energy Alignment   · amber  */
+  --pillar-1: #1a9cba; /* Direction Clarity  · teal   */
+  --pillar-2: #d95926; /* Identity Alignment · orange */
+  --pillar-3: #9085e9; /* Decision Readiness · violet */
+  --pillar-4: #c98500; /* Energy Alignment   · amber  */
+
+  --pillar-1-ink: #2bb3cf;
+  --pillar-2-ink: #e8703f;
+  --pillar-3-ink: #a79ef0;
+  --pillar-4-ink: #e0a52e;
 }
 
 /* Optional light section variant, same teal family. */
@@ -260,7 +289,11 @@ select {
 }
 .text-eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  /* 0.75rem = 12px, the floor for real page copy. Was 0.72rem (11.52px),
+     which put every chapter mark and every over-line on the page a half-pixel
+     under it. Tracked uppercase at 11px is the first thing an older reader —
+     which is this page's audience — loses. */
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -279,7 +312,9 @@ select {
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
   font-family: var(--font-sans);
-  font-size: clamp(0.7rem, 0.66rem + 0.18vw, 0.78rem);
+  /* Floor raised from 0.7rem: at 320px the clamp resolved to 11.2px, putting
+     the page's single most important control below the 12px copy floor. */
+  font-size: clamp(0.75rem, 0.7rem + 0.18vw, 0.78rem);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -600,7 +635,13 @@ select {
    just above the video rather than wrapping the whole card. */
 .hero-glow {
   position: absolute;
-  inset: -12%;
+  /* Vertical-only inset. `-12%` on all four sides pushed this 22px past each
+     edge of a 390px phone (and 14px at 320px) — the whole element sat wider
+     than the viewport. `overflow-x: clip` on html/body hid the scrollbar, so
+     every "is the page scrolling sideways?" check passed while the glow was
+     genuinely off-screen. Decorative glows never get a negative x-inset; the
+     same rule is on .signal-halo and .take-halo. */
+  inset: -12% 0;
   background: radial-gradient(
     circle at 50% 40%,
     rgb(var(--glow) / 0.22),
@@ -1069,7 +1110,8 @@ select {
 /* Chapter mark: "III · The walkthrough". Sits above every section headline. */
 .eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  /* 12px floor — see the note on .text-eyebrow. */
+  font-size: 0.75rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   font-weight: 500;
@@ -1222,7 +1264,9 @@ select {
 /* The deliverables deck: overlapping artifact cards with a signal halo. */
 .take-halo {
   position: absolute;
-  inset: -12% -8% -8% -8%;
+  /* Vertical-only inset, for the reason documented on .hero-glow: the -8%
+     sides put this 8px past each edge of a 390px phone. */
+  inset: -12% 0 -8% 0;
   border-radius: 50%;
   background: radial-gradient(circle, rgb(var(--glow) / 0.16), transparent 68%);
   filter: blur(48px);
@@ -1296,4 +1340,104 @@ select {
   box-shadow:
     inset 0 0 0 1px rgba(var(--shadow-ink), 0.04),
     inset 0 -36px 60px -40px rgba(var(--shadow-ink), 0.55);
+}
+
+/* ===========================================================================
+   Imagery, entrance and artifact utilities.
+
+   Ported from the sibling Coaches and Consultants page so both properties
+   share one motion and lighting language. Everything here is opacity or
+   transform only, so it stays on the compositor.
+=========================================================================== */
+
+/* Above-the-fold entrance for things that are not type. Pure CSS with no
+   observer, so it can never strand content at opacity 0 the way a
+   JS-triggered reveal can. Callers stagger with --rise-delay. */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  opacity: 0;
+  animation: rise-in 0.9s var(--ease-out) both;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* --- Imagery --------------------------------------------------------------
+   Photography carries the page's mood, so it gets treatments that cost
+   nothing at runtime: a zoom on hover, and a halo behind the frame in the
+   palette's own glow colour. */
+
+.img-hover-zoom img {
+  transition: transform 1.2s var(--ease-out);
+}
+@media (hover: hover) {
+  .img-hover-zoom:hover img {
+    transform: scale(1.045);
+  }
+}
+
+/* Radial glow BEHIND an image frame. The inset is VERTICAL-ONLY on purpose:
+   a negative x-inset lets the halo poke past the viewport edge on a 390px
+   phone and makes the whole document scroll sideways. Do not add one. */
+.signal-halo {
+  position: relative;
+}
+.signal-halo::before {
+  content: "";
+  position: absolute;
+  inset: -10% 0;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgb(var(--glow) / 0.2),
+    transparent 65%
+  );
+  filter: blur(48px);
+  z-index: -1;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* --- Product artifact frame ----------------------------------------------
+   App-window chrome for the token-rendered result artifact. Its whole job is
+   to say "this is a real screen you will receive" before a word is read. */
+.device-frame {
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--elev-3), var(--glass-highlight);
+  transition:
+    transform var(--dur-polish) var(--ease-polish),
+    box-shadow var(--dur-polish) var(--ease-polish);
+}
+@media (hover: hover) {
+  .device-frame:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--elev-3-lift), var(--glass-highlight);
+  }
+}
+
+/* --- The belief loop ------------------------------------------------------
+   The reinforcing cycle drawn as a ring of four nodes. The dash animation
+   traces the path so the loop reads as something that keeps going, which is
+   the one idea the section exists to land. */
+@keyframes loop-trace {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -28; }
+}
+.loop-trace {
+  stroke-dasharray: 5 9;
+  animation: loop-trace 2.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .loop-trace { animation: none; }
+  .img-hover-zoom img { transition: none; }
+  @media (hover: hover) {
+    .img-hover-zoom:hover img,
+    .device-frame:hover { transform: none; }
+  }
 }

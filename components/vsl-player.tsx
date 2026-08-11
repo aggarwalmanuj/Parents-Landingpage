@@ -151,12 +151,19 @@ export function VslPlayer() {
 
   return (
     <div className="vsl-stage relative">
-      {/* Annotation chips float outside the frame on large screens only. */}
+      {/* Annotation chips float outside the frame on large screens only.
+
+          `xl`, not `lg`. These sit at `left-0 -translate-x-1/2`, i.e. half
+          their own width outside the player. The player lives in a
+          `max-w-4xl` (896px) column, so at exactly 1024px the page margin is
+          only 64px and a ~212px chip hung 10px past the viewport edge — real
+          content off-screen, hidden by the page's `overflow-x: clip`. At
+          1280px the margin is 192px and the chip clears comfortably. */}
       {CHIPS.map((chip) => (
         <span
           key={chip.text}
           aria-hidden
-          className={`vsl-chip absolute z-20 hidden lg:inline-flex ${chip.className}`}
+          className={`vsl-chip absolute z-20 hidden xl:inline-flex ${chip.className}`}
         >
           {chip.text}
         </span>

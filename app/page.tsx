@@ -1,15 +1,20 @@
 import Image from "next/image";
 import ReactDOM from "react-dom";
+import {
+  Award,
+  BookOpen,
+  Building2,
+  Check,
+  HeartHandshake,
+  Lock,
+  ShieldCheck,
+  UserRoundCheck,
+} from "lucide-react";
 import { FaqItem } from "@/components/faq-item";
 import { LandingAnalytics } from "@/components/landing-analytics";
 import { MacWindow } from "@/components/mac-window";
 import { MobileStickyCta } from "@/components/mobile-sticky-cta";
 import { WordReveal } from "@/components/motion";
-import {
-  PILLAR_ORDER,
-  PillarDial,
-  SAMPLE_SUBSCORES,
-} from "@/components/pillar-dial";
 import { Reveal } from "@/components/reveal";
 import { ScorecardCta } from "@/components/scorecard-cta";
 import { SectionViewTracker } from "@/components/section-view-tracker";
@@ -21,11 +26,29 @@ import {
   publicationNode,
   videoNode,
 } from "@/components/structured-data";
+import { DeviceFrame } from "@/components/visuals/device-frame";
+import { ReportPreviewCard } from "@/components/visuals/report-preview";
+import {
+  BeliefLoop,
+  GenericAdvicePanel,
+  RECOGNITION_SCENES,
+  StepGlyph,
+  YourWordsPanel,
+} from "@/components/visuals/scenes";
+import { PillarDial } from "@/components/visuals/score-visuals";
 import { VslPlayer } from "@/components/vsl-player";
 import { WalkthroughSection } from "@/components/walkthrough";
 import { ZoomableShot } from "@/components/zoomable-shot";
 import type { CtaLocation } from "@/lib/analytics";
 import { ESSENTIAL_FAQS, toFaqEntries } from "@/lib/faq";
+import {
+  PILLAR_COLORS,
+  PILLAR_ICONS,
+  PILLAR_LABELS,
+  PILLAR_ORDER,
+  PILLAR_TEXT_COLORS,
+  SAMPLE_SUBSCORES,
+} from "@/lib/pillars";
 import { ROUTES } from "@/lib/site";
 
 /* ==========================================================================
@@ -287,11 +310,28 @@ export default function Home() {
       <LandingAnalytics />
 
       <main id="main" className="relative flex-1">
+        {/* The page's lighting, finally mounted.
+
+            All three of these layers were fully written in globals.css and
+            rendered by NOTHING — the page was shipping the CSS for an ambient
+            system it never turned on. They cost no layout and no JS:
+            `.ambient-field` is a document-anchored column of very faint radial
+            sources that scrolls with the content it lights, and
+            `.page-vignette` is viewport-fixed so the vignette hugs the screen
+            edge and the key light stays behind the sticky header CTA at every
+            scroll position. Both sit at z-index -1, behind everything. */}
+        <div className="ambient-field" aria-hidden />
+        <div className="page-vignette" aria-hidden />
+
         {/* ================== Block 01 · Hero ==================
             Structure mirrors the Coaches and Consultants hero exactly:
             eyebrow, headline, VSL, CTA, trust line, credibility line. No
             supporting paragraph between the headline, the VSL and the CTA. */}
         <section id="hero" className="relative overflow-hidden">
+          {/* The signature spotlight: one large soft orb centred behind the
+              headline. Capped at 100vw in CSS so it can never add document
+              width on a narrow phone. */}
+          <div className="spotlight-hero" aria-hidden />
           {/* Tighter top/bottom on phones. The hero stacks eyebrow, a
               four-line headline, a three-line subhead and a 16:9 video before
               the CTA is reached; at the desktop rhythm that pushed the button
@@ -330,15 +370,12 @@ export default function Home() {
             <Reveal delay={220}>
               <CtaBlock location="hero" className="mt-8" />
             </Reveal>
-            <Reveal delay={280}>
-              <p className="mt-4 text-center text-sm leading-relaxed text-faint">
-                A quiet week. An unfinished responsibility. Another reminder. A
-                decision you wouldn&rsquo;t have made. The moment may be small.
-                What it begins to mean can become much larger.
-              </p>
-            </Reveal>
           </div>
 
+          {/* CUT: a five-sentence atmosphere paragraph ("A quiet week. An
+              unfinished responsibility. …") used to sit here. It described the
+              loop in prose one screen before the loop is DRAWN in section I,
+              so it was the same idea told twice, the weaker time first. */}
           <Reveal delay={320}>
             <p className="mx-auto mt-8 max-w-4xl px-5 pb-16 text-center text-sm text-faint sm:px-8">
               Built on AI Merge, a methodology published in the{" "}
@@ -352,11 +389,12 @@ export default function Home() {
             question is narrowed to the parent's own pattern. Everything after
             this section depends on the reader having accepted this framing. */}
         <section
-          className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="question-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="question_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="I · The question"
               id="question-heading"
@@ -375,31 +413,51 @@ export default function Home() {
 
             <ChapterRule />
 
-            {/* The two objections, granted rather than argued with. */}
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
-              <Reveal as="div" delay={150}>
-                <blockquote className="h-full rounded-xl border border-line bg-bg p-6 sm:p-8">
-                  <p className="text-title">
-                    &ldquo;But the situation with my child is real.&rdquo;
-                  </p>
-                  <p className="mt-4 leading-[1.8] text-muted">
-                    That may be true. Your child may genuinely be facing a
-                    decision with real consequences.
-                  </p>
-                </blockquote>
-              </Reveal>
-              <Reveal as="div" delay={250}>
-                <blockquote className="h-full rounded-xl border border-line bg-bg p-6 sm:p-8">
-                  <p className="text-title">
-                    &ldquo;I&rsquo;m not trying to control anything. I just want
-                    to stay close.&rdquo;
-                  </p>
-                  <p className="mt-4 leading-[1.8] text-muted">
-                    That may also be true.
-                  </p>
-                </blockquote>
-              </Reveal>
-            </div>
+            {/* The two objections, granted rather than argued with.
+
+                Compressed from two full cards to two chips. Both used to carry
+                a follow-up paragraph, and both paragraphs said the same thing
+                the heading already says ("that may be true"). Granting an
+                objection needs one line; arguing needs three, and the page is
+                explicitly not arguing here. */}
+            <ul className="grid list-none gap-3 sm:grid-cols-2 sm:gap-4">
+              {[
+                "But the situation with my child is real.",
+                "I’m not trying to control anything. I just want to stay close.",
+              ].map((objection, i) => (
+                <Reveal as="li" key={objection} delay={150 + i * 80}>
+                  <blockquote className="flex h-full items-start gap-3 rounded-xl border border-line bg-bg px-5 py-4">
+                    <Check
+                      className="mt-1 h-4 w-4 shrink-0 text-signal"
+                      strokeWidth={2}
+                      aria-hidden
+                    />
+                    <span className="min-w-0">
+                      <span className="block font-serif-italic text-[17px] leading-snug text-ink">
+                        &ldquo;{objection}&rdquo;
+                      </span>
+                      <span className="mt-1.5 block text-sm text-faint">
+                        That may be true.
+                      </span>
+                    </span>
+                  </blockquote>
+                </Reveal>
+              ))}
+            </ul>
+
+            {/* The mechanism, drawn.
+
+                This section is the page's hinge, and it used to be the page's
+                only wholly text-only screen: a headline, a lede, and two
+                paragraph cards. The loop it describes is a SHAPE — concern
+                drives intervention, intervention hides the counter-evidence,
+                the missing evidence feeds the concern — and a shape is the one
+                thing prose is worst at carrying. */}
+            <Reveal delay={200}>
+              <div className="mt-12 sm:mt-14">
+                <BeliefLoop />
+              </div>
+            </Reveal>
 
             <Reveal delay={300}>
               <CtaBlock location="question" className="mt-12" />
@@ -411,11 +469,12 @@ export default function Home() {
             The page's central proof. A described moment on the left, the
             result fields it produces on the right. */}
         <section
-          className="border-t border-line py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
           aria-labelledby="score-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="score_visual_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="II · The mechanism"
               id="score-heading"
@@ -433,7 +492,7 @@ export default function Home() {
 
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
               {/* What the parent writes. */}
-              <Reveal as="div" delay={150} className="lg:col-span-5">
+              <Reveal as="div" delay={150} className="min-w-0 lg:col-span-5">
                 <p className="eyebrow mb-5">
                   <span className="mr-3 inline-block h-px w-6 align-middle bg-line-strong" />
                   What you write
@@ -476,7 +535,7 @@ export default function Home() {
               </Reveal>
 
               {/* What the score returns. */}
-              <Reveal as="div" delay={250} className="lg:col-span-7">
+              <Reveal as="div" delay={250} className="min-w-0 lg:col-span-7">
                 <p className="eyebrow mb-5">
                   <span className="mr-3 inline-block h-px w-6 align-middle bg-line-strong" />
                   What your score reflects back
@@ -488,7 +547,7 @@ export default function Home() {
                         key={f.label}
                         className="grid grid-cols-12 gap-4 px-5 py-5 sm:px-7 sm:py-6"
                       >
-                        <dt className="col-span-12 text-[11px] uppercase tracking-[0.18em] text-faint sm:col-span-4">
+                        <dt className="col-span-12 text-[12px] uppercase tracking-[0.16em] text-faint sm:col-span-4">
                           {f.label}
                         </dt>
                         <dd
@@ -504,7 +563,7 @@ export default function Home() {
                     ))}
                   </dl>
                 </MacWindow>
-                <p className="mt-3 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+                <p className="mt-3 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
                   Illustrative example. Yours will be built from your own words.
                 </p>
 
@@ -518,11 +577,12 @@ export default function Home() {
 
         {/* ====== Block 05 · Patterns become visible in ordinary moments ====== */}
         <section
-          className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="recognition-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="recognition_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="III · Recognition"
               id="recognition-heading"
@@ -561,22 +621,35 @@ export default function Home() {
                   ))}
                 </ul>
 
-                <div className="mt-10 space-y-5 text-[1.05rem] leading-[1.85] text-muted">
-                  <p>
-                    When something matters, it makes sense to reach for the
-                    response that feels responsible — ask again, send another
-                    reminder, offer the better option.
-                  </p>
-                  <p>
-                    But sometimes the response meant to help introduces more
-                    pressure than you intended. The reminder may carry doubt.
-                    The advice may become the main thing they hear.
-                  </p>
-                  <p className="font-serif-italic text-xl text-ink">
-                    Over time, the familiar response can shape the relationship
-                    more than the original situation did.
-                  </p>
-                </div>
+                {/* Three ordinary moments, drawn from their artifacts.
+
+                    CUT: two explanatory paragraphs stood here ("When something
+                    matters, it makes sense to reach for the response that feels
+                    responsible…", "But sometimes the response meant to help
+                    introduces more pressure than you intended. The reminder may
+                    carry doubt. The advice may become the main thing they
+                    hear."). Both were describing pictures — a third reminder, a
+                    plan gaining options, a decision already made — so they are
+                    now the pictures. The closing italic line stays, because it
+                    is the turn the section is built to land and no drawing
+                    carries "over time". */}
+                <ul className="mt-8 grid list-none gap-3 sm:grid-cols-3 sm:gap-4">
+                  {RECOGNITION_SCENES.map(({ Scene, caption }, i) => (
+                    <Reveal as="li" key={caption} delay={150 + i * 90}>
+                      <figure className="flex h-full flex-col">
+                        <Scene />
+                        <figcaption className="mt-3 text-[13px] leading-[1.6] text-faint">
+                          {caption}
+                        </figcaption>
+                      </figure>
+                    </Reveal>
+                  ))}
+                </ul>
+
+                <p className="mt-8 font-serif-italic text-xl leading-[1.5] text-ink">
+                  Over time, the familiar response can shape the relationship
+                  more than the original situation did.
+                </p>
               </Reveal>
 
               {/* Recognition image. The document's constraint is strict and this
@@ -591,8 +664,13 @@ export default function Home() {
                   sits beside and pull the eye off the argument. object-top
                   keeps the figure and the window (the subject) in frame while
                   the crop takes from the empty floor at the bottom. */}
-              <Reveal as="figure" delay={250} className="lg:col-span-5">
-                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
+              <Reveal as="figure" delay={250} className="min-w-0 lg:col-span-5">
+                {/* signal-halo puts a glow BEHIND the frame so the photo sits
+                    in the page's light rather than on top of it;
+                    img-hover-zoom is the same slow scale every other image on
+                    the page uses. The halo's inset is vertical-only by design
+                    — see the note on .signal-halo in globals.css. */}
+                <div className="signal-halo img-hover-zoom relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
                   <Image
                     src="/images/recognition.jpg"
                     alt="A parent standing at a window in an ordinary room, looking out, mid-thought."
@@ -614,7 +692,7 @@ export default function Home() {
                     }}
                   />
                 </div>
-                <figcaption className="mt-4 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+                <figcaption className="mt-4 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
                   The moment before the response
                 </figcaption>
               </Reveal>
@@ -628,11 +706,12 @@ export default function Home() {
 
         {/* ============ Block 06 · What's inside your score ============ */}
         <section
-          className="border-t border-line py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
           aria-labelledby="whats-inside-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="whats_inside_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="IV · Your result"
               id="whats-inside-heading"
@@ -648,19 +727,41 @@ export default function Home() {
             <ChapterRule />
 
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-7">
+              {/* `min-w-0` is load-bearing on BOTH tracks, and the reason is
+                  subtle enough to be worth stating so it does not get removed
+                  as noise.
+
+                  The device frame below contains a title chip with `truncate`,
+                  which implies `white-space: nowrap`. A nowrap element's
+                  min-content is its full string width (240px for
+                  "your-parenting-belief-score"). `min-w-0` on the chip itself
+                  lets flex shrink it during layout, but it does NOT change what
+                  it contributes to an ancestor's intrinsic sizing — and a grid
+                  column is `minmax(auto, 1fr)`, whose `auto` minimum resolves
+                  to the grid ITEM's automatic minimum size. So the track was
+                  pinned at 324px on a 320px screen and the whole column was
+                  being clipped by the page's `overflow-x: clip`, which hides
+                  the scrollbar but not the damage. `min-w-0` here is what
+                  releases the track. */}
+              <div className="min-w-0 lg:col-span-7">
                 <ol className="grid grid-cols-1">
                   {WHATS_INSIDE.map((item, i) => (
                     <Reveal
                       as="li"
                       key={item}
                       delay={i * 80}
-                      className="row-interactive grid grid-cols-12 items-baseline gap-6 border-t border-line py-7 last:border-b sm:gap-10 sm:py-8"
+                      // Flex, not `grid-cols-12 gap-6`. A 12-column grid with
+                      // a 24px gap spends 11 x 24 = 264px on gutters alone; on
+                      // a 320px screen with 20px page padding only 280px
+                      // exists, so the row was 324px wide and its text was
+                      // being clipped by the page's `overflow-x: clip`. Two
+                      // flex items with one gap have no such arithmetic.
+                      className="row-interactive flex items-baseline gap-4 border-t border-line py-7 last:border-b sm:gap-8 sm:py-8"
                     >
-                      <span className="row-num col-span-2 font-serif-italic text-3xl text-faint sm:text-4xl">
+                      <span className="row-num w-10 shrink-0 font-serif-italic text-3xl text-faint sm:w-14 sm:text-4xl">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <p className="col-span-10 flex items-baseline gap-3 font-serif text-xl leading-snug text-ink sm:text-2xl">
+                      <p className="flex min-w-0 items-baseline gap-3 font-serif text-xl leading-snug text-ink sm:text-2xl">
                         <span className="row-mark" aria-hidden />
                         {item}
                       </p>
@@ -668,6 +769,30 @@ export default function Home() {
                   ))}
                 </ol>
 
+                {/* The artifact, rendered from live tokens rather than
+                    photographed.
+
+                    The page shows the result three ways on purpose, and this
+                    is the one that cannot go stale: the two captures beside it
+                    are raster files that freeze whatever the product looked
+                    like the day they were taken, and the walkthrough shows it
+                    in motion. This one is built from the same --pillar-N
+                    tokens and the same SAMPLE_SUBSCORES as the dial grid
+                    below, so it re-renders correctly if the palette ever moves
+                    and it can never disagree with the numbers on this page.
+
+                    Its narrative half is redaction bars, never invented
+                    sentences — writing a plausible belief hypothesis here
+                    would be fabricating a result for a family that does not
+                    exist. The "Illustrative example" chip is inside the frame,
+                    not in the caption. */}
+                <Reveal delay={200}>
+                  <div className="mt-10">
+                    <DeviceFrame title="your-parenting-belief-score">
+                      <ReportPreviewCard />
+                    </DeviceFrame>
+                  </div>
+                </Reveal>
               </div>
 
               {/* The deliverables deck: two real artifacts overlapped so the
@@ -679,7 +804,7 @@ export default function Home() {
                   child assessment, no paid-only content, and no belief
                   hypothesis, which the document forbids showing unless it
                   belongs to a consented participant. */}
-              <Reveal as="figure" delay={250} className="lg:col-span-5">
+              <Reveal as="figure" delay={250} className="min-w-0 lg:col-span-5">
                 <div className="relative mx-auto w-full max-w-md">
                   <span aria-hidden className="take-halo" />
                   <div className="take-back relative w-[88%] origin-bottom-left">
@@ -717,7 +842,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <figcaption className="mt-6 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+                <figcaption className="mt-6 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
                   Illustrative. Yours is built from your own words.
                 </figcaption>
               </Reveal>
@@ -773,43 +898,83 @@ export default function Home() {
         </section>
 
         {/* ====== Block 07 · Generic advice vs. your own description ====== */}
-        <section className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
-            <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <section className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
+          <div className="section-orbs" aria-hidden />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+            {/* Two panels of the same size and shape, so the difference
+                between them is the only thing the eye has to do.
+
+                This whole section used to be two short sentences of type on an
+                empty ground — the page's clearest failure of the "no section
+                is text-only" rule, and its weakest argument, because "begins
+                with a category" versus "begins with your description" is a
+                claim about SHAPE that was being made in words. Drawn, the
+                stack of interchangeable category cards and the one handwritten
+                line resolving into four scored bars make the point before
+                either eyebrow is read. */}
+            <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
               <Reveal as="div">
                 <p className="eyebrow mb-6">
                   <span className="mr-3 inline-block h-px w-6 align-middle bg-line-strong" />
                   Generic advice
                 </p>
-                <p className="font-serif text-2xl leading-snug text-faint sm:text-3xl">
+                <p className="mb-6 font-serif text-2xl leading-snug text-faint sm:text-3xl">
                   begins with a category.
                 </p>
+                <GenericAdvicePanel />
               </Reveal>
               <Reveal as="div" delay={150}>
                 <p className="eyebrow mb-6">
                   <span className="mr-3 inline-block h-px w-6 align-middle bg-line-strong" />
                   The Parenting Belief Score
                 </p>
-                <p className="font-serif text-2xl leading-snug text-ink sm:text-3xl">
+                <p className="mb-6 font-serif text-2xl leading-snug text-ink sm:text-3xl">
                   begins with your description of what actually happened.
                 </p>
-                <p className="mt-8 font-serif-italic text-xl text-ink">
-                  You remain the authority on your own parenting.
-                </p>
+                <YourWordsPanel />
               </Reveal>
             </div>
 
+            <Reveal delay={200}>
+              <p className="mt-10 text-center font-serif-italic text-xl text-ink sm:mt-12">
+                You remain the authority on your own parenting.
+              </p>
+            </Reveal>
+
             {/* Block 08 — the reassurance the document places right after the
                 comparison, so "examine your pattern" can never be misread as
-                "care less". */}
+                "care less".
+
+                The four things a parent may still do were a run-on sentence
+                ("You may still ask the question. You may still offer help…").
+                As four ticked chips they are countable at a glance, which is
+                what a reassurance needs to be. */}
             <Reveal delay={200}>
               <div className="mt-14 rounded-xl border border-line bg-bg p-6 sm:mt-16 sm:p-10">
                 <h2 className="text-headline">This isn&rsquo;t about caring less</h2>
-                <p className="mt-5 text-[1.05rem] leading-[1.85] text-muted">
-                  You may still ask the question. You may still offer help. You
-                  may still set a boundary. You may still say no.
-                </p>
-                <p className="mt-4 font-serif-italic text-xl leading-[1.6] text-ink">
+                <ul className="mt-6 grid list-none gap-2.5 sm:grid-cols-2 sm:gap-3">
+                  {[
+                    "Still ask the question",
+                    "Still offer help",
+                    "Still set a boundary",
+                    "Still say no",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-center gap-3 rounded-lg border border-line bg-surface px-4 py-3"
+                    >
+                      <Check
+                        className="h-4 w-4 shrink-0 text-signal"
+                        strokeWidth={2}
+                        aria-hidden
+                      />
+                      <span className="min-w-0 text-[15px] text-muted">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-6 font-serif-italic text-xl leading-[1.6] text-ink">
                   But you can do it with more choice — and with less need for
                   the interaction to prove you&rsquo;ve done enough.
                 </p>
@@ -820,11 +985,12 @@ export default function Home() {
 
         {/* ============ Block 09 · Founder and credentials ============ */}
         <section
-          className="border-t border-line py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
           aria-labelledby="founder-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="founder_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="V · The founder"
               id="founder-heading"
@@ -835,7 +1001,7 @@ export default function Home() {
             <ChapterRule />
 
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              <Reveal as="div" delay={150} className="lg:col-span-4">
+              <Reveal as="div" delay={150} className="min-w-0 lg:col-span-4">
                 {/* The document specifies a 400×400 portrait here. The source
                     was a 1400×1867 headshot, resized to 900px on its long edge
                     (2.9MB -> 177KB; it renders at most 400px). It is cropped
@@ -843,7 +1009,10 @@ export default function Home() {
                     crop takes the face rather than centring on the torso)
                     rather than being letterboxed or distorted. */}
                 <figure className="mx-auto w-full max-w-[400px]">
-                  <div className="relative aspect-square overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
+                  {/* Halo behind the frame + the page's standard hover zoom, so
+                      the one real face on the page is lit like everything else
+                      rather than pasted onto the ground. */}
+                  <div className="signal-halo img-hover-zoom relative aspect-square overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
                     <Image
                       src="/manuj/founder.jpg"
                       alt="Manuj Aggarwal, founder of AI Merge and creator of the Parenting Belief Score."
@@ -855,14 +1024,14 @@ export default function Home() {
                 </figure>
               </Reveal>
 
-              <Reveal as="div" delay={250} className="lg:col-span-8">
+              <Reveal as="div" delay={250} className="min-w-0 lg:col-span-8">
+                {/* CUT: the opening biography paragraph ("I understood the
+                    visible parenting moment. I could see when care became
+                    pressure…") restated the recognition section three screens
+                    earlier, in the first person. The gap it was setting up is
+                    stated by the paragraph that follows it, which now opens
+                    the block. */}
                 <div className="space-y-5 text-[1.05rem] leading-[1.85] text-muted">
-                  <p>
-                    I understood the visible parenting moment. I could see when
-                    care became pressure, when uncertainty became urgency, and
-                    when the story in my mind moved faster than the evidence in
-                    front of me.
-                  </p>
                   <p>
                     Understanding the situation didn&rsquo;t automatically
                     reveal what was shaping my response. That gap is why I built
@@ -878,10 +1047,53 @@ export default function Home() {
 
                 <div className="mt-8 border-t border-line pt-6">
                   <p className="text-title">Manuj Aggarwal</p>
-                  <p className="mt-2 text-sm leading-relaxed text-faint">
-                    Founder &amp; CIO, TetraNoodle Technologies · Four patents ·
-                    Published in the Mensa Research Journal
-                  </p>
+                  {/* The credential line was a single run of dot-separated
+                      text. As an icon grid each claim is countable at a
+                      glance and the block stops being a wall of prose beside
+                      a portrait. Same four facts, nothing added. */}
+                  <ul className="mt-4 grid list-none gap-2.5 sm:grid-cols-2">
+                    {[
+                      {
+                        Icon: Building2,
+                        label: "Founder & CIO",
+                        detail: "TetraNoodle Technologies",
+                      },
+                      {
+                        Icon: Award,
+                        label: "Four patents",
+                        detail: "Granted",
+                      },
+                      {
+                        Icon: BookOpen,
+                        label: "Mensa Research Journal",
+                        detail: "Published methodology",
+                      },
+                      {
+                        Icon: ShieldCheck,
+                        label: "AI Merge",
+                        detail: "Creator of the method",
+                      },
+                    ].map(({ Icon, label, detail }) => (
+                      <li
+                        key={label}
+                        className="flex items-start gap-3 rounded-lg border border-line bg-card px-4 py-3"
+                      >
+                        <Icon
+                          className="mt-0.5 h-4 w-4 shrink-0 text-signal"
+                          strokeWidth={1.75}
+                          aria-hidden
+                        />
+                        <span className="min-w-0">
+                          <span className="block text-sm font-medium text-fg">
+                            {label}
+                          </span>
+                          <span className="mt-0.5 block text-[13px] leading-snug text-faint">
+                            {detail}
+                          </span>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <Reveal delay={150}>
@@ -952,8 +1164,9 @@ export default function Home() {
             became less dependent on external guidance. Never use a testimonial
             that promises child change. <TestimonialReel /> is still in the
             repo for when consented clips exist. */}
-        <section className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
-          <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <section className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
+          <div className="section-orbs" aria-hidden />
+          <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <Reveal>
                 <p className="eyebrow mb-6">In their words</p>
@@ -970,10 +1183,16 @@ export default function Home() {
 
             <ul className="mt-12 grid list-none gap-5 md:grid-cols-2">
               {TESTIMONIALS.map((t, i) => {
-                const color = [
-                  "var(--pillar-1)",
-                  "var(--pillar-3)",
-                ][i];
+                // --signal, not two of the four pillar hues as before.
+                //
+                // The pillar palette is CATEGORICAL: each hue identifies one
+                // scored dimension and nothing else. Spending teal and violet
+                // on quote cards meant teal said "Direction Clarity" in the
+                // result section and "first testimonial" here, which is
+                // exactly the ambiguity a categorical palette exists to
+                // prevent. The card's ornament is the oversized glyph and the
+                // rule; it does not need a second colour system to work.
+                const color = "var(--signal)";
                 return (
                   <Reveal as="li" key={t.name} delay={i * 80}>
                     <figure
@@ -1028,11 +1247,12 @@ export default function Home() {
 
         {/* ====== Block 11 · How it works (five questions, one moment) ====== */}
         <section
-          className="border-t border-line py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
           aria-labelledby="how-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="how_it_works_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
               mark="VI · How it works"
               id="how-heading"
@@ -1042,6 +1262,12 @@ export default function Home() {
 
             <ChapterRule />
 
+            {/* Each step now opens with a drawn tile rather than a numeral
+                alone. Four identical boxes carrying a moment being picked,
+                words being typed, a score resolving and a choice being kept:
+                enough to read the sequence at a squint, and deliberately
+                abstract so it does not compete with the real captures in the
+                walkthrough immediately below. */}
             <ol className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
               {HOW_IT_WORKS.map((step, i) => (
                 <Reveal
@@ -1050,10 +1276,11 @@ export default function Home() {
                   delay={i * 90}
                   className="bg-bg p-6 sm:p-7"
                 >
+                  <StepGlyph index={i} />
                   <span className="font-serif-italic text-3xl text-signal">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="mt-4 text-title">{step.title}</p>
+                  <p className="mt-3 text-title">{step.title}</p>
                   <p className="mt-2 text-sm leading-[1.75] text-faint">
                     {step.body}
                   </p>
@@ -1073,53 +1300,177 @@ export default function Home() {
 
         {/* ============ Block 12 · Questions parents ask ============ */}
         <section
-          className="border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="faq-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="faq_view" />
-          <div className="mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
-            <Reveal as="div" className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-5">
-                <p className="eyebrow mb-6">VIII · Questions</p>
-                <h2 id="faq-heading" className="text-section">
-                  Questions
-                  <span className="block font-serif-italic">parents ask.</span>
-                </h2>
-                <p className="mt-6 max-w-md text-[15px] leading-[1.8] text-muted">
-                  Answered in the spirit we hope you&rsquo;ll bring to the
-                  questions themselves — plainly, and without hurry.
-                </p>
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+              {/* Left rail: heading plus the four boundaries this page is
+                  built on, as cards. Sticky on desktop so they stay beside
+                  whichever question the reader has opened — which is the point:
+                  the four things a cautious parent most wants settled are the
+                  four things they should not have to open an accordion to
+                  find. `min-w-0` because the track holds arbitrary content. */}
+              <div className="min-w-0 lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
+                <Reveal>
+                  <p className="eyebrow mb-6">VIII · Questions</p>
+                  <h2 id="faq-heading" className="text-section">
+                    Questions
+                    <span className="block font-serif-italic">parents ask.</span>
+                  </h2>
+                </Reveal>
+
+                <ul className="mt-9 grid list-none gap-3">
+                  {[
+                    {
+                      Icon: UserRoundCheck,
+                      color: "var(--pillar-1)",
+                      ink: "var(--pillar-1-ink)",
+                      label: "It examines you, not your child",
+                      body: "Nothing here assesses, scores, or diagnoses your child.",
+                    },
+                    {
+                      Icon: HeartHandshake,
+                      color: "var(--pillar-2)",
+                      ink: "var(--pillar-2-ink)",
+                      label: "Reflective, not clinical",
+                      body: "Educational — not diagnosis, treatment, or therapy.",
+                    },
+                    {
+                      Icon: Lock,
+                      color: "var(--pillar-3)",
+                      ink: "var(--pillar-3-ink)",
+                      label: "Free, no card",
+                      body: "Five questions, about ten minutes, your result immediately.",
+                    },
+                    {
+                      Icon: ShieldCheck,
+                      color: "var(--pillar-4)",
+                      ink: "var(--pillar-4-ink)",
+                      label: "You decide what fits",
+                      body: "The result is a possible belief, offered for you to judge.",
+                    },
+                  ].map(({ Icon, color, ink, label, body }, i) => (
+                    <Reveal as="li" key={label} delay={100 + i * 60}>
+                      <div
+                        className="flex items-start gap-3.5 rounded-xl border bg-card p-4"
+                        style={{
+                          // Border and tint take the GRAPHICS token (3:1 is the
+                          // bar for a non-text object); nothing here puts a
+                          // series colour on body copy.
+                          borderColor: `color-mix(in srgb, ${color} 26%, var(--border))`,
+                        }}
+                      >
+                        <span
+                          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                          style={{
+                            background: `color-mix(in srgb, ${color} 14%, transparent)`,
+                            color,
+                          }}
+                        >
+                          <Icon
+                            className="h-4 w-4"
+                            strokeWidth={1.75}
+                            aria-hidden
+                          />
+                        </span>
+                        <span className="min-w-0">
+                          {/* The one coloured LABEL on the page, so it takes
+                              the lifted -ink token: at 14px on this ground the
+                              graphics hue would not clear 4.5:1. */}
+                          <span
+                            className="block text-sm font-medium"
+                            style={{ color: ink }}
+                          >
+                            {label}
+                          </span>
+                          <span className="mt-1 block text-[13px] leading-relaxed text-muted">
+                            {body}
+                          </span>
+                        </span>
+                      </div>
+                    </Reveal>
+                  ))}
+                </ul>
               </div>
 
-              <div className="lg:col-span-7">
-                <div className="border-t border-line">
-                  {ESSENTIAL_FAQS.map((faq) => (
-                    <FaqItem key={faq.q} question={faq.q}>
-                      {faq.a.map((para) => (
-                        <p key={para}>{para}</p>
-                      ))}
-                    </FaqItem>
-                  ))}
-                </div>
+              {/* Right column: a plain div rather than a Reveal, so each item
+                  can reveal on its own timing. */}
+              <div className="min-w-0 lg:col-span-7">
+                <Reveal>
+                  <div className="border-t border-line">
+                    {ESSENTIAL_FAQS.map((faq) => (
+                      <FaqItem key={faq.q} question={faq.q}>
+                        {faq.a.map((para) => (
+                          <p key={para}>{para}</p>
+                        ))}
+                      </FaqItem>
+                    ))}
+                  </div>
+                </Reveal>
                 <Reveal delay={150}>
                   <CtaBlock location="faq" className="mt-10 sm:items-start" />
                 </Reveal>
               </div>
-            </Reveal>
+            </div>
           </div>
         </section>
 
         {/* ================== Block 13 · Final CTA ================== */}
         <section
-          className="border-t border-line py-20 sm:py-28"
+          className="relative overflow-hidden border-t border-line py-20 sm:py-28"
           aria-labelledby="final-heading"
         >
+          <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="final_cta_view" />
-          <div className="mx-auto max-w-4xl px-5 text-center sm:px-8">
+          <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
             <Reveal>
               <p className="eyebrow mb-6">
                 <span className="pulse-dot mr-2.5" aria-hidden />A closing
               </p>
+            </Reveal>
+
+            {/* The four dimensions as chips, ABOVE the headline.
+
+                The close deliberately has no image: anything sitting beside
+                the button gives the eye a second place to stop. But the
+                section still needs something to look at, so the graphic goes
+                above the argument rather than next to the click target, and it
+                is a RECAP rather than a new idea — the same four chips, in the
+                same four colours and the same order, that the assessment's own
+                entry screen shows (public/take/audience.jpg). A visitor who
+                arrives here from a scroll sees what they are about to get in
+                one row. */}
+            <Reveal delay={40}>
+              <ul className="mx-auto mb-9 flex list-none flex-wrap items-center justify-center gap-2">
+                {PILLAR_ORDER.map((key, i) => {
+                  const Icon = PILLAR_ICONS[key];
+                  const color = PILLAR_COLORS[key];
+                  return (
+                    <li key={key}>
+                      <span
+                        className="rise-in inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] uppercase tracking-[0.12em]"
+                        style={{
+                          // Border and tint take the GRAPHICS token (3:1 is
+                          // the bar for a non-text object); the label takes
+                          // the lifted -ink token, because at 10.5px it is
+                          // small text and needs 4.5:1 on this ground. This
+                          // split is the whole reason both tokens exist.
+                          borderColor: `color-mix(in srgb, ${color} 45%, transparent)`,
+                          background: `color-mix(in srgb, ${color} 9%, transparent)`,
+                          color: PILLAR_TEXT_COLORS[key],
+                          ["--rise-delay" as string]: `${i * 90}ms`,
+                        }}
+                      >
+                        <Icon className="h-3 w-3" strokeWidth={2} aria-hidden />
+                        {PILLAR_LABELS[key].label}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
             </Reveal>
             <Reveal delay={80}>
               <h2 id="final-heading" className="text-section">

@@ -93,14 +93,14 @@ export function ZoomableShot({
               to reveal it), and fading in on pointer devices. */}
           <span
             aria-hidden
-            className="pointer-events-none absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-pill bg-bg/85 px-2.5 py-1.5 text-[10px] uppercase tracking-[0.16em] text-ink backdrop-blur-sm transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:opacity-100"
+            className="pointer-events-none absolute bottom-2 right-2 inline-flex items-center gap-1.5 rounded-pill bg-bg/85 px-2.5 py-1.5 text-[12px] uppercase tracking-[0.14em] text-ink backdrop-blur-sm transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:opacity-100"
           >
             <Expand className="h-3 w-3" strokeWidth={2} />
             Tap to enlarge
           </span>
         </button>
         {caption && (
-          <figcaption className="mt-3 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+          <figcaption className="mt-3 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
             {caption}
           </figcaption>
         )}
@@ -121,7 +121,7 @@ export function ZoomableShot({
           <button
             type="button"
             onClick={close}
-            className="self-end inline-flex min-h-11 items-center gap-2 rounded-pill border border-line bg-surface px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-ink transition-colors hover:border-line-strong"
+            className="self-end inline-flex min-h-11 items-center gap-2 rounded-pill border border-line bg-surface px-4 py-2 text-[12px] uppercase tracking-[0.16em] text-ink transition-colors hover:border-line-strong"
           >
             <X className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
             Close
