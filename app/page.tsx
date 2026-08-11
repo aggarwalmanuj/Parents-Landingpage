@@ -343,22 +343,71 @@ export default function Home() {
               </p>
             </Reveal>
             <Reveal delay={80}>
-              {/* The document's H1 and subhead. The italic clause carries the
-                  promise ("before the next conversation"), which is the whole
-                  proposition: this is about the moment that has not happened
-                  yet, not the one that already went wrong. */}
+              {/* The approved LP.md headline, restored.
+                  The live build had been running "See what's shaping your
+                  response before the next conversation" — a line that could
+                  belong to a marriage page, a management page, or a therapy
+                  page. The CRO audit's #1 critical finding: the most-read line
+                  on the page named no audience and no situation, and this
+                  headline had already solved that and was quietly dropped.
+
+                  "For parents" is now the second word, so the ad-to-page match
+                  happens in the first glance rather than in the eyebrow.
+
+                  The italic clause carries the objection the whole page exists
+                  to answer: a parent who wants to trust themselves does not
+                  want to buy that confidence at the relationship's expense.
+
+                  TODO(paid traffic): swap this per utm_content using the
+                  Landing-Page Bridge line already written for each ad in
+                  Ads.md (Pulling-Away Teenager → "When ordinary distance
+                  starts feeling permanent," etc.). No new copy needed, just
+                  the wiring. */}
               <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
-                See what&rsquo;s shaping your response{" "}
+                For parents who want to trust themselves in this
                 <span className="text-emphasis">
-                  before the next conversation.
+                  {" "}&mdash; without it costing the relationship.
                 </span>
               </h1>
             </Reveal>
             <Reveal delay={140}>
-              <p className="mt-5 max-w-2xl text-balance text-body-lg text-muted sm:mt-6">
-                Answer five questions about one real parenting moment. Get a
-                free, personalised Parenting Belief Score built from your own
-                words.
+              {/* The spec's four atmosphere fragments. Restored as the subhead
+                  rather than as the loose paragraph they used to be below the
+                  CTA: four concrete situations do the work the old generic
+                  subhead ("Answer five questions about one real parenting
+                  moment") could not, which is letting a reader recognise their
+                  own moment before they have decided whether to care.
+
+                  Set as its own line so the fragments read as a list of
+                  moments rather than one run-on sentence. */}
+              <p className="mt-4 max-w-2xl text-balance text-[17px] leading-[1.65] text-muted sm:mt-6 sm:text-body-lg sm:leading-[1.7]">
+                A quiet week. An unfinished responsibility. Another reminder. A
+                decision you wouldn&rsquo;t have made.
+              </p>
+            </Reveal>
+            <Reveal delay={180}>
+              {/* The second sentence is its own block, not an inline <span>
+                  inside the first. Inline, `text-balance` split it mid-phrase
+                  ("…small. What it / begins to mean…"), which reads as a typo.
+                  As two lines the contrast the copy is built on — small moment,
+                  large meaning — lands on the break instead of fighting it. */}
+              <p className="mt-3 max-w-2xl text-balance text-[17px] leading-[1.65] text-muted sm:mt-4 sm:text-body-lg sm:leading-[1.7]">
+                The moment may be small.
+                <span className="mt-1 block text-ink">
+                  What it begins to mean can become much larger.
+                </span>
+              </p>
+            </Reveal>
+            <Reveal delay={220}>
+              {/* Smallest of the three, and the only one a visitor can skip
+                  without losing the argument: it explains the product, while
+                  the two above it do the recognising. Hidden on phones, where
+                  three stacked blocks pushed the CTA below a second screen —
+                  the same sentence is the CTA microcopy's job there. */}
+              <p className="mt-4 hidden max-w-2xl text-balance leading-[1.8] text-faint sm:block">
+                The free Parenting Belief Score helps you examine what may be
+                shaping your own interpretation and response &mdash; in one real
+                parenting moment.
               </p>
             </Reveal>
           </div>
@@ -367,15 +416,15 @@ export default function Home() {
             <Reveal immediate>
               <VslPlayer />
             </Reveal>
-            <Reveal delay={220}>
+            <Reveal delay={260}>
               <CtaBlock location="hero" className="mt-8" />
             </Reveal>
           </div>
 
-          {/* CUT: a five-sentence atmosphere paragraph ("A quiet week. An
-              unfinished responsibility. …") used to sit here. It described the
-              loop in prose one screen before the loop is DRAWN in section I,
-              so it was the same idea told twice, the weaker time first. */}
+          {/* The atmosphere fragments that used to sit here now open the hero
+              as the subhead, where the spec places them — above the VSL, doing
+              the recognition work before a visitor decides whether to watch
+              anything. What remains here is only the methodology line. */}
           <Reveal delay={320}>
             <p className="mx-auto mt-8 max-w-4xl px-5 pb-16 text-center text-sm text-faint sm:px-8">
               Built on AI Merge, a methodology published in the{" "}
