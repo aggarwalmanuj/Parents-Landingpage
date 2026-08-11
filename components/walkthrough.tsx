@@ -296,7 +296,20 @@ export function WalkthroughSection() {
                     captures shows each one whole, and the fixed cell means
                     switching between different native ratios still never
                     reflows the page. */}
-                <div className="wt-stage relative w-full bg-surface">
+                {/* The tablist below is only half a tabs widget on its own:
+                    every button announced "tab, selected" while controlling
+                    nothing a screen reader could reach, because the stage was
+                    an unlabelled <div>. Naming it as the panel the tabs drive
+                    (and pointing every tab at it via aria-controls) is what
+                    makes selecting a step mean something without sight. One
+                    panel rather than five: the slides share a single grid cell
+                    and only the selected one is not aria-hidden. */}
+                <div
+                  id="wt-panel"
+                  role="tabpanel"
+                  aria-labelledby={`wt-tab-${active}`}
+                  className="wt-stage relative w-full bg-surface"
+                >
                   {STEPS.map((s, i) => {
                     const hidden = i !== active;
                     // `pointer-events-none` on the inactive slides stops an
@@ -375,6 +388,7 @@ export function WalkthroughSection() {
                       type="button"
                       role="tab"
                       id={`wt-tab-${i}`}
+                      aria-controls="wt-panel"
                       aria-selected={isActive}
                       // Roving tabindex: one stop for the whole list, arrows
                       // move between steps.
