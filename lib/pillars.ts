@@ -122,19 +122,27 @@ export const PILLAR_LABELS: Record<
   },
 };
 
-/** Illustrative subscores. Deliberately mid-range and uneven: a demo showing
- *  four high numbers would read as a score to beat, and four low ones as a
- *  verdict. The first two are the values the real breakdown capture
- *  (public/take/reportpdf.jpg) shows, so the page and the artifact beside it
- *  cannot disagree on screen. */
+/** Illustrative subscores, taken from a REAL completed run of the live
+ *  parenting assessment (the Parenting Action Plan, page 1). They are not
+ *  invented, and they are not the coaches vertical's numbers.
+ *
+ *  Worth stating because it is a genuine check on this file: overallOf() below
+ *  returns exactly 69 for these four values, which is the overall the live
+ *  product printed for that same run. The page's arithmetic is therefore not
+ *  merely plausible - it is demonstrably the product's.
+ *
+ *  They are also deliberately uneven and mid-to-high: the lowest (Energy
+ *  Alignment, 42) is the one the real plan named as the biggest opening, which
+ *  is the point the page makes about a low number meaning room to move rather
+ *  than a failing grade. */
 export const SAMPLE_SUBSCORES: Record<PillarKey, number> = {
-  directionClarity: 42,
-  identityAlignment: 24,
-  decisionReadiness: 46,
-  energyAlignment: 58,
+  directionClarity: 78,
+  identityAlignment: 66,
+  decisionReadiness: 74,
+  energyAlignment: 42,
 };
 
-/** The assessment's own weighting. Returns 41 for the sample above, which is
+/** The assessment's own weighting. Returns 69 for the sample above, which is
  *  the overall the real breakdown capture prints — so the preview's arithmetic
  *  is the product's, not a plausible-looking invention. */
 export function overallOf(s: Record<PillarKey, number>): number {

@@ -576,19 +576,21 @@ export default function Home() {
 
                 {/* Rendered, not photographed.
 
-                    This slot used to hold the reportsummary.jpg capture, which
-                    prints an overall of 14 — while the same illustrative
-                    example renders as 41 in the result section further down.
-                    Two different numbers for what reads as one example is a
-                    small, avoidable trust ding (CRO audit #8/#12), and it
-                    cannot be fixed in code while the number is baked into
-                    pixels.
+                    This slot used to hold a capture that printed an overall of
+                    14, while the same illustrative example rendered a different
+                    number in the result section further down. Two numbers for
+                    one example is a small, avoidable trust ding (CRO audit
+                    #8/#12), and it cannot be fixed in code while the number is
+                    baked into pixels.
 
                     ReportPreviewCard derives its overall from SAMPLE_SUBSCORES
-                    through the assessment's own weighting, so it prints 41 here
-                    for the same reason it prints 41 there: it is the same
-                    arithmetic, not a value typed twice. The page can no longer
-                    disagree with itself about its own example.
+                    through the assessment's own weighting, so every rendered
+                    result on this page shows the same figure for the same
+                    reason: it is one piece of arithmetic, not a value typed
+                    twice. Those subscores now come from a real completed run,
+                    and the weighting reproduces that run's published overall
+                    exactly - so the page agrees with the product as well as
+                    with itself.
 
                     It also fixes the legibility problem the capture had at this
                     width (~1900px of UI in a 5-column slot), which is why the
@@ -869,8 +871,15 @@ export default function Home() {
 
             <ChapterRule />
 
-            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              {/* `min-w-0` is load-bearing on BOTH tracks, and the reason is
+            {/* Single column now. This was a two-track grid whose right side
+                held a capture of the optional PDF breakdown; that artifact is
+                gone from this section, following the Coaches page, which shows
+                only the final result here and leaves the deeper document to be
+                discovered after the score. One frozen raster of a document
+                nobody has earned yet was competing with the live-rendered
+                result beside it. */}
+            <div className="grid gap-12">
+              {/* `min-w-0` is load-bearing, and the reason is
                   subtle enough to be worth stating so it does not get removed
                   as noise.
 
@@ -886,7 +895,7 @@ export default function Home() {
                   being clipped by the page's `overflow-x: clip`, which hides
                   the scrollbar but not the damage. `min-w-0` here is what
                   releases the track. */}
-              <div className="min-w-0 lg:col-span-7">
+              <div className="min-w-0">
                 <ol className="grid grid-cols-1">
                   {WHATS_INSIDE.map((item, i) => (
                     <Reveal
@@ -938,44 +947,6 @@ export default function Home() {
                 </Reveal>
               </div>
 
-              {/* The optional detailed breakdown, shown as the second artifact.
-
-                  This used to be a two-card deck. The front card was
-                  reportsummary.jpg, which prints an overall of 14 — sitting
-                  directly beside the rendered ReportPreviewCard printing 41 for
-                  the same illustrative example. That is the 14/41 collision the
-                  CRO audit flagged twice (#8, #12), and it was at its most
-                  visible right here, with both numbers on one screen.
-
-                  Removing the summary card rather than the breakdown is the
-                  right way round: the summary is already on this page, rendered
-                  and correct, one column to the left. Repeating it as a frozen
-                  capture with a stale number added nothing except the
-                  contradiction. What remains is the artifact the rendered card
-                  does NOT show — the optional deeper document — so the two
-                  columns now say different things instead of the same thing
-                  twice.
-
-                  TODO(launch): re-export this capture from the parenting
-                  question set; it still shows the shared assessment's copy. */}
-              <Reveal as="figure" delay={250} className="min-w-0 lg:col-span-5">
-                <div className="relative mx-auto w-full max-w-md">
-                  <span aria-hidden className="take-halo" />
-                  <div className="relative overflow-hidden rounded-lg border border-line shadow-[var(--elev-3)]">
-                    <Image
-                      src="/take/reportpdf.jpg"
-                      alt="A page from the optional detailed breakdown, composed around the parent's own answers."
-                      width={1920}
-                      height={1200}
-                      sizes="(max-width: 1024px) 90vw, 34vw"
-                      className="block h-auto w-full"
-                    />
-                  </div>
-                </div>
-                <figcaption className="mt-6 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
-                  The optional deeper breakdown · illustrative
-                </figcaption>
-              </Reveal>
             </div>
 
             {/* The four scored dimensions.
