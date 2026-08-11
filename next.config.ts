@@ -12,6 +12,13 @@ import type { NextConfig } from "next";
       To enforce: set CSP_ENFORCE=true (or flip ENFORCE_CSP below) and the
       same policy is emitted as `Content-Security-Policy` instead.
 
+      CSP_ENFORCE IS READ AT BUILD TIME, NOT AT RUNTIME. `next build`
+      serialises whatever `headers()` returns into the build output
+      (.next/routes-manifest.json), so the header NAME is fixed the moment the
+      build runs. Setting the variable on a running server, or in a
+      runtime-only environment, changes nothing and fails silently — it has to
+      be set for the build, and flipping it means a rebuild/redeploy.
+
    Origins are derived from the actual code, not guessed:
    - PostHog: reverse-proxied through same-origin `/ingest/*` (see rewrites
      below), so `'self'` covers ingest. `*.posthog.com` / `*.i.posthog.com`
