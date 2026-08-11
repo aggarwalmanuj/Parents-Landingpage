@@ -38,7 +38,6 @@ import {
 import { PillarDial } from "@/components/visuals/score-visuals";
 import { VslPlayer } from "@/components/vsl-player";
 import { WalkthroughSection } from "@/components/walkthrough";
-import { ZoomableShot } from "@/components/zoomable-shot";
 import type { CtaLocation } from "@/lib/analytics";
 import { ESSENTIAL_FAQS, toFaqEntries } from "@/lib/faq";
 import {
@@ -336,7 +335,7 @@ export default function Home() {
               four-line headline, a three-line subhead and a 16:9 video before
               the CTA is reached; at the desktop rhythm that pushed the button
               well past a second screen on a 390px viewport. */}
-          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-7 pt-8 text-center sm:px-8 sm:pb-10 sm:pt-16">
+          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-6 pt-6 text-center sm:px-8 sm:pb-10 sm:pt-16">
             <Reveal>
               <p className="cred-chip">
                 AI Merge · Free Parenting Belief Score
@@ -363,51 +362,59 @@ export default function Home() {
                   Ads.md (Pulling-Away Teenager → "When ordinary distance
                   starts feeling permanent," etc.). No new copy needed, just
                   the wiring. */}
+              {/* Two lines, no dash. The em dash was doing a job punctuation
+                  should not have to do here: it was holding together a
+                  statement and its qualifier that are better read as two
+                  beats. Breaking them onto their own lines says the same thing
+                  and gives the italic clause the weight it is carrying, which
+                  is the objection the whole page answers. */}
               <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
-                For parents who want to trust themselves in this
-                <span className="text-emphasis">
-                  {" "}&mdash; without it costing the relationship.
+                <span className="block">
+                  For parents who want to trust themselves in this.
+                </span>
+                <span className="mt-1 block text-emphasis sm:mt-2">
+                  Without it costing the relationship.
                 </span>
               </h1>
             </Reveal>
             <Reveal delay={140}>
-              {/* The spec's four atmosphere fragments. Restored as the subhead
-                  rather than as the loose paragraph they used to be below the
-                  CTA: four concrete situations do the work the old generic
-                  subhead ("Answer five questions about one real parenting
-                  moment") could not, which is letting a reader recognise their
-                  own moment before they have decided whether to care.
+              {/* ONE subhead, not three stacked paragraphs.
 
-                  Set as its own line so the fragments read as a list of
-                  moments rather than one run-on sentence. */}
-              <p className="mt-4 max-w-2xl text-balance text-[17px] leading-[1.65] text-muted sm:mt-6 sm:text-body-lg sm:leading-[1.7]">
+                  The hero previously ran the spec's fragments, then the
+                  small/large contrast, then a product explanation, as three
+                  separate blocks of near-identical weight. Three paragraphs
+                  competing at the same size is what made the fold feel like
+                  reading rather than recognising - a visitor has to work out
+                  which line matters, and most will not bother.
+
+                  Now there is a clear order: the four moments (recognition),
+                  then the turn in ink (the point), and the product sentence
+                  moves out of the hero entirely - it is the CTA microcopy's
+                  job, and it was the one line here nobody needed before
+                  deciding to care. */}
+              <p className="mt-4 max-w-xl text-balance text-[17px] leading-[1.7] text-muted sm:mt-7 sm:text-body-lg sm:leading-[1.75]">
                 A quiet week. An unfinished responsibility. Another reminder. A
                 decision you wouldn&rsquo;t have made.
               </p>
             </Reveal>
-            <Reveal delay={180}>
-              {/* The second sentence is its own block, not an inline <span>
-                  inside the first. Inline, `text-balance` split it mid-phrase
-                  ("…small. What it / begins to mean…"), which reads as a typo.
-                  As two lines the contrast the copy is built on — small moment,
-                  large meaning — lands on the break instead of fighting it. */}
-              <p className="mt-3 max-w-2xl text-balance text-[17px] leading-[1.65] text-muted sm:mt-4 sm:text-body-lg sm:leading-[1.7]">
-                The moment may be small.
-                <span className="mt-1 block text-ink">
+            <Reveal delay={190}>
+              {/* Two sentences, two lines. Left to wrap on its own, the break
+                  landed mid-phrase ("…small. What it / begins to mean…"),
+                  which reads as a typo. Splitting on the sentence boundary
+                  puts the break where the contrast already is: small moment on
+                  one line, large meaning on the next. */}
+              {/* `inline sm:block` on the second sentence, not `block`
+                  everywhere. On desktop the two sentences get their own lines,
+                  so the break lands on the contrast the copy is built on
+                  rather than mid-phrase. On a phone that same split forced a
+                  third line and pushed the CTA off the first screen, so there
+                  the sentences run together and wrap naturally - at 390px the
+                  text is narrow enough that they break sensibly anyway. */}
+              <p className="mt-4 max-w-xl text-balance text-[17px] leading-[1.7] text-ink sm:mt-5 sm:text-balance sm:text-[1.2rem] sm:leading-[1.6]">
+                The moment may be small.{" "}
+                <span className="inline sm:block">
                   What it begins to mean can become much larger.
                 </span>
-              </p>
-            </Reveal>
-            <Reveal delay={220}>
-              {/* Smallest of the three, and the only one a visitor can skip
-                  without losing the argument: it explains the product, while
-                  the two above it do the recognising. Hidden on phones, where
-                  three stacked blocks pushed the CTA below a second screen —
-                  the same sentence is the CTA microcopy's job there. */}
-              <p className="mt-4 hidden max-w-2xl text-balance leading-[1.8] text-faint sm:block">
-                The free Parenting Belief Score helps you examine what may be
-                shaping your own interpretation and response &mdash; in one real
-                parenting moment.
               </p>
             </Reveal>
           </div>
@@ -558,29 +565,31 @@ export default function Home() {
                   nothing to prepare.
                 </p>
 
-                {/* The document's highest-priority asset: "the actual score
-                    display exactly as the live product renders it. Not a
-                    mockup, not an illustration."
+                {/* Rendered, not photographed.
 
-                    This is a real capture of the live AI Merge result screen,
-                    so it satisfies the "not a mockup" rule today rather than
-                    leaving the page's central proof empty. It is the shared
-                    assessment interface. TODO(launch): re-capture from the
-                    parenting question set so the words on screen match the
-                    words on this page. */}
-                {/* Zoomable: at this width the UI inside the capture is far
-                    below reading size, and an unreadable proof is decoration.
-                    Tapping opens it full-viewport. */}
-                <ZoomableShot
-                  className="mt-8"
-                  src="/take/reportsummary.jpg"
-                  alt="The live result screen, showing a completed score with the pattern reflected back to the participant."
-                  width={1920}
-                  height={1200}
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  caption="The live result screen"
-                  event="result_screen"
-                />
+                    This slot used to hold the reportsummary.jpg capture, which
+                    prints an overall of 14 — while the same illustrative
+                    example renders as 41 in the result section further down.
+                    Two different numbers for what reads as one example is a
+                    small, avoidable trust ding (CRO audit #8/#12), and it
+                    cannot be fixed in code while the number is baked into
+                    pixels.
+
+                    ReportPreviewCard derives its overall from SAMPLE_SUBSCORES
+                    through the assessment's own weighting, so it prints 41 here
+                    for the same reason it prints 41 there: it is the same
+                    arithmetic, not a value typed twice. The page can no longer
+                    disagree with itself about its own example.
+
+                    It also fixes the legibility problem the capture had at this
+                    width (~1900px of UI in a 5-column slot), which is why the
+                    zoom affordance is no longer needed here. */}
+                <div className="mt-8 overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
+                  <ReportPreviewCard />
+                </div>
+                <p className="mt-3 text-center text-[11px] uppercase tracking-[0.18em] text-faint">
+                  The shape of your result
+                </p>
               </Reveal>
 
               {/* What the score returns. */}
@@ -884,55 +893,42 @@ export default function Home() {
                 </Reveal>
               </div>
 
-              {/* The deliverables deck: two real artifacts overlapped so the
-                  result reads as an object you receive rather than a screen you
-                  glance at. Same composition as the funnel landing's take-home
-                  section, in this page's tokens.
+              {/* The optional detailed breakdown, shown as the second artifact.
 
-                  Both captures show the parent-facing result surface only — no
-                  child assessment, no paid-only content, and no belief
-                  hypothesis, which the document forbids showing unless it
-                  belongs to a consented participant. */}
+                  This used to be a two-card deck. The front card was
+                  reportsummary.jpg, which prints an overall of 14 — sitting
+                  directly beside the rendered ReportPreviewCard printing 41 for
+                  the same illustrative example. That is the 14/41 collision the
+                  CRO audit flagged twice (#8, #12), and it was at its most
+                  visible right here, with both numbers on one screen.
+
+                  Removing the summary card rather than the breakdown is the
+                  right way round: the summary is already on this page, rendered
+                  and correct, one column to the left. Repeating it as a frozen
+                  capture with a stale number added nothing except the
+                  contradiction. What remains is the artifact the rendered card
+                  does NOT show — the optional deeper document — so the two
+                  columns now say different things instead of the same thing
+                  twice.
+
+                  TODO(launch): re-export this capture from the parenting
+                  question set; it still shows the shared assessment's copy. */}
               <Reveal as="figure" delay={250} className="min-w-0 lg:col-span-5">
                 <div className="relative mx-auto w-full max-w-md">
                   <span aria-hidden className="take-halo" />
-                  <div className="take-back relative w-[88%] origin-bottom-left">
-                    <div className="overflow-hidden rounded-md border border-line shadow-[var(--elev-3)]">
-                      <Image
-                        src="/take/reportpdf.jpg"
-                        alt="A page from the optional detailed breakdown, composed around the parent's own answers."
-                        width={1920}
-                        height={1200}
-                        sizes="(max-width: 1024px) 60vw, 30vw"
-                        className="block h-auto w-full"
-                      />
-                    </div>
-                  </div>
-                  {/* Negative margin overlaps the cards; absolute positioning
-                      left too much vertical dead space at narrow widths.
-
-                      The overlap is -9%, not the -18% this composition used
-                      when the back card was a wide 4:3 page. The updated
-                      breakdown capture is nearly square, so the deeper overlap
-                      buried its score ring and the first two pillars — the
-                      part that makes it read as a result rather than as a
-                      generic document. -9% still reads as a stack while
-                      leaving the back card's top third clear. */}
-                  <div className="take-front relative -mt-[9%] ml-auto w-[74%] origin-top-right">
-                    <div className="overflow-hidden rounded-md border border-line-strong shadow-[var(--elev-3-lift)]">
-                      <Image
-                        src="/take/reportsummary.jpg"
-                        alt="The result summary, reflecting the parent's own described pattern back to them."
-                        width={1920}
-                        height={1200}
-                        sizes="(max-width: 1024px) 55vw, 26vw"
-                        className="block h-auto w-full"
-                      />
-                    </div>
+                  <div className="relative overflow-hidden rounded-lg border border-line shadow-[var(--elev-3)]">
+                    <Image
+                      src="/take/reportpdf.jpg"
+                      alt="A page from the optional detailed breakdown, composed around the parent's own answers."
+                      width={1920}
+                      height={1200}
+                      sizes="(max-width: 1024px) 90vw, 34vw"
+                      className="block h-auto w-full"
+                    />
                   </div>
                 </div>
                 <figcaption className="mt-6 text-center text-[12px] uppercase tracking-[0.16em] text-faint">
-                  Illustrative. Yours is built from your own words.
+                  The optional deeper breakdown · illustrative
                 </figcaption>
               </Reveal>
             </div>
