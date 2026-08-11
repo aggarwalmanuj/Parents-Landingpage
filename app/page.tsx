@@ -756,12 +756,33 @@ export default function Home() {
                   parent, so child imagery here would contradict the one thing
                   this section exists to establish — who is being scored.
 
+                  Re-cast to answer CRO audit #10. The previous photo read as a
+                  woman in her thirties in a blazer beside city-view blinds -
+                  corporate styling, and no age signal matching the ICP
+                  (parents roughly 40s-60s), so it landed as generic stock
+                  rather than "someone like me".
+
+                  This frame fixes both: a parent in the right age band, plain
+                  clothes, ordinary domestic window light. It is deliberately
+                  the calm option of the three sourced - the other two were the
+                  same model visibly distressed, and a worried face here would
+                  read as "you are failing" three inches from copy that says
+                  the opposite ("This isn't about caring less"). The approved
+                  Ads.md brief asks for "ordinary and respectful, not
+                  dramatic", and a furrowed brow is the dramatic version.
+
+                  TODO(launch): the brief's full direction is a parent outside
+                  a teenager's closed bedroom door, pausing before knocking,
+                  with one neutral household object. This frame carries the age
+                  and the register but not that setting; swap it if the
+                  doorway shot is ever produced.
+
                   The source is a tall 2:3 portrait. It is given a 4:5 frame and
                   cropped with object-cover rather than being letterboxed: at
                   full portrait height it would tower over the text column it
                   sits beside and pull the eye off the argument. object-top
-                  keeps the figure and the window (the subject) in frame while
-                  the crop takes from the empty floor at the bottom. */}
+                  keeps the face and the window (the subject) in frame while
+                  the crop takes from the bottom. */}
               <Reveal as="figure" delay={250} className="min-w-0 lg:col-span-5">
                 {/* signal-halo puts a glow BEHIND the frame so the photo sits
                     in the page's light rather than on top of it;
@@ -771,22 +792,23 @@ export default function Home() {
                 <div className="signal-halo img-hover-zoom relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
                   <Image
                     src="/images/recognition.jpg"
-                    alt="A parent standing at a window in an ordinary room, looking out, mid-thought."
+                    alt="A parent at a window in an ordinary room, paused mid-thought."
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover object-top"
                   />
-                  {/* Scrim: the photo is markedly lighter and warmer than the
-                      navy ground, so without this it reads as a bright rectangle
-                      pasted onto the page. A bottom-weighted gradient in the
-                      background colour settles it into the section and gives the
-                      caption a ground to sit on. */}
+                  {/* Scrim, lightened for this photo. The previous frame was
+                      bright and high-key and needed a heavy gradient to stop it
+                      punching a white rectangle into the navy. This one is
+                      already low-key and warm, so the old 12/30/88 ramp was
+                      crushing the face into the ground. Only the bottom third
+                      is now weighted, which is all the caption needs. */}
                   <div
                     aria-hidden
                     className="absolute inset-0"
                     style={{
                       background:
-                        "linear-gradient(180deg, color-mix(in srgb, var(--background) 12%, transparent) 0%, color-mix(in srgb, var(--background) 30%, transparent) 55%, color-mix(in srgb, var(--background) 88%, transparent) 100%)",
+                        "linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--background) 10%, transparent) 60%, color-mix(in srgb, var(--background) 62%, transparent) 100%)",
                     }}
                   />
                 </div>
