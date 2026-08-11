@@ -49,14 +49,14 @@ export const ESSENTIAL_FAQS: Faq[] = [
   {
     q: "Is this about me or my child?",
     a: [
-      "It's about your own pattern as a parent — your interpretation, meaning, response, and recurring loop in one parenting moment.",
+      "It's about your own pattern as a parent - your interpretation, meaning, response, and recurring loop in one parenting moment.",
       "The Parenting Belief Score does not assess, score, or diagnose your child, and it won't tell you what they think, feel, intend, or are capable of.",
     ],
   },
   {
     q: "Is this a diagnosis or a professional service?",
     a: [
-      "No. The Parenting Belief Score is an educational and reflective tool — not diagnosis, treatment, or medical, psychological, legal, or family-therapy services.",
+      "No. The Parenting Belief Score is an educational and reflective tool - not diagnosis, treatment, or medical, psychological, legal, or family-therapy services.",
       "Parenting is shaped by development, circumstances, personality, health, finances, history and culture. The score examines one possible layer: what may be shaping your own response.",
     ],
   },
@@ -88,14 +88,14 @@ export const ESSENTIAL_FAQS: Faq[] = [
     q: "What if the result feels inaccurate?",
     a: [
       "Treat it as a hypothesis, not a verdict. Accept part of it, reject it, or refine it.",
-      "Technology helps organise what you provide and suggest a possible pattern — it cannot read your mind, it doesn't know your child, and it doesn't decide what's true. You decide what fits.",
+      "Technology helps organise what you provide and suggest a possible pattern - it cannot read your mind, it doesn't know your child, and it doesn't decide what's true. You decide what fits.",
     ],
   },
   {
     q: "How does this fit with support I'm already getting?",
     a: [
       "Keep what helps. Parenting education offers practical strategies. Therapy helps with emotional, relational and clinical concerns. A counselor, physician, financial adviser or school professional helps with circumstances needing their expertise.",
-      "The Parenting Belief Score examines a different layer — the meaning and response forming inside your own moment. It can help you enter those conversations clearer about what may be yours, and what may not be.",
+      "The Parenting Belief Score examines a different layer - the meaning and response forming inside your own moment. It can help you enter those conversations clearer about what may be yours, and what may not be.",
     ],
   },
 ];
@@ -128,7 +128,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       {
         q: "What does 'it examines your pattern, not your child's' actually mean?",
         a: [
-          "It means every field in your result describes something you did, interpreted, or felt — never something your child is.",
+          "It means every field in your result describes something you did, interpreted, or felt - never something your child is.",
           "The score does not infer your child's state, motives, or capability. A result that reads like an assessment of your child would be outside what this tool does.",
         ],
       },
@@ -155,7 +155,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
           // learns the page is careless with exactly the kind of small factual
           // claim this product asks them to trust.
           "About 10 minutes. Five questions about one moment, answered in your own words.",
-          "You receive your personalised result immediately afterward. Some people take longer because they want to sit with a question — that is fine, and nothing expires while you think.",
+          "You receive your personalised result immediately afterward. Some people take longer because they want to sit with a question - that is fine, and nothing expires while you think.",
         ],
       },
     ],
@@ -190,7 +190,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
         q: "Is this a personality test?",
         a: [
           "No. There is no type, label, or archetype in a Parenting Belief Score.",
-          "It describes one specific recurring moment you chose to write about — not a stable trait you carry.",
+          "It describes one specific recurring moment you chose to write about - not a stable trait you carry.",
         ],
       },
     ],

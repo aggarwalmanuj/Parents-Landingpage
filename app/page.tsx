@@ -117,7 +117,7 @@ const SCORE_FIELDS = [
 /* Block 06: what a completed result contains. */
 const WHATS_INSIDE = [
   "The moment that keeps repeating.",
-  "What it begins to mean to you — before you’ve consciously decided.",
+  "What it begins to mean to you - before you’ve consciously decided.",
   "The point where you may have more choice than it feels like.",
 ];
 
@@ -404,7 +404,7 @@ export default function Home() {
               <p className="text-lg leading-[1.8] text-muted">
                 The Parenting Belief Score isn&rsquo;t asking you to ignore
                 what&rsquo;s real, or to accept that you&rsquo;re doing anything
-                wrong. It asks one additional question — the one to the left.
+                wrong. It asks one additional question - the one to the left.
               </p>
               <p className="mt-4 font-serif-italic text-xl text-ink">
                 It examines your pattern, not your child&rsquo;s.
@@ -484,7 +484,7 @@ export default function Home() {
               <p className="text-lg leading-[1.8] text-muted">
                 Describe one real moment. No polished explanation required.
                 Your score reflects the pattern back, then you receive your
-                personalised result immediately — no credit card, no waiting.
+                personalised result immediately - no credit card, no waiting.
               </p>
             </ChapterHead>
 
@@ -975,7 +975,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <p className="mt-6 font-serif-italic text-xl leading-[1.6] text-ink">
-                  But you can do it with more choice — and with less need for
+                  But you can do it with more choice - and with less need for
                   the interaction to prove you&rsquo;ve done enough.
                 </p>
               </div>
@@ -1035,7 +1035,7 @@ export default function Home() {
                   <p>
                     Understanding the situation didn&rsquo;t automatically
                     reveal what was shaping my response. That gap is why I built
-                    the Parenting Belief Score — using AI Merge, a methodology I
+                    the Parenting Belief Score - using AI Merge, a methodology I
                     created and published in the Mensa Research Journal.
                   </p>
                   <p className="font-serif-italic text-xl text-ink">
@@ -1336,7 +1336,7 @@ export default function Home() {
                       color: "var(--pillar-2)",
                       ink: "var(--pillar-2-ink)",
                       label: "Reflective, not clinical",
-                      body: "Educational — not diagnosis, treatment, or therapy.",
+                      body: "Educational - not diagnosis, treatment, or therapy.",
                     },
                     {
                       Icon: Lock,

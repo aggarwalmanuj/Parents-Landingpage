@@ -83,7 +83,7 @@ const STEPS: ReadonlyArray<Step> = [
     render: ScreenReflection,
     alt: "A reflection screen where the assessment mirrors back what you have just described.",
     what: "Between questions, what you have described is reflected back to you in plain language.",
-    why: "This is usually where the pattern first becomes visible — named, rather than merely felt.",
+    why: "This is usually where the pattern first becomes visible - named, rather than merely felt.",
   },
   {
     n: "04",
@@ -217,7 +217,7 @@ export function WalkthroughSection() {
               Five questions. One moment. Your result.
             </p>
             <p className="mt-3 text-[15px] leading-[1.75] text-faint">
-              Here is every step, start to finish — so you know exactly what
+              Here is every step, start to finish - so you know exactly what
               you&rsquo;re walking into, and what you&rsquo;ll walk away with.
             </p>
           </div>

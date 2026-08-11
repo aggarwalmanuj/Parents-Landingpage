@@ -48,7 +48,7 @@ export const GLOSSARY_GROUPS: GlossaryGroup[] = [
       {
         term: "The loop",
         definition:
-          "The self-sustaining part of a parenting pattern: concern drives intervention, the intervention hides what would have happened without it, and the missing evidence feeds the concern again. Naming the loop is what makes a pattern visible — once a parent can see where it closes, they can see where it might open.",
+          "The self-sustaining part of a parenting pattern: concern drives intervention, the intervention hides what would have happened without it, and the missing evidence feeds the concern again. Naming the loop is what makes a pattern visible - once a parent can see where it closes, they can see where it might open.",
         related: ["Moment to notice", "Possible belief"],
       },
       {
@@ -85,7 +85,7 @@ export const GLOSSARY_GROUPS: GlossaryGroup[] = [
       {
         term: "Intervention",
         definition:
-          "Any response a parent makes to reduce their own uncertainty about a situation — another reminder, a piece of advice, a better option offered, a question asked again. On this site intervention is treated as one of the observable behaviours a repeated parenting moment may produce, not as a fault in the parent's care or judgment.",
+          "Any response a parent makes to reduce their own uncertainty about a situation - another reminder, a piece of advice, a better option offered, a question asked again. On this site intervention is treated as one of the observable behaviours a repeated parenting moment may produce, not as a fault in the parent's care or judgment.",
         related: ["The loop"],
       },
       {

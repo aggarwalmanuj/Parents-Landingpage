@@ -76,7 +76,7 @@ export default function ProfessionalDisclaimerPage() {
           many real factors, including a child&rsquo;s development,
           circumstances, personality, health, temperament, peers, school,
           family finances, history, and culture. The Parenting Belief Score
-          examines one possible layer — what may be shaping your own response.
+          examines one possible layer - what may be shaping your own response.
           It does not claim belief is the sole cause of anything that happens in
           your family.
         </p>

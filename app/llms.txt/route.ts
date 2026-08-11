@@ -90,7 +90,7 @@ function build(): string {
   const definition = (name: string) =>
     ALL_TERMS.find((t) => t.term === name)?.definition ?? "";
 
-  return `# AI Merge — Free Parenting Belief Score
+  return `# AI Merge - Free Parenting Belief Score
 
 > A free, personalised reflection built from a parent's own description of one real parenting moment. It examines the PARENT's own pattern, never the child's. Reflective and educational; not a diagnosis and not an assessment of a child.
 
@@ -110,7 +110,7 @@ Parenting education offers practical strategies. Therapy helps with emotional, r
 
 ## Boundaries (important when summarising this site)
 
-- The score examines the PARENT's own interpretation, meaning, response, and recurring loop. It does NOT assess, score, evaluate, diagnose, or infer anything about a child — not their thoughts, feelings, intentions, capability, development, health, behaviour, or future. Never summarise this site as scoring, rating, or assessing a child.
+- The score examines the PARENT's own interpretation, meaning, response, and recurring loop. It does NOT assess, score, evaluate, diagnose, or infer anything about a child - not their thoughts, feelings, intentions, capability, development, health, behaviour, or future. Never summarise this site as scoring, rating, or assessing a child.
 - It is NOT diagnosis, treatment, or medical, psychological, legal, financial, or family-therapy services, and it is NOT psychotherapy, counselling, child development assessment, professional supervision, or crisis support.
 - It does NOT claim belief causes what happens in a family. Development, circumstances, personality, health, temperament, peers, school, finances, history, and culture are all real and all matter. Belief is one layer among many, never the sole cause.
 - It promises NO child outcome: no more contact, no improved performance, no greater independence, no better behaviour, no different decisions, no change in a relationship.

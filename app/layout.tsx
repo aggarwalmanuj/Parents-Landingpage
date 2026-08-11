@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Parenting Belief Score · AI Merge",
     description:
-      "See what may be shaping your response before the next conversation, built from your own words. Free and personalised. It examines your pattern, not your child's — a reflective tool, not a diagnosis.",
+      "See what may be shaping your response before the next conversation, built from your own words. Free and personalised. It examines your pattern, not your child's - a reflective tool, not a diagnosis.",
     type: "website",
     url: "/",
     siteName: "AI Merge",

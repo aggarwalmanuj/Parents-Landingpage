@@ -47,7 +47,7 @@ export function SiteFooter() {
           className="brand-logo h-4 w-auto"
         />
         <p className="text-title">
-          AI Merge — helping people make repeated patterns visible{" "}
+          AI Merge - helping people make repeated patterns visible{" "}
           <span className="text-emphasis">
             so they can respond with greater clarity and choice.
           </span>
