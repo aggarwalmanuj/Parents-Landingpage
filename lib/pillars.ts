@@ -13,8 +13,13 @@
 //
 //   - reportsummary.jpg renders the four chips as DIRECTION CLARITY /
 //     IDENTITY ALIGNMENT / DECISION READINESS / ENERGY ALIGNMENT, in that
-//     order, and the rows beneath them as "PILLAR I · PURPOSE / Direction
-//     Clarity" and "PILLAR II · IDENTITY / Identity Alignment".
+//     order.
+//
+//     There is deliberately NO `pillar` field ("Pillar I · Purpose"). The Core
+//     Protocol requires that pillar names never be surfaced to the person and
+//     are translated into plain language instead; `label` is that translation,
+//     and printing both put the internal scheme on the page beside its own
+//     "not a category" positioning.
 //   - reportpdf.jpg renders "Identity Alignment 24" and "Direction Clarity 42",
 //     which are the first two SAMPLE_SUBSCORES below, and an overall of 41 —
 //     exactly what overallOf() returns for the full set. The page's arithmetic
@@ -94,29 +99,25 @@ export const PILLAR_ICONS: Record<PillarKey, LucideIcon> = {
  */
 export const PILLAR_LABELS: Record<
   PillarKey,
-  { label: string; pillar: string; plain: string }
+  { label: string; plain: string }
 > = {
   directionClarity: {
     label: "Direction Clarity",
-    pillar: "Pillar I · Purpose",
     plain:
       "How clearly you can say what you actually want in this moment, in your own words.",
   },
   identityAlignment: {
     label: "Identity Alignment",
-    pillar: "Pillar II · Identity",
     plain:
       "How closely the way you respond matches the parent you feel you are.",
   },
   decisionReadiness: {
     label: "Decision Readiness",
-    pillar: "Pillar III · Peace of mind",
     plain:
       "How ready you are to make the call instead of going round the same loop again.",
   },
   energyAlignment: {
     label: "Energy Alignment",
-    pillar: "Pillar IV · Embodiment",
     plain: "How much of your energy this pattern is quietly using up.",
   },
 };

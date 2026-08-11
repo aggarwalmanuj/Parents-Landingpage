@@ -590,13 +590,53 @@ export default function Home() {
               emphasis="in ordinary moments."
             >
               <p className="text-lg leading-[1.8] text-muted">
-                A week goes by without much being said. A report card arrives. A
-                move gets closer. Another request arrives, and you hear yourself
-                asking the same question again.
+                It rarely announces itself. It arrives inside something
+                ordinary - and you hear yourself asking the same question
+                again.
               </p>
             </ChapterHead>
 
             <ChapterRule />
+
+            {/* Four separate moments, not one sentence.
+
+                Each fragment is a real situation from a DIFFERENT ICP card
+                (teenager distance / achievement / a move or departure / a
+                request). Run together as prose, a reader skims all four and
+                none of them lands as THEIR moment - which is the one job this
+                lede has. As four tiles the eye stops on the one that is true
+                for them.
+
+                TODO(paid traffic): for ad clicks, show or highlight the
+                matching ICP's tile first, using the same utm_content swap the
+                hero headline will use. */}
+            <Reveal delay={100}>
+              <ul className="mb-12 grid list-none gap-3 sm:mb-14 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  "A week goes by without much being said.",
+                  "A report card arrives.",
+                  "A move gets closer.",
+                  "Another request arrives.",
+                ].map((moment, i) => (
+                  <li
+                    key={moment}
+                    className="flex items-start gap-3 rounded-xl border border-line bg-bg px-5 py-5"
+                  >
+                    <span
+                      aria-hidden
+                      className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{
+                        background: `var(--pillar-${i + 1})`,
+                        opacity: 0.8,
+                      }}
+                    />
+                    <span className="font-serif text-[17px] leading-snug text-ink">
+                      {moment}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
 
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
               <Reveal as="div" delay={150} className="lg:col-span-7">
@@ -897,6 +937,21 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Walkthrough - the real assessment screens.
+
+            Moved UP, from after the founder/proof block to directly after the
+            result section. Anyone already convinced has clicked one of the
+            earlier CTAs; anyone still scrolling at that depth is the most
+            skeptical visitor left, and this section exists for exactly them -
+            it answers "what am I actually agreeing to" by showing every screen.
+            Sitting behind founder and testimonials, it was arriving after the
+            point much of that audience had already left.
+
+            It also reads better here: the reader has just seen WHAT they
+            receive, so HOW they get there is the next question, not a later
+            one. */}
+        <WalkthroughSection />
+
         {/* ====== Block 07 · Generic advice vs. your own description ====== */}
         <section className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28">
           <div className="section-orbs" aria-hidden />
@@ -992,7 +1047,7 @@ export default function Home() {
           <SectionViewTracker event="founder_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="V · The founder"
+              mark="VI · The founder"
               id="founder-heading"
               lead="Why I built"
               emphasis="the Parenting Belief Score."
@@ -1032,6 +1087,27 @@ export default function Home() {
                     stated by the paragraph that follows it, which now opens
                     the block. */}
                 <div className="space-y-5 text-[1.05rem] leading-[1.85] text-muted">
+                  {/* One concrete moment before the abstract sentence.
+
+                      With the old opening biography paragraph cut, "the
+                      situation" had no referent at all - the block opened on an
+                      abstraction, in the section asking hardest to be believed.
+                      This is the specific thing, written from ICP pattern #1:
+                      a fluctuating, developmentally normal closeness/distance
+                      cycle, where the behavioural evidence is more reliable
+                      than the narrative.
+
+                      It deliberately stops short of the biographical detail the
+                      CRO audit drafted ("I have two teenage sons") - that is a
+                      claim about a real person that no source here establishes.
+                      TODO(launch): if Manuj confirms the specifics, swap this
+                      for the fuller version; it will land harder. */}
+                  <p>
+                    Some weeks the closeness was there. Some weeks the distance
+                    stretched. I caught myself reading a few quiet days as a
+                    verdict on the relationship, when the more reliable evidence
+                    said otherwise.
+                  </p>
                   <p>
                     Understanding the situation didn&rsquo;t automatically
                     reveal what was shaping my response. That gap is why I built
@@ -1179,6 +1255,25 @@ export default function Home() {
                   </span>
                 </h2>
               </Reveal>
+              {/* States the gap ABOVE the quotes rather than conceding it in
+                  small print underneath.
+
+                  Neither quote is from a parent or about a parenting outcome,
+                  and this sits in one of the highest-trust positions on the
+                  page. A reader who works that out for themselves, after
+                  reading two quotes presented as proof, trusts the page less
+                  than one who was told first - so saying it up front turns a
+                  silent gap into a stated promise, in the same honesty-first
+                  voice the rest of the page uses.
+
+                  TODO(launch): replace with real parent quotes as soon as
+                  completions produce them, and delete this line with them. */}
+              <Reveal delay={100}>
+                <p className="mx-auto mt-6 max-w-xl text-[15px] leading-[1.75] text-faint">
+                  These are from the broader AI Merge methodology. Real parent
+                  stories will appear here as soon as we have them.
+                </p>
+              </Reveal>
             </div>
 
             <ul className="mt-12 grid list-none gap-5 md:grid-cols-2">
@@ -1254,7 +1349,7 @@ export default function Home() {
           <SectionViewTracker event="how_it_works_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="VI · How it works"
+              mark="VII · How it works"
               id="how-heading"
               lead="Five questions. One moment."
               emphasis="Your result."
@@ -1293,10 +1388,6 @@ export default function Home() {
             </Reveal>
           </div>
         </section>
-
-        {/* Walkthrough — the real assessment screens, so the ask has a
-            visible shape before the visitor commits. */}
-        <WalkthroughSection />
 
         {/* ============ Block 12 · Questions parents ask ============ */}
         <section
