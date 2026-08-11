@@ -782,25 +782,24 @@ export default function Home() {
                   Do not silently revert this to an adult-only frame. If it
                   needs to change, it is a product decision, not a cleanup.
 
-                  Two known costs, recorded so they are not rediscovered later:
+                  This frame also closes the two costs an earlier attempt
+                  carried, which is why it replaced it:
 
-                  1. AGE MISMATCH. The child reads about four or five, while
-                     every moment in this section's copy is teen-or-older (a
-                     report card, a move getting closer, a decision already
-                     made, "never actually asked"). A parent of a teenager may
-                     read the picture as "not for me". The fix is a re-shoot or
-                     re-source with an older child, not a code change.
-                  2. AD REVIEW. The child is sharp and facing the lens on a
-                     page about scoring. Meta review treats implied assessment
-                     of a minor as a rejection category; the mitigation would
-                     be a frame where the child is turned away, partial, or out
-                     of focus.
+                  1. AGE. The child is a teenager, matching every moment in
+                     this section's copy (a report card, a move getting closer,
+                     a decision already made, "never actually asked"). The
+                     previous frame showed a four-or-five-year-old, which a
+                     parent of a teenager could read as "not for me".
+                  2. AD REVIEW. The child is turned away from the lens and the
+                     parent is the one facing camera, so the frame reads as the
+                     parent's moment rather than as an assessment of a minor -
+                     the framing Meta review is sensitive to on a page about
+                     scoring.
 
-                  TODO(launch): re-source to the approved Ads.md direction - a
-                  parent outside a teenager's closed bedroom door, ordinary and
-                  respectful, soft hallway lighting - which carries the
-                  parenting cue with the child off-camera and resolves both
-                  costs above.
+                  It is a bedroom conversation rather than the approved Ads.md
+                  direction (a parent outside a teenager's CLOSED door), but it
+                  carries the same beat - the pause before the response - with
+                  the relational cue the closed-door version deliberately hides.
 
                   The source is a tall 2:3 portrait. It is given a 4:5 frame and
                   cropped with object-cover rather than being letterboxed: at
@@ -817,7 +816,7 @@ export default function Home() {
                 <div className="signal-halo img-hover-zoom relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
                   <Image
                     src="/images/recognition.jpg"
-                    alt="A parent sitting beside their child, turned toward them, mid-thought."
+                    alt="A parent sitting on the edge of a bed beside their teenage son, mid-conversation."
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover object-top"
