@@ -337,8 +337,17 @@ export default function Home() {
               well past a second screen on a 390px viewport. */}
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-6 pt-6 text-center sm:px-8 sm:pb-10 sm:pt-16">
             <Reveal>
+              {/* "For parents", not "AI Merge". The chip is the first line a
+                  visitor reads, and it was spending that position on the
+                  vendor's name - a brand nobody arriving from an ad recognises
+                  yet. Naming the audience instead means the fold says who this
+                  is for twice, in the chip and again in the headline, which is
+                  the message-match the CRO audit's #1 finding was about.
+
+                  AI Merge still appears further down, where it is doing
+                  credibility work rather than occupying the first glance. */}
               <p className="cred-chip">
-                AI Merge · Free Parenting Belief Score
+                For parents · Free Parenting Belief Score
               </p>
             </Reveal>
             <Reveal delay={80}>
