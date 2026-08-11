@@ -1182,21 +1182,29 @@ export default function Home() {
                       With the old opening biography paragraph cut, "the
                       situation" had no referent at all - the block opened on an
                       abstraction, in the section asking hardest to be believed.
-                      This is the specific thing, written from ICP pattern #1:
-                      a fluctuating, developmentally normal closeness/distance
-                      cycle, where the behavioural evidence is more reliable
-                      than the narrative.
 
-                      It deliberately stops short of the biographical detail the
-                      CRO audit drafted ("I have two teenage sons") - that is a
-                      claim about a real person that no source here establishes.
-                      TODO(launch): if Manuj confirms the specifics, swap this
-                      for the fuller version; it will land harder. */}
+                      This is the CRO audit's drafted wording, verbatim, and it
+                      opens on a biographical fact ("I have two teenage sons")
+                      confirmed by the owners before publishing. That matters
+                      beyond accuracy: it is a first-person claim about a real
+                      person on a page whose entire pitch is honesty, so it is
+                      not the kind of detail to infer from a persona document.
+
+                      It also quietly repairs an inconsistency elsewhere. The
+                      recognition photo shows a young child while every moment
+                      in this page's copy is teen-or-older; "teenage" in the
+                      founder's own voice puts the right life stage back on the
+                      page in words while the image is what it is.
+
+                      The pattern underneath is ICP #1: a fluctuating,
+                      developmentally normal closeness/distance cycle, where the
+                      behavioural evidence is more reliable than the narrative
+                      a parent builds from a few quiet days. */}
                   <p>
-                    Some weeks the closeness was there. Some weeks the distance
-                    stretched. I caught myself reading a few quiet days as a
-                    verdict on the relationship, when the more reliable evidence
-                    said otherwise.
+                    I have two teenage sons. Some weeks they&rsquo;re close,
+                    some weeks the distance stretches, and I caught myself
+                    reading a few quiet days as a verdict on the relationship,
+                    when the more reliable evidence said otherwise.
                   </p>
                   <p>
                     Understanding the situation didn&rsquo;t automatically
