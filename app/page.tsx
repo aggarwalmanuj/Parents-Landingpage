@@ -756,26 +756,40 @@ export default function Home() {
                   parent, so child imagery here would contradict the one thing
                   this section exists to establish — who is being scored.
 
-                  Re-cast to answer CRO audit #10. The previous photo read as a
-                  woman in her thirties in a blazer beside city-view blinds -
-                  corporate styling, and no age signal matching the ICP
-                  (parents roughly 40s-60s), so it landed as generic stock
-                  rather than "someone like me".
+                  Shows a parent WITH a child, which is a deliberate owner
+                  decision that overrides the source document's constraint for
+                  this slot ("No children in frame - the product examines the
+                  parent, and child imagery contradicts that on a page whose
+                  whole job is establishing who is being scored").
 
-                  This frame fixes both: a parent in the right age band, plain
-                  clothes, ordinary domestic window light. It is deliberately
-                  the calm option of the three sourced - the other two were the
-                  same model visibly distressed, and a worried face here would
-                  read as "you are failing" three inches from copy that says
-                  the opposite ("This isn't about caring less"). The approved
-                  Ads.md brief asks for "ordinary and respectful, not
-                  dramatic", and a furrowed brow is the dramatic version.
+                  The reasoning for the override: an adult alone is ambiguous.
+                  A visitor cannot tell whether the person is a parent, so the
+                  frame does not establish the audience, and the section's job
+                  is recognition. A relational cue makes "this is about
+                  parenting" legible in the first glance.
 
-                  TODO(launch): the brief's full direction is a parent outside
-                  a teenager's closed bedroom door, pausing before knocking,
-                  with one neutral household object. This frame carries the age
-                  and the register but not that setting; swap it if the
-                  doorway shot is ever produced.
+                  Do not silently revert this to an adult-only frame. If it
+                  needs to change, it is a product decision, not a cleanup.
+
+                  Two known costs, recorded so they are not rediscovered later:
+
+                  1. AGE MISMATCH. The child reads about four or five, while
+                     every moment in this section's copy is teen-or-older (a
+                     report card, a move getting closer, a decision already
+                     made, "never actually asked"). A parent of a teenager may
+                     read the picture as "not for me". The fix is a re-shoot or
+                     re-source with an older child, not a code change.
+                  2. AD REVIEW. The child is sharp and facing the lens on a
+                     page about scoring. Meta review treats implied assessment
+                     of a minor as a rejection category; the mitigation would
+                     be a frame where the child is turned away, partial, or out
+                     of focus.
+
+                  TODO(launch): re-source to the approved Ads.md direction - a
+                  parent outside a teenager's closed bedroom door, ordinary and
+                  respectful, soft hallway lighting - which carries the
+                  parenting cue with the child off-camera and resolves both
+                  costs above.
 
                   The source is a tall 2:3 portrait. It is given a 4:5 frame and
                   cropped with object-cover rather than being letterboxed: at
@@ -792,23 +806,23 @@ export default function Home() {
                 <div className="signal-halo img-hover-zoom relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-line shadow-[var(--elev-2)]">
                   <Image
                     src="/images/recognition.jpg"
-                    alt="A parent at a window in an ordinary room, paused mid-thought."
+                    alt="A parent sitting beside their child, turned toward them, mid-thought."
                     fill
                     sizes="(max-width: 1024px) 100vw, 40vw"
                     className="object-cover object-top"
                   />
-                  {/* Scrim, lightened for this photo. The previous frame was
-                      bright and high-key and needed a heavy gradient to stop it
-                      punching a white rectangle into the navy. This one is
-                      already low-key and warm, so the old 12/30/88 ramp was
-                      crushing the face into the ground. Only the bottom third
-                      is now weighted, which is all the caption needs. */}
+                  {/* Scrim weighted back up for this photo. The frame it
+                      replaced was low-key and warm and needed almost nothing;
+                      this one is bright, cool and high-key (white tile, white
+                      shirts), so without a real gradient it punches a pale
+                      rectangle into the navy ground. Bottom-weighted so the
+                      caption still has something to sit on. */}
                   <div
                     aria-hidden
                     className="absolute inset-0"
                     style={{
                       background:
-                        "linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--background) 10%, transparent) 60%, color-mix(in srgb, var(--background) 62%, transparent) 100%)",
+                        "linear-gradient(180deg, color-mix(in srgb, var(--background) 14%, transparent) 0%, color-mix(in srgb, var(--background) 34%, transparent) 55%, color-mix(in srgb, var(--background) 88%, transparent) 100%)",
                     }}
                   />
                 </div>
