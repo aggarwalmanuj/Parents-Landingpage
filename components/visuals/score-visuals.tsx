@@ -131,7 +131,7 @@ export function PillarDial({
 }) {
   const color = PILLAR_COLORS[dimension];
   const Icon = PILLAR_ICONS[dimension];
-  const { label, pillar, plain } = PILLAR_LABELS[dimension];
+  const { label, plain } = PILLAR_LABELS[dimension];
 
   return (
     <div
@@ -153,32 +153,27 @@ export function PillarDial({
             {value}
           </span>
         </ScoreRing>
-        <div className="min-w-0">
-          {/* The over-line wears a TEXT token; only the ICON carries the hue.
-              This is load-bearing, not a style preference. The moment a series
-              colour becomes 9px type it has to be lifted for contrast, and the
-              palette drifts away from the product it is supposed to match —
-              which is exactly what had happened here before (see the history
-              note on --pillar-N in globals.css). The ring beside this already
-              says which dimension it is. */}
-          {/* 12px, not the 9px this over-line carried before. A dial is real
-              page copy, not simulated product chrome, so the page's 12px floor
-              applies — and 9px tracked uppercase is exactly what an older
-              reader loses first. Tracking is pulled in to 0.12em so the
-              longest label ("Pillar III · Peace of mind") still fits the
-              card at two columns. */}
-          <p className="flex items-center gap-1.5 text-[12px] uppercase tracking-[0.12em] text-faint">
-            <Icon
-              className="h-3 w-3 shrink-0"
-              strokeWidth={2}
-              aria-hidden
-              style={{ color }}
-            />
-            {pillar}
-          </p>
-          <p className="mt-1 font-serif text-[17px] leading-snug text-fg">
-            {label}
-          </p>
+        {/* The internal taxonomy over-line ("PILLAR I · PURPOSE") is gone.
+            The Core Protocol is explicit that pillar names must never be
+            surfaced to the person, only translated into plain human language —
+            and `label` below already IS that translation, so the over-line was
+            printing the scheme the protocol says to hide, immediately beside
+            this page's own "not a category" positioning.
+
+            Only the icon and the ring survive from that row, which is enough:
+            each still identifies the dimension without naming the system. The
+            icon keeps its hue while the label wears a text token, for the
+            contrast reason noted on --pillar-N in globals.css — a series
+            colour turned into small type has to be lightened, and the palette
+            then drifts from the product it is supposed to match. */}
+        <div className="flex min-w-0 items-center gap-2.5">
+          <Icon
+            className="h-4 w-4 shrink-0"
+            strokeWidth={1.9}
+            aria-hidden
+            style={{ color }}
+          />
+          <p className="font-serif text-[17px] leading-snug text-fg">{label}</p>
         </div>
       </div>
       <p className="text-[14px] leading-[1.7] text-muted">{plain}</p>

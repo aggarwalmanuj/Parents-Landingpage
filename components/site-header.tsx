@@ -79,9 +79,16 @@ export function SiteHeader() {
             >
               {/* One label per breakpoint. Both strings ship in the DOM, so the
                   `hidden` one must not contribute width - `hidden` (not
-                  `sm:inline` alone) is what guarantees that. */}
-              <span className="hidden sm:inline">Free Belief Score</span>
-              <span className="sm:hidden">Free Score</span>
+                  `sm:inline` alone) is what guarantees that.
+
+                  Both now say "Parenting". This is the ONE CTA visible at every
+                  scroll depth, and it was the only CTA on the page omitting the
+                  word - so the button a visitor sees most often was the button
+                  doing least to tell them what page they are on. The phone
+                  label is "My Parenting Score" rather than the full string
+                  because the sticky row still has to survive a 320px viewport. */}
+              <span className="hidden sm:inline">Free Parenting Belief Score</span>
+              <span className="sm:hidden">My Parenting Score</span>
             </ScorecardCta>
           </span>
         </div>

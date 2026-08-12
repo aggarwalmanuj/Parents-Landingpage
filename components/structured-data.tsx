@@ -302,9 +302,11 @@ export function PageStructuredData({
 // ---------------------------------------------------------------------------
 
 /** The hero VSL. `duration` is the measured length of the shipped cut
- *  (247.8s -> PT4M8S); it is stated only because it was actually measured, not
- *  estimated. Rendered on the homepage only, which is the one route that
- *  carries the video. */
+ *  (69.0s -> PT1M9S); it is stated only because it was actually measured, not
+ *  estimated. The thumbnail dimensions are likewise the poster file's real
+ *  1280x720, matching the cut's own frame size — asserting a 1920x1080 card
+ *  that no crawler can fetch at that size is a claim, not metadata. Rendered on
+ *  the homepage only, which is the one route that carries the video. */
 export const videoNode = {
   "@type": "VideoObject",
   "@id": `${SITE}/#vsl`,
@@ -315,8 +317,8 @@ export const videoNode = {
   thumbnail: {
     "@type": "ImageObject",
     url: `${SITE}/video/vsl-parents-poster.jpg`,
-    width: 1920,
-    height: 1080,
+    width: 1280,
+    height: 720,
   },
   thumbnailUrl: `${SITE}/video/vsl-parents-poster.jpg`,
   duration: "PT1M9S",

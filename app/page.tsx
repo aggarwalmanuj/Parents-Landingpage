@@ -611,8 +611,8 @@ export default function Home() {
                   <div className="take-back relative w-[88%] origin-bottom-left">
                     <div className="overflow-hidden rounded-md border border-line shadow-[var(--elev-3)]">
                       <Image
-                        src="/take/reportpdf.jpg"
-                        alt="A page from the detailed written breakdown, composed around the parent's own answers."
+                        src="/take/parents-05-plan.jpg"
+                        alt="Page one of a Parenting Action Plan: the score, the pattern named in the parent's own terms, and the four dimensions each with a written reading."
                         width={1920}
                         height={1200}
                         sizes="(max-width: 1024px) 60vw, 30vw"
@@ -630,8 +630,8 @@ export default function Home() {
                   <div className="take-front relative -mt-[9%] ml-auto w-[74%] origin-top-right">
                     <div className="overflow-hidden rounded-md border border-line-strong shadow-[var(--elev-3-lift)]">
                       <Image
-                        src="/take/reportsummary.jpg"
-                        alt="The result summary, reflecting the parent's own described pattern back to them."
+                        src="/take/parents-04-summary.jpg"
+                        alt="The result screen: a Parenting Belief Score out of 100, with the four dimensions listed beneath it."
                         width={1920}
                         height={1200}
                         sizes="(max-width: 1024px) 55vw, 26vw"

@@ -31,7 +31,8 @@
 // Server components: no client JS, no image bytes, and they art-direct
 // themselves at every width instead of needing a phone capture.
 
-import { ArrowLeft, ArrowRight, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ReportPreviewCard } from "@/components/visuals/report-preview";
 
 /** Shared chrome: the five-step progress rail the real screens carry across
  *  the top, plus the illustrative chip. */
@@ -47,7 +48,10 @@ function SimShell({
     // 16:10 matches the real captures (1920x1200) so switching between a drawn
     // slide and a photographed one never changes the stage height.
     <div className="relative flex aspect-[16/10] w-full flex-col overflow-hidden bg-bg">
-      {/* Progress rail */}
+      {/* Progress rail. FIVE dots, deliberately, even though the walkthrough
+          around these frames has four steps: this rail belongs to the product,
+          where it tracks the five questions a parent answers. The walkthrough's
+          steps are a narrative of the flow, not a copy of its screens. */}
       <div className="flex items-center justify-center gap-1.5 border-b border-line/60 px-4 py-2 sm:gap-2 sm:py-3">
         {[1, 2, 3, 4, 5].map((n) => (
           <span key={n} className="flex items-center gap-1.5 sm:gap-2">
@@ -142,38 +146,17 @@ export function ScreenQuestion() {
   );
 }
 
-/** Step 03 — the reflection between questions. */
-export function ScreenReflection() {
+/** Step 04 - the result. Wraps the same ReportPreviewCard the result section
+ *  renders, so the walkthrough cannot show a different score than the page
+ *  two screens above it. The capture this replaces printed 14 and leaked
+ *  "PILLAR I · PURPOSE" into the frame; both are fixed by rendering. */
+export function ScreenScore() {
   return (
-    <SimShell step={3}>
-      <div className="flex h-full min-h-0 flex-col">
-        <p className="flex items-center gap-2 text-[8px] uppercase tracking-[0.2em] text-faint sm:text-[10px]">
-          <span className="inline-block h-px w-4 bg-line-strong sm:w-6" aria-hidden />
-          Reflection 3 · 5
-        </p>
-
-        <div className="mt-2 min-h-0 flex-1 rounded-lg border border-line bg-card p-3 sm:mt-4 sm:p-5">
-          <p className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.18em] text-faint sm:text-[9.5px]">
-            <Lightbulb className="h-2.5 w-2.5 text-signal sm:h-3 sm:w-3" aria-hidden />
-            What you have described so far
-          </p>
-          <p className="mt-1.5 font-serif text-[12px] leading-[1.25] text-ink sm:mt-3 sm:text-[17px] lg:text-[21px]">
-            The same moment has come back
-            <span className="block font-serif-italic">more than once.</span>
-          </p>
-          {/* Redaction bars, not invented prose: the reflection is built from
-              the parent's own answers and cannot exist before they write. */}
-          <div className="mt-2 space-y-1.5 sm:mt-4 sm:space-y-2" aria-hidden>
-            <span className="block h-1 rounded-full bg-fg/20 sm:h-1.5" />
-            <span className="block h-1 w-10/12 rounded-full bg-fg/12 sm:h-1.5" />
-            <span className="block h-1 w-11/12 rounded-full bg-fg/8 sm:h-1.5" />
-            <span className="block h-1 w-6/12 rounded-full bg-fg/8 sm:h-1.5" />
-          </div>
+    <SimShell step={4}>
+      <div className="flex h-full min-h-0 items-center justify-center overflow-hidden">
+        <div className="w-full max-w-md">
+          <ReportPreviewCard animate={false} />
         </div>
-
-        <p className="mt-2 shrink-0 text-[8.5px] leading-relaxed text-faint sm:mt-3 sm:text-[11px]">
-          Nothing here is a conclusion. You decide what fits.
-        </p>
       </div>
     </SimShell>
   );

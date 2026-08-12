@@ -16,19 +16,49 @@ declare global {
   }
 }
 
+/**
+ * The ONE place window.fbq is ever invoked. Every helper below goes through
+ * it, so a caller cannot accidentally reintroduce an unprotected call site.
+ *
+ * A throwing fbq is not hypothetical. Some privacy extensions REPLACE
+ * window.fbq with a stub that throws instead of blocking
+ * connect.facebook.net, and the pixel snippet's own `if (f.fbq) return;`
+ * guard means fbevents.js then never loads to correct it.
+ *
+ * Unprotected, that exception escaped into whatever called the helper. The
+ * worst path was FacebookPixel's route effect: a throw inside a commit-phase
+ * useEffect reaches React's error boundary, which unmounts the tree and
+ * replaces the entire page with the global error screen. A landing page whose
+ * traffic is bought from ad platforms is exactly the audience most likely to
+ * run such an extension, so a blocked pixel was taking the page down for the
+ * visitors it most needed to reach.
+ *
+ * A blocked or hostile pixel must cost the pixel event, and nothing else.
+ *
+ * Returns whether fbq was actually reached, so a caller that polls (see
+ * trackWhenReady) can tell "not loaded yet" from "loaded, and it threw" - the
+ * second must end the poll rather than retry a sink that will throw again.
+ */
+function callFbq(...args: unknown[]): boolean {
+  if (typeof window === "undefined" || !window.fbq) return false;
+  try {
+    window.fbq(...args);
+  } catch {
+    // Analytics must never break the page.
+  }
+  return true;
+}
+
 export function pageview(): void {
-  if (typeof window === "undefined" || !window.fbq) return;
-  window.fbq("track", "PageView");
+  callFbq("track", "PageView");
 }
 
 export function track(name: string, data?: Record<string, unknown>): void {
-  if (typeof window === "undefined" || !window.fbq) return;
-  window.fbq("track", name, data ?? {});
+  callFbq("track", name, data ?? {});
 }
 
 export function trackCustom(name: string, data?: Record<string, unknown>): void {
-  if (typeof window === "undefined" || !window.fbq) return;
-  window.fbq("trackCustom", name, data ?? {});
+  callFbq("trackCustom", name, data ?? {});
 }
 
 /**
@@ -44,14 +74,14 @@ export function trackWhenReady(
 ): void {
   if (typeof window === "undefined" || !FB_PIXEL_ID) return;
   const attempt = (left: number) => {
-    if (window.fbq) {
-      if (eventID) {
-        window.fbq("track", name, data ?? {}, { eventID });
-      } else {
-        window.fbq("track", name, data ?? {});
-      }
-      return;
-    }
+    // callFbq reports whether fbq was REACHED, not whether it succeeded. A stub
+    // that throws is still an answer, so stop here: retrying it would just
+    // throw 30 more times, and the retry runs inside a timer where an escaping
+    // exception has no caller left to catch it.
+    const reached = eventID
+      ? callFbq("track", name, data ?? {}, { eventID })
+      : callFbq("track", name, data ?? {});
+    if (reached) return;
     if (left <= 0) return;
     window.setTimeout(() => attempt(left - 1), 150);
   };

@@ -13,8 +13,13 @@
 //
 //   - reportsummary.jpg renders the four chips as DIRECTION CLARITY /
 //     IDENTITY ALIGNMENT / DECISION READINESS / ENERGY ALIGNMENT, in that
-//     order, and the rows beneath them as "PILLAR I · PURPOSE / Direction
-//     Clarity" and "PILLAR II · IDENTITY / Identity Alignment".
+//     order.
+//
+//     There is deliberately NO `pillar` field ("Pillar I · Purpose"). The Core
+//     Protocol requires that pillar names never be surfaced to the person and
+//     are translated into plain language instead; `label` is that translation,
+//     and printing both put the internal scheme on the page beside its own
+//     "not a category" positioning.
 //   - reportpdf.jpg renders "Identity Alignment 24" and "Direction Clarity 42",
 //     which are the first two SAMPLE_SUBSCORES below, and an overall of 41 —
 //     exactly what overallOf() returns for the full set. The page's arithmetic
@@ -94,46 +99,50 @@ export const PILLAR_ICONS: Record<PillarKey, LucideIcon> = {
  */
 export const PILLAR_LABELS: Record<
   PillarKey,
-  { label: string; pillar: string; plain: string }
+  { label: string; plain: string }
 > = {
   directionClarity: {
     label: "Direction Clarity",
-    pillar: "Pillar I · Purpose",
     plain:
       "How clearly you can say what you actually want in this moment, in your own words.",
   },
   identityAlignment: {
     label: "Identity Alignment",
-    pillar: "Pillar II · Identity",
     plain:
       "How closely the way you respond matches the parent you feel you are.",
   },
   decisionReadiness: {
     label: "Decision Readiness",
-    pillar: "Pillar III · Peace of mind",
     plain:
       "How ready you are to make the call instead of going round the same loop again.",
   },
   energyAlignment: {
     label: "Energy Alignment",
-    pillar: "Pillar IV · Embodiment",
     plain: "How much of your energy this pattern is quietly using up.",
   },
 };
 
-/** Illustrative subscores. Deliberately mid-range and uneven: a demo showing
- *  four high numbers would read as a score to beat, and four low ones as a
- *  verdict. The first two are the values the real breakdown capture
- *  (public/take/reportpdf.jpg) shows, so the page and the artifact beside it
- *  cannot disagree on screen. */
+/** Illustrative subscores, taken from a REAL completed run of the live
+ *  parenting assessment (the Parenting Action Plan, page 1). They are not
+ *  invented, and they are not the coaches vertical's numbers.
+ *
+ *  Worth stating because it is a genuine check on this file: overallOf() below
+ *  returns exactly 69 for these four values, which is the overall the live
+ *  product printed for that same run. The page's arithmetic is therefore not
+ *  merely plausible - it is demonstrably the product's.
+ *
+ *  They are also deliberately uneven and mid-to-high: the lowest (Energy
+ *  Alignment, 42) is the one the real plan named as the biggest opening, which
+ *  is the point the page makes about a low number meaning room to move rather
+ *  than a failing grade. */
 export const SAMPLE_SUBSCORES: Record<PillarKey, number> = {
-  directionClarity: 42,
-  identityAlignment: 24,
-  decisionReadiness: 46,
-  energyAlignment: 58,
+  directionClarity: 78,
+  identityAlignment: 66,
+  decisionReadiness: 74,
+  energyAlignment: 42,
 };
 
-/** The assessment's own weighting. Returns 41 for the sample above, which is
+/** The assessment's own weighting. Returns 69 for the sample above, which is
  *  the overall the real breakdown capture prints — so the preview's arithmetic
  *  is the product's, not a plausible-looking invention. */
 export function overallOf(s: Record<PillarKey, number>): number {

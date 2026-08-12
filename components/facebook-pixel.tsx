@@ -22,8 +22,20 @@ export function FacebookPixel() {
 
   return (
     <>
+      {/* Meta's stock bootstrap, wrapped in try/catch.
+
+          The two raw `fbq(...)` calls at the end are the only fbq invocations
+          on the site that do NOT go through lib/fbpixel.ts, so the guard there
+          cannot cover them. When a privacy extension REPLACES window.fbq with
+          a throwing stub, the snippet's own `if(f.fbq)return;` sees it, skips
+          loading fbevents.js, and then `fbq('init', ...)` throws — an uncaught
+          exception at the top level of this inline script.
+
+          It is contained rather than retried: a stub that throws once will
+          throw every time, so the only correct response is to stop. A blocked
+          pixel costs the pixel and nothing else. */}
       <Script id="fb-pixel" strategy="afterInteractive">
-        {`!function(f,b,e,v,n,t,s)
+        {`try{!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
@@ -32,7 +44,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${FB_PIXEL_ID}');
-fbq('track', 'PageView');`}
+fbq('track', 'PageView');}catch(e){}`}
       </Script>
       <Suspense fallback={null}>
         <FacebookPixelTracker />

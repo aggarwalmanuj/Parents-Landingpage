@@ -37,19 +37,16 @@ import {
 import { Pause, Play } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { SectionViewTracker } from "@/components/section-view-tracker";
-import { ScreenQuestion, ScreenReflection } from "@/components/visuals/sim-screens";
 import { trackEvent } from "@/lib/analytics";
 
 type Step = {
   n: string;
   title: string;
   meta: string;
-  /** A real capture. Mutually exclusive with `render`. */
-  img?: string;
-  w?: number;
-  h?: number;
-  /** A drawn screen, for steps whose real capture is off-vertical. */
-  render?: () => React.ReactNode;
+  /** A real capture of the live assessment. */
+  img: string;
+  w: number;
+  h: number;
   alt: string;
   what: string;
   why: string;
@@ -58,54 +55,63 @@ type Step = {
 const STEPS: ReadonlyArray<Step> = [
   {
     n: "01",
-    title: "Choose one moment",
-    meta: "A minute",
-    img: "/take/audience.jpg",
+    title: "Tell us who this is for",
+    meta: "30 seconds",
+    img: "/take/parents-00-entry.jpg",
     w: 1920,
     h: 1200,
-    alt: "The opening screen of the assessment, where you say who the reflection is for and where your result should be sent.",
-    what: "A recurring interaction, request, or decision you want to understand.",
-    why: "One moment, described concretely, is what the score is built from. Not your whole relationship.",
+    alt: "The opening screen of the live assessment: your name, your email, and the four dimensions your score will cover.",
+    what: "Your name and the email your result is sent to. A phone number is optional.",
+    why: "Your answers are private, and the score is yours to keep. Free, with no credit card.",
   },
   {
     n: "02",
-    title: "Describe what happens",
-    meta: "Five questions",
-    render: ScreenQuestion,
-    alt: "A question screen showing a single open question with room to type your answer in your own words.",
-    what: "Five short questions, in your own words. No polished explanation required.",
-    why: "There is no right answer and nothing to study. You are describing what actually happened.",
+    title: "Answer five honest questions",
+    meta: "≈ 7 minutes",
+    img: "/take/parents-01-question.jpg",
+    w: 1920,
+    h: 1200,
+    alt: "The first question screen: pick one parenting moment that keeps repeating, and describe the last real time it happened.",
+    what: "Five open questions about one moment, typed or spoken in your own words.",
+    why: "There is nothing to study and no right answer. Messy answers are genuinely fine.",
   },
   {
     n: "03",
-    title: "See it reflected back",
+    title: "Watch it reflect back",
     meta: "As you go",
-    render: ScreenReflection,
-    alt: "A reflection screen where the assessment mirrors back what you have just described.",
-    what: "Between questions, what you have described is reflected back to you in plain language.",
-    why: "This is usually where the pattern first becomes visible - named, rather than merely felt.",
+    img: "/take/parents-03-reflection.jpg",
+    w: 1920,
+    h: 1200,
+    alt: "A reflection screen reading the parent's own described moment back to them in composed language.",
+    what: "Between questions, what you have described is read back to you in plain language.",
+    why: "This is where most people feel seen: language for what they already knew but had not named.",
   },
   {
     n: "04",
     title: "Receive your score",
-    meta: "Immediately",
-    img: "/take/reportsummary.jpg",
+    meta: "Instant",
+    img: "/take/parents-04-summary.jpg",
     w: 1920,
     h: 1200,
-    alt: "The result screen showing the Parenting Belief Score summary with the pattern reflected back.",
-    what: "What happened, what it meant, your response, the loop, and the moment to notice.",
-    why: "Free, with no credit card and no waiting. Your result is yours to keep.",
+    alt: "The result screen: a Parenting Belief Score out of 100 with the four dimensions listed beneath it.",
+    what: "Your Parenting Belief Score across four dimensions, and the pattern underneath it.",
+    why: "A precise, honest score. Not a label, and not an assessment of your child.",
   },
   {
+    // Page 1 of a real Parenting Action Plan, from the same completed run as
+    // the summary in step 04 - which is why it prints the same 69 and the same
+    // four subscores. This is the ONE slide that is letterboxed rather than
+    // cropped: it is a document, and a cover-crop would cut the pillar rows
+    // that are the reason to show it at all.
     n: "05",
-    title: "Decide what fits",
+    title: "Go deeper, if you choose",
     meta: "Optional",
-    img: "/take/reportpdf.jpg",
+    img: "/take/parents-05-plan.jpg",
     w: 1920,
     h: 1200,
-    alt: "The expanded breakdown, an optional detailed document available after the free score.",
-    what: "An optional detailed breakdown and personalised Action Plan, if you want to go further.",
-    why: "You are never required to buy anything to get your score. You remain the authority on what fits.",
+    alt: "Page one of a Parenting Action Plan: the score, the pattern named in the parent's own terms, and the four dimensions each with a written reading.",
+    what: "A full diagnostic action plan and a personal audio composition, built around your exact answers.",
+    why: "The complete picture: what the pattern means, what is in the way, and what shifts when it lifts.",
   },
 ];
 
@@ -278,7 +284,7 @@ export function WalkthroughSection() {
                   </div>
                 </div>
 
-                {/* Crossfade stack. All five slides are rendered and toggled by
+                {/* Crossfade stack. All four slides are rendered and toggled by
                     opacity so switching never shows a blank frame while the
                     next file decodes.
 
@@ -292,37 +298,34 @@ export function WalkthroughSection() {
                     captures shows each one whole, and the fixed cell means
                     switching between different native ratios still never
                     reflows the page. */}
-                <div className="wt-stage relative w-full bg-surface">
+                {/* The tablist below is only half a tabs widget on its own:
+                    every button announced "tab, selected" while controlling
+                    nothing a screen reader could reach, because the stage was
+                    an unlabelled <div>. Naming it as the panel the tabs drive
+                    (and pointing every tab at it via aria-controls) is what
+                    makes selecting a step mean something without sight. One
+                    panel rather than five: the slides share a single grid cell
+                    and only the selected one is not aria-hidden. */}
+                <div
+                  id="wt-panel"
+                  role="tabpanel"
+                  aria-labelledby={`wt-tab-${active}`}
+                  className="wt-stage relative w-full bg-surface"
+                >
                   {STEPS.map((s, i) => {
                     const hidden = i !== active;
-                    // One shared wrapper for both slide kinds, so a drawn
-                    // screen and a captured one crossfade identically and both
-                    // occupy the same grid cell. `pointer-events-none` on the
-                    // inactive ones stops an invisible slide swallowing clicks.
+                    // `pointer-events-none` on the inactive slides stops an
+                    // invisible one swallowing clicks.
                     const cls = `block w-full transition-opacity duration-700 ${
                       hidden ? "pointer-events-none opacity-0" : "opacity-100"
                     }`;
-                    if (s.render) {
-                      const Slide = s.render;
-                      return (
-                        <div
-                          key={s.n}
-                          className={cls}
-                          aria-hidden={hidden}
-                          role="img"
-                          aria-label={s.alt}
-                        >
-                          <Slide />
-                        </div>
-                      );
-                    }
                     return (
                       <Image
                         key={s.n}
-                        src={s.img as string}
+                        src={s.img}
                         alt={s.alt}
-                        width={s.w as number}
-                        height={s.h as number}
+                        width={s.w}
+                        height={s.h}
                         // Only the first slide is eager: it is the one visible
                         // when the section scrolls in.
                         priority={i === 0}
@@ -387,6 +390,7 @@ export function WalkthroughSection() {
                       type="button"
                       role="tab"
                       id={`wt-tab-${i}`}
+                      aria-controls="wt-panel"
                       aria-selected={isActive}
                       // Roving tabindex: one stop for the whole list, arrows
                       // move between steps.

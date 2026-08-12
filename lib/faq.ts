@@ -174,10 +174,15 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "Is a human involved, or is this only AI?",
-        a: [
-          "[INSERT APPROVED HUMAN-REVIEW WORDING]",
-          "TODO(launch): this must match the AI and Data Disclosure page exactly. Do not ship divergent wording.",
-        ],
+        // LAUNCH-BLOCKING, same as the privacy answer above: replace with the
+        // approved wording, and keep it identical to the AI and Data Disclosure
+        // page — divergent wording on the same question is worse than none.
+        //
+        // This note belongs in a comment, not in `a`. Every string in `a` is a
+        // rendered paragraph AND a sentence inside the FAQPage JSON-LD's
+        // acceptedAnswer, so the note shipped as visible body text on /faq and
+        // as answer text for any engine quoting the markup.
+        a: ["[INSERT APPROVED HUMAN-REVIEW WORDING]"],
       },
       {
         q: "Why does the result say 'possible belief' rather than telling me what I believe?",
