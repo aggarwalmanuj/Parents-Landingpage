@@ -59,11 +59,51 @@ const CHIPS = [
 
 type Mode = "preview" | "poster" | "playing";
 
+/**
+ * Whether it is reasonable to spend this visitor's bandwidth on a silent
+ * preview they did not ask for.
+ *
+ * The VSL is a 6.5 MB progressive MP4 with no adaptive variants, so a muted
+ * autoplay is not a cheap flourish: the browser opens a `bytes=0-` range
+ * request and pulls the entire file. On the mid-range Android phone on a
+ * mobile connection that this page's paid traffic actually arrives on, that is
+ * the largest single thing the page does, and the visitor may well leave
+ * before the video they never started is finished downloading.
+ *
+ * Where the browser tells us the connection is metered or slow, the preview is
+ * skipped and the poster + play button is shown instead — the video then costs
+ * nothing at all unless it is asked for. Everywhere else the preview is
+ * unchanged. The Network Information API is Chromium-only, so this is a
+ * best-effort improvement for the visitors it can identify, never a gate.
+ */
+function connectionCanAffordPreview(): boolean {
+  try {
+    const conn = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    if (!conn) return true;
+    if (conn.saveData) return false;
+    return conn.effectiveType !== "slow-2g" && conn.effectiveType !== "2g";
+  } catch {
+    return true;
+  }
+}
+
 export function VslPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Quartile flags live in a ref: timeupdate fires ~4×/s and must not re-render.
   const firedRef = useRef<Set<string>>(new Set());
-  const [mode, setMode] = useState<Mode>("preview");
+  // Starts on the poster, not on the preview overlay.
+  //
+  // The overlay reads "Your video is playing. Click to unmute.", and with the
+  // autoplay attempt now deferred past load that sentence would be false for
+  // the first few seconds of every visit — and permanently false for anyone
+  // whose browser refuses the autoplay or whose connection is metered. The
+  // player promotes itself to "preview" when play() actually succeeds, so the
+  // overlay now only ever appears over a video that is genuinely running.
+  const [mode, setMode] = useState<Mode>("poster");
 
   useEffect(() => {
     // No approved cut yet: the placeholder card renders instead, and there is
@@ -73,47 +113,76 @@ export function VslPlayer() {
     if (!video) return;
     // Reduced-motion visitors get the poster + a plain play button. No motion,
     // and no video bytes at all, until they ask for them.
-    //
-    // Scheduled on a microtask rather than called inline: React forbids a
-    // synchronous setState in an effect body. This is the same timing the
-    // previous implementation had, which reached setMode through a rejected
-    // promise's .catch() — also a microtask. Deferring it to the idle callback
-    // below instead would leave a reduced-motion visitor looking at the "Your
-    // video is playing" overlay for up to 1.5s while nothing played.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      queueMicrotask(() => setMode("poster"));
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!connectionCanAffordPreview()) return;
 
     // Muted autoplay: allowed by policy almost everywhere, but Low-Power-Mode
     // iOS and some browsers still reject it, hence the catch.
     video.muted = true;
 
-    // The autoplay attempt is deferred to the first idle callback rather than
-    // fired during the effect. The VSL is a large progressive MP4, and calling
-    // play() immediately starts streaming it in direct competition with the
-    // hero poster and the display font for the same connection, during the
-    // exact window LCP is measured in. Waiting for idle means the largest
-    // paint lands on an uncontended network; the preview still starts a frame
-    // or two later, well inside the time it takes to read the headline.
-    //
-    // The 1500ms timeout is the ceiling: on a busy main thread the callback
-    // is forced to run rather than being starved indefinitely.
     let cancelled = false;
     const start = () => {
       if (cancelled) return;
-      video.play().catch(() => setMode("poster"));
+      // preload="none" means the element holds no bytes yet; play() is what
+      // starts the fetch, which is exactly the point — nothing is downloaded
+      // until this moment.
+      video.play().then(
+        () => {
+          if (!cancelled) setMode("preview");
+        },
+        () => {
+          // Autoplay refused. The poster and its play button are already what
+          // is on screen, so there is nothing to change.
+        }
+      );
     };
 
-    const canIdle = typeof window.requestIdleCallback === "function";
-    const handle = canIdle
-      ? window.requestIdleCallback(start, { timeout: 1500 })
-      : window.setTimeout(start, 200);
+    // The autoplay attempt waits for the `load` event, then for idle.
+    //
+    // It used to wait for idle alone, with a 1500ms ceiling. That was not
+    // enough: on a throttled mobile connection the page is still fetching the
+    // font, the stylesheet and the JavaScript that the hero needs at 1500ms,
+    // so the ceiling fired mid-flight and the video began streaming straight
+    // into the middle of the LCP window, competing with the assets that decide
+    // when the headline and CTA appear.
+    //
+    // Anchoring to `load` means the preview cannot start until everything the
+    // page needs in order to be usable has already arrived. The idle callback
+    // after it yields the main thread one more time so play() does not land
+    // inside hydration. Both are bounded, so a page that never fires `load`
+    // (a stalled below-the-fold image, say) still gets its preview.
+    let idleHandle: number | undefined;
+    // `load` and the backstop timer can both fire; only the first may schedule.
+    let scheduled = false;
+    const afterLoad = () => {
+      if (cancelled || scheduled) return;
+      scheduled = true;
+      idleHandle =
+        typeof window.requestIdleCallback === "function"
+          ? window.requestIdleCallback(start, { timeout: 2000 })
+          : window.setTimeout(start, 200);
+    };
+
+    let loadTimer: number | undefined;
+    if (document.readyState === "complete") {
+      afterLoad();
+    } else {
+      window.addEventListener("load", afterLoad, { once: true });
+      // Backstop for a `load` that never comes.
+      loadTimer = window.setTimeout(afterLoad, 8000);
+    }
 
     return () => {
       cancelled = true;
-      if (canIdle) window.cancelIdleCallback(handle as number);
-      else window.clearTimeout(handle as number);
+      window.removeEventListener("load", afterLoad);
+      if (loadTimer !== undefined) window.clearTimeout(loadTimer);
+      if (idleHandle !== undefined) {
+        if (typeof window.cancelIdleCallback === "function") {
+          window.cancelIdleCallback(idleHandle);
+        } else {
+          window.clearTimeout(idleHandle);
+        }
+      }
     };
   }, []);
 
@@ -200,10 +269,28 @@ export function VslPlayer() {
           className="aspect-video w-full"
           src={VSL_SRC}
           {...(VSL_POSTER ? { poster: VSL_POSTER } : {})}
-          preload="metadata"
+          // "none", not "metadata". `metadata` sounds cheap and is not: for a
+          // progressive MP4 whose moov atom placement we do not control,
+          // Chrome opens a `bytes=0-` range request and streams the whole
+          // 6.5 MB file — measured, not assumed. That download started during
+          // the initial page load, on the same connection as the font and the
+          // JavaScript, for a video most visitors never unmute.
+          //
+          // Nothing is lost: the poster still renders (it is a separate image),
+          // the effect above calls play() once the page has loaded, and a
+          // visitor who presses play gets the fetch started by that gesture.
+          preload="none"
           playsInline
           muted
-          controls={mode !== "preview"}
+          // `mode === "playing"`, not `mode !== "preview"`. "poster" is now the
+          // state the player STARTS in rather than only the state it falls back
+          // to, and showing a native control bar across the hero poster from
+          // first paint would change how the hero looks. The overlay's play
+          // button is the affordance until then (it carries an accessible
+          // name, so keyboard and screen-reader users reach it), and pressing
+          // it moves the player to "playing", which hands over to the native
+          // controls exactly as before.
+          controls={mode === "playing"}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
           aria-label="AI Merge Parenting Belief Score video"
