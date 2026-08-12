@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   // mid-sentence, which is exactly when Google substitutes its own snippet.
   // Leads with the offer and the objection that decides the click.
   description:
-    "Free, personalised Parenting Belief Score: see what may be shaping your response before the next conversation. Built from your own words. No credit card.",
+    "Your kids are growing up - and telling you less. See what may be shaping your side of the distance. Free, personalised Parenting Belief Score. No credit card.",
   applicationName: BRAND,
   // Authorship and publisher are the machine-readable half of E-E-A-T. The
   // JSON-LD Person/Organization graph asserts the same two entities, so the
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Parenting Belief Score · AI Merge",
     description:
-      "See what may be shaping your response before the next conversation, built from your own words. Free and personalised. It examines your pattern, not your child's - a reflective tool, not a diagnosis.",
+      "Your kids are growing up. Why does it feel like they're growing away? A free, personalised Parenting Belief Score, built from your own words. It examines your pattern, not your child's - a reflective tool, not a diagnosis.",
     type: "website",
     url: "/",
     siteName: "AI Merge",
@@ -100,7 +100,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Parenting Belief Score · AI Merge",
     description:
-      "See what may be shaping your response before the next conversation. Free, personalised, built from your own words. Reflective, not diagnostic.",
+      "Your kids are growing up. Why does it feel like they're growing away? Free, personalised Parenting Belief Score, built from your own words. Reflective, not diagnostic.",
     // twitter:image is auto-injected from app/twitter-image.tsx.
   },
 };

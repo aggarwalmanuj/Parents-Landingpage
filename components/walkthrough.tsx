@@ -219,12 +219,14 @@ export function WalkthroughSection() {
             </h2>
           </div>
           <div className="lg:col-span-5">
+            {/* One line, not two. The standalone four-step "How it works"
+                section that used to sit above this was cut in the narrative
+                rebuild — these five real screens were always the better
+                answer to the same question — so this lede no longer has to
+                avoid repeating it. */}
             <p className="text-lg leading-[1.8] text-muted">
-              Five questions. One moment. Your result.
-            </p>
-            <p className="mt-3 text-[15px] leading-[1.75] text-faint">
-              Here is every step, start to finish - so you know exactly what
-              you&rsquo;re walking into, and what you&rsquo;ll walk away with.
+              Five questions. One moment. Your score - start to finish, before
+              you commit to anything.
             </p>
           </div>
         </Reveal>

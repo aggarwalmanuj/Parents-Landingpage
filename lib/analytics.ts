@@ -11,30 +11,33 @@ import { LP_SLUG } from "./scorecard";
 
 /**
  * CTA placements the doc requires distinct tracking for. These map 1:1 to the
- * blocks of the Parenting Belief Score landing page, so the funnel report can
+ * sections of the Parenting Belief Score landing page, so the funnel report can
  * tell WHICH argument produced the click:
  *
- *   hero            — Block 01, above the VSL
- *   question        — Block 03, the one additional question
- *   score_visual    — Block 04, "How your words become your score" + score card
- *   recognition     — Block 05, patterns become visible in ordinary moments
- *   whats_inside    — Block 06, what's inside your score
- *   founder         — Block 08, why I built this
- *   how_it_works    — Block 11, five questions / one moment / your result
- *   faq             — Block 12, questions parents ask
- *   final           — Block 13, closing CTA
+ *   hero            — above the VSL
+ *   drift           — I, the distance drawn as it accumulates
+ *   pattern         — II, the part of it they can still change
+ *   score           — III, what the number means (the arch)
+ *   what_arrives    — IV, the score, the breakdown, the program
+ *   founder         — VI, who built it + proof
+ *   faq             — VII, questions parents ask
+ *   final           — the closing CTA
  *   mobile_sticky   — the persistent mobile bar
  *   header          — the sticky header CTA
+ *
+ * RENAMED 2026-08-12 with the narrative rebuild. The retired names were
+ * `question`, `score_visual`, `recognition`, `whats_inside` and
+ * `how_it_works`; any saved PostHog funnel or dashboard filtering on those
+ * needs repointing rather than silently reporting zero.
  */
 export type CtaLocation =
   | "header"
   | "hero"
-  | "question"
-  | "score_visual"
-  | "recognition"
-  | "whats_inside"
+  | "drift"
+  | "pattern"
+  | "score"
+  | "what_arrives"
   | "founder"
-  | "how_it_works"
   | "faq"
   | "final"
   | "mobile_sticky"

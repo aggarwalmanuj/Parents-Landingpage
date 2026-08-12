@@ -1471,3 +1471,58 @@ select {
     .device-frame:hover { transform: none; }
   }
 }
+
+/* --- The drift chart ------------------------------------------------------
+   Two lines that leave the same point and never meet again (see
+   components/visuals/closeness-drift.tsx). The lines TRACE rather than
+   appearing, because the one idea the drawing carries is that the gap opened
+   over time.
+
+   `pathLength="1"` on the paths is what makes this work without measuring
+   anything in JS: the dash array is expressed in the normalised length, so one
+   rule animates any path at any viewport width.
+
+   Both animations start PAUSED and are released by the `is-visible` class the
+   Reveal wrapper adds when the figure scrolls into view. Without that gate the
+   trace would run at mount and be over before the section is reached — the
+   component always renders itself inside a Reveal for exactly this reason. */
+@keyframes drift-draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes drift-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.drift-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: drift-draw 1.7s var(--ease-out) forwards;
+  animation-delay: var(--drift-delay, 0ms);
+  animation-play-state: paused;
+}
+.drift-fade {
+  opacity: 0;
+  animation: drift-fade 0.7s var(--ease-out) forwards;
+  animation-delay: var(--drift-delay, 300ms);
+  animation-play-state: paused;
+}
+.reveal.is-visible .drift-draw,
+.reveal.is-visible .drift-fade {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No trace, no fade — but the marks must still be THERE, which is why these
+     reset the static properties too rather than only cancelling the
+     animation. */
+  .drift-draw {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .drift-fade {
+    opacity: 1;
+    animation: none;
+  }
+}

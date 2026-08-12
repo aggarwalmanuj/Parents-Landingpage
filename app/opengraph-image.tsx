@@ -3,10 +3,15 @@ import { ImageResponse } from "next/og";
 // Copy is declared once so the same strings drive the render, the font
 // glyph-subsetting, and the `alt` text below. Matches the live hero headline.
 const EYEBROW = "Free Parenting Belief Score";
-const HEAD_LINE_1 = "See what's shaping";
-const HEAD_LINE_2 = "your response.";
+// Mirrors the live H1. Line 2 is the shortened form of "Why does it feel like
+// they're growing away?" — at 78px the full question runs to roughly 1600px
+// inside a 1040px text column, so the card carries the same turn in fewer
+// words rather than shrinking the type until the card stops reading at
+// thumbnail size in a feed.
+const HEAD_LINE_1 = "Your kids are growing up.";
+const HEAD_LINE_2 = "Are they growing away?";
 const SUBHEAD =
-  "Answer five questions about one real parenting moment. Get a free, personalised Parenting Belief Score built from your own words.";
+  "A free, personalised Parenting Belief Score, built from your own words. Five questions, about 10 minutes, no credit card.";
 const FOOTER = "AI Merge · TetraNoodle Technologies";
 
 // Route segment config. Node runtime so it can be generated at build time.

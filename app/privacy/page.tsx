@@ -40,7 +40,7 @@ export default function PrivacyPage() {
             moment. What you write is personal, and it may mention a child or
             another member of your family. Please share only what you are
             comfortable sharing, and only what you need in order to describe
-            the moment &mdash; there is no benefit to including full names,
+            the moment - there is no benefit to including full names,
             addresses, schools, medical details, or anything else that
             identifies a child.
           </p>

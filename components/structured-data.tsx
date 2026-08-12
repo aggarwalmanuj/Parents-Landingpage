@@ -136,7 +136,7 @@ const siteGraph = {
       url: SITE,
       name: "AIMERGE",
       description:
-        "The free Parenting Belief Score: see what may be shaping your response before the next conversation.",
+        "The free Parenting Belief Score: for parents whose children are growing up and telling them less, a reflective look at what may be shaping the parent's own side of the distance.",
       publisher: { "@id": ID.org },
       about: { "@id": ID.service },
       inLanguage: "en",
