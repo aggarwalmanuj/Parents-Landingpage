@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ReactDOM from "react-dom";
 import {
   Award,
   BookOpen,
@@ -279,18 +278,34 @@ function ChapterRule({ className = "my-12 sm:my-16" }: { className?: string }) {
 }
 
 export default function Home() {
-  // LCP preload. The hero video's poster is the largest element in the initial
-  // viewport on desktop, but a `poster` attribute is only discovered once the
-  // <video> is parsed and browsers fetch posters at low priority — so it loses
-  // the race to assets that matter less. ReactDOM.preload (not a rendered
-  // <link>) emits exactly one hint rather than two.
-  ReactDOM.preload("/video/vsl-parents-poster.jpg", {
-    as: "image",
-    fetchPriority: "high",
-  });
-
   return (
     <>
+      {/* LCP preload, desktop only.
+
+          The hero video's poster is the largest element in the initial viewport
+          on DESKTOP, and a `poster` attribute is only discovered once the
+          <video> is parsed and browsers fetch posters at low priority — so
+          without a hint it loses the race to assets that matter less.
+
+          On a phone it is a different picture entirely, and that is the traffic
+          this page is bought for. The hero stacks an eyebrow, a two-line
+          display headline and two subheads above the player, so at 412x915 the
+          poster is at or below the fold while the LCP element is the headline.
+          Fetching 63 KB at `fetchPriority: high` there does not make anything
+          visible sooner; it takes bandwidth from the font, the stylesheet and
+          the JavaScript that do, on the one connection they all share.
+
+          `media` is what keeps both cases right, and it is why this is a
+          rendered <link> rather than ReactDOM.preload — the latter has no
+          media option, so it cannot express "desktop only". React hoists this
+          into <head> exactly like any other preload. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/video/vsl-parents-poster.jpg"
+        fetchPriority="high"
+        media="(min-width: 768px)"
+      />
       <SiteHeader />
       {/* FAQ, video, HowTo and publication JSON-LD: homepage only, because only
           this page renders the questions accordion, the VSL, and the four-step
@@ -336,7 +351,7 @@ export default function Home() {
               the CTA is reached; at the desktop rhythm that pushed the button
               well past a second screen on a 390px viewport. */}
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-6 pt-6 text-center sm:px-8 sm:pb-10 sm:pt-16">
-            <Reveal>
+            <Reveal priority>
               {/* "For parents", not "AI Merge". The chip is the first line a
                   visitor reads, and it was spending that position on the
                   vendor's name - a brand nobody arriving from an ad recognises
@@ -350,7 +365,7 @@ export default function Home() {
                 For parents · Free Parenting Belief Score
               </p>
             </Reveal>
-            <Reveal delay={80}>
+            <Reveal priority delay={80}>
               {/* The approved LP.md headline, restored.
                   The live build had been running "See what's shaping your
                   response before the next conversation" — a line that could
@@ -386,7 +401,7 @@ export default function Home() {
                 </span>
               </h1>
             </Reveal>
-            <Reveal delay={140}>
+            <Reveal priority delay={140}>
               {/* ONE subhead, not three stacked paragraphs.
 
                   The hero previously ran the spec's fragments, then the
@@ -406,7 +421,7 @@ export default function Home() {
                 decision you wouldn&rsquo;t have made.
               </p>
             </Reveal>
-            <Reveal delay={190}>
+            <Reveal priority delay={190}>
               {/* Two sentences, two lines. Left to wrap on its own, the break
                   landed mid-phrase ("…small. What it / begins to mean…"),
                   which reads as a typo. Splitting on the sentence boundary
@@ -432,7 +447,7 @@ export default function Home() {
             <Reveal immediate>
               <VslPlayer />
             </Reveal>
-            <Reveal delay={260}>
+            <Reveal priority delay={260}>
               <CtaBlock location="hero" className="mt-8" />
             </Reveal>
           </div>
@@ -441,7 +456,7 @@ export default function Home() {
               as the subhead, where the spec places them — above the VSL, doing
               the recognition work before a visitor decides whether to watch
               anything. What remains here is only the methodology line. */}
-          <Reveal delay={320}>
+          <Reveal priority delay={320}>
             <p className="mx-auto mt-8 max-w-4xl px-5 pb-16 text-center text-sm text-faint sm:px-8">
               Built on AI Merge, a methodology published in the{" "}
               <span className="text-muted">Mensa Research Journal</span>.

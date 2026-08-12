@@ -817,6 +817,36 @@ select {
   transform: none;
 }
 
+/* Above-the-fold entrance, driven by CSS alone.
+   Identical motion to .reveal (same distance, same duration, same easing, same
+   --reveal-delay), but expressed as a keyframe that starts when the element is
+   parsed rather than as a transition waiting for a class that only hydration
+   can add. Nothing above the fold should need the client bundle in order to
+   become visible — see the `priority` prop in components/reveal.tsx. */
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.reveal-now {
+  animation: reveal-rise var(--dur-slow) var(--ease-out) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+/* `both` holds the `from` state through the delay, so a visitor who prefers
+   reduced motion would otherwise sit at opacity 0 for that long. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-now {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Logo marquee */
 @keyframes marquee {
   from { transform: translateX(0); }
