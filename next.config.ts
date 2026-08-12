@@ -105,6 +105,41 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      {
+        /* Files under /public are served with `cache-control: public,
+           max-age=0` by default, so every one of them is revalidated on every
+           visit. For /_next/static that does not matter — those URLs are
+           content-hashed and cached for a year automatically — but nothing in
+           /public gets that treatment, and this page keeps its heaviest asset
+           there: a 6.5 MB VSL that a returning visitor re-fetched in full.
+
+           The filename carries the version (`vsl-parents-v1.mp4`), and the
+           poster sits beside it in the same directory, so `immutable` is
+           accurate: a new cut ships as v2 and gets a new URL. */
+        source: "/video/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        /* The rest of the static imagery. A day in the browser and a week of
+           stale-while-revalidate at the edge, NOT `immutable`: these filenames
+           are descriptive rather than versioned (`parents-00-entry.jpg`), so a
+           replaced screenshot has to be able to reach people who already have
+           the old one. Most of these are also requested through /_next/image,
+           which caches the optimised output separately; this covers the
+           originals and any direct reference. */
+        source: "/:dir(images|take|logos|manuj|icon)/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
     ];
   },
   async rewrites() {
