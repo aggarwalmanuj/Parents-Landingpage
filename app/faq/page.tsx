@@ -72,8 +72,8 @@ export default function FaqPage() {
             Parenting Belief Score
           </strong>{" "}
           is a free, personalised reflection built from your own description of
-          one real parenting moment. It examines your own pattern &mdash; your
-          interpretation, meaning, response, and recurring loop &mdash; and it
+          one real parenting moment. It examines your own pattern - your
+          interpretation, meaning, response, and recurring loop - and it
           does not assess, score, or diagnose your child. It is reflective and
           educational, not diagnosis, treatment, or medical, psychological,
           legal, or family-therapy services, and it requires no credit card.

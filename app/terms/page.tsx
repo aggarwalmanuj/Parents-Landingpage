@@ -80,7 +80,7 @@ export default function TermsPage() {
             about you, your child, your family, your ability, or your value.
             Keep what fits; correct, refine, question, or reject what does not.
             Belief is never presented as the sole cause of anything that
-            happens in your family &mdash; development, circumstances,
+            happens in your family - development, circumstances,
             personality, health, finances, history and culture are all real.
             You remain responsible for the decisions you make as a parent.
           </p>
