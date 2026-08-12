@@ -1,18 +1,35 @@
 // Client instrumentation (Next 15.3+ convention): runs before the app
 // becomes interactive.
 
-import posthog from "posthog-js";
 import { captureFirstTouchAttribution } from "@/lib/attribution";
 import { getConsent, onConsentChange } from "@/lib/consent";
+import { setPostHogClient } from "@/lib/posthog-client";
 
 // Attribution is captured unconditionally, it must work even when PostHog
 // is off. (captureFirstTouchAttribution is idempotent and try/catch'd.)
+//
+// It also stays SYNCHRONOUS and free of any posthog-js import, which is what
+// lets it run in the first tick of client instrumentation: `fbclid` and the
+// UTM set have to be read off window.location before anything can strip or
+// rewrite the URL, and they must be captured for visitors who never grant
+// consent at all.
 captureFirstTouchAttribution();
 
 const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
 const enableDev = process.env.NEXT_PUBLIC_POSTHOG_ENABLE_DEV === "true";
 
-function startPostHog(): void {
+/**
+ * Load and initialise posthog-js.
+ *
+ * The import is dynamic so the library is fetched only for visitors who have
+ * actually granted consent, instead of riding in the initial bundle of every
+ * first-time ad click that has not answered the banner yet. See
+ * lib/posthog-client.ts for the full reasoning.
+ *
+ * Events emitted before this resolves are not lost: lib/analytics.ts buffers
+ * them and replays them the moment setPostHogClient() lands.
+ */
+async function startPostHog(): Promise<void> {
   if (
     !token ||
     typeof window === "undefined" ||
@@ -21,6 +38,17 @@ function startPostHog(): void {
   ) {
     return;
   }
+
+  let posthog;
+  try {
+    posthog = (await import("posthog-js")).default;
+  } catch {
+    // Chunk blocked or offline. The page must not break, and the buffered
+    // events simply stay unsent — exactly as they would if the library were
+    // blocked by an extension.
+    return;
+  }
+
   posthog.init(token, {
     // Own-origin reverse proxy (next.config rewrites), defeats ad blockers
     // that drop *.posthog.com by hostname.
@@ -46,6 +74,11 @@ function startPostHog(): void {
       }
     },
   });
+
+  // Publish only after init(): every consumer checks `__loaded`, and handing
+  // out a client that has not been initialised would make that check pass on
+  // an instance that cannot capture.
+  setPostHogClient(posthog);
 }
 
 // GDPR: PostHog sets cookies/localStorage, so it only starts after explicit
@@ -53,10 +86,10 @@ function startPostHog(): void {
 // moment the banner's Accept is pressed.
 if (typeof window !== "undefined") {
   if (getConsent() === "granted") {
-    startPostHog();
+    void startPostHog();
   } else {
     onConsentChange((value) => {
-      if (value === "granted") startPostHog();
+      if (value === "granted") void startPostHog();
     });
   }
 }
