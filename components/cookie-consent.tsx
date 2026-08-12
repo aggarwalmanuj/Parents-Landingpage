@@ -37,8 +37,13 @@ export function CookieConsent() {
           We use cookies for analytics and to measure our ads. Accept to help
           us improve the site, or decline and we&apos;ll only use what&apos;s
           strictly necessary.{" "}
+          {/* prefetch={false}: this banner is on screen for every first-time
+              visitor, so its prefetch fires on every cold load — for a page
+              almost nobody opens from here, at the moment the hero can least
+              afford the bandwidth. */}
           <Link
             href="/privacy"
+            prefetch={false}
             className="font-medium text-fg underline underline-offset-4"
           >
             Privacy policy

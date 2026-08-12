@@ -49,7 +49,18 @@ export function SiteHeader() {
         {/* min-h-11: the anchor otherwise hugged the 16px-tall logo image,
             leaving a 114x16 tap target. The extra height is vertical padding
             inside the 64px header row, so nothing moves visually. */}
-        <Link href="/" className="flex min-h-11 shrink-0 items-center">
+        {/* prefetch={false}: on the landing page this link points at the page
+            the visitor is already looking at, and next/link still prefetches
+            it — measured as three RSC requests totalling ~23 KB, fetched just
+            after load on the same mobile connection the video preview is about
+            to want. There is nothing to prefetch: navigating here is a no-op.
+            On the sub-pages it is a genuine link, and one plain navigation
+            back to the landing page is not worth prefetching six of them. */}
+        <Link
+          href="/"
+          prefetch={false}
+          className="flex min-h-11 shrink-0 items-center"
+        >
           <Image
             src="/icon/logo.png"
             alt="AIMERGE"
