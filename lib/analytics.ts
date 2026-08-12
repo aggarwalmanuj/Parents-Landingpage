@@ -4,9 +4,9 @@
 // and payloads. Both sinks are consent-gated upstream and no-op safely when
 // absent.
 
-import posthog from "posthog-js";
 import { getConsent, onConsentChange } from "./consent";
 import { trackCustom } from "./fbpixel";
+import { getPostHog, onPostHogReady } from "./posthog-client";
 import { LP_SLUG } from "./scorecard";
 
 /**
@@ -84,8 +84,10 @@ const RETRY_ATTEMPTS = 30;
  *  and retrying would loop forever. False only means "sink not ready yet". */
 function sendToPostHog(e: QueuedEvent): boolean {
   try {
-    // __loaded is false until posthog.init runs (i.e. before consent).
-    if (!posthog.__loaded) return false;
+    // null until consent is granted AND the posthog-js chunk has arrived;
+    // __loaded is false until posthog.init() has run on it.
+    const posthog = getPostHog();
+    if (!posthog?.__loaded) return false;
     posthog.capture(e.name, e.payload);
   } catch {
     // Analytics must never break the page.
@@ -117,10 +119,38 @@ type Sink = {
    *  work but never the events - flush() shifts each one the instant it
    *  lands, synchronously, so a later chain finds it already gone. */
   draining: boolean;
+  /**
+   * Whether an exhausted retry budget is allowed to discard this sink's
+   * backlog.
+   *
+   * True for the pixel: fbevents.js is a third-party script that an ad blocker
+   * can stop arriving entirely, and there is no signal that says so. After
+   * 4.5s of polling, giving up is the only way to stop holding events forever.
+   *
+   * False for PostHog, which now arrives as a dynamically imported chunk. Its
+   * download is a first-party request on the same slow connection the visitor
+   * is already fighting, so it can legitimately outlast any fixed budget - and
+   * dropping `landing_page_view` because the library was slow rather than
+   * blocked would silently remove the funnel's denominator, which is the exact
+   * failure this whole queue exists to prevent. It is released by the
+   * onPostHogReady hook below instead of by a timer, and is bounded by
+   * PENDING_LIMIT rather than by time.
+   */
+  expires: boolean;
 };
 
-const postHogSink: Sink = { pending: [], send: sendToPostHog, draining: false };
-const pixelSink: Sink = { pending: [], send: sendToPixel, draining: false };
+const postHogSink: Sink = {
+  pending: [],
+  send: sendToPostHog,
+  draining: false,
+  expires: false,
+};
+const pixelSink: Sink = {
+  pending: [],
+  send: sendToPixel,
+  draining: false,
+  expires: true,
+};
 /** PostHog first: it is the funnel's system of record, the pixel is the ad
  *  platform's copy. */
 const SINKS: readonly Sink[] = [postHogSink, pixelSink];
@@ -150,9 +180,11 @@ function scheduleDrain(sink: Sink, attemptsLeft = RETRY_ATTEMPTS): void {
     flush(sink);
     if (sink.pending.length === 0) return;
     // Budget spent with nothing listening. Drop THIS sink's backlog only -
-    // the other sink may be perfectly healthy and mid-flush.
+    // the other sink may be perfectly healthy and mid-flush. A sink that does
+    // not expire keeps its backlog and simply stops polling; something else
+    // will wake it (see onPostHogReady below).
     if (attemptsLeft <= 1) {
-      sink.pending.length = 0;
+      if (sink.expires) sink.pending.length = 0;
       return;
     }
     scheduleDrain(sink, attemptsLeft - 1);
@@ -203,4 +235,15 @@ if (typeof window !== "undefined") {
       if (value === "granted") replayAll();
       else for (const sink of SINKS) sink.pending.length = 0;
     });
+
+  // Consent releases the sinks, but posthog-js is now fetched over the network
+  // at that moment rather than being already present in the bundle, so consent
+  // is no longer the instant it becomes usable. This is that instant. Without
+  // it, everything queued for PostHog would wait for the next trackEvent call
+  // to push it out - and a visitor who lands, accepts, and leaves without
+  // scrolling produces no further events at all.
+  onPostHogReady(() => {
+    flush(postHogSink);
+    if (postHogSink.pending.length > 0) scheduleDrain(postHogSink);
+  });
 }

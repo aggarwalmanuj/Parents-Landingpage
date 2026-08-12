@@ -1,7 +1,10 @@
 // First-touch attribution + safe PostHog wrappers.
 // Everything here is defensive: attribution must never break the page.
 
-import posthog from "posthog-js";
+// posthog-js is reached through the lazy holder, never imported directly: a
+// static import here would pull the whole library back into the initial bundle
+// for the sake of three functions that all no-op until consent anyway.
+import { getPostHog } from "./posthog-client";
 
 const STORAGE_KEY = "hf-first-touch";
 
@@ -94,7 +97,8 @@ export function getPostHogIds(): Pick<
   "posthogSessionId" | "posthogDistinctId"
 > {
   try {
-    if (typeof window === "undefined" || !posthog.__loaded) return {};
+    const posthog = getPostHog();
+    if (typeof window === "undefined" || !posthog?.__loaded) return {};
     return {
       posthogSessionId: posthog.get_session_id() || undefined,
       posthogDistinctId: posthog.get_distinct_id() || undefined,
@@ -123,7 +127,8 @@ export function getLeadAttribution(): LeadAttribution {
 
 export function phCapture(event: string, props?: Record<string, unknown>): void {
   try {
-    if (typeof window === "undefined" || !posthog.__loaded) return;
+    const posthog = getPostHog();
+    if (typeof window === "undefined" || !posthog?.__loaded) return;
     posthog.capture(event, props);
   } catch {
     // ignore
@@ -132,7 +137,8 @@ export function phCapture(event: string, props?: Record<string, unknown>): void 
 
 export function phIdentify(id: string, props?: Record<string, unknown>): void {
   try {
-    if (typeof window === "undefined" || !posthog.__loaded) return;
+    const posthog = getPostHog();
+    if (typeof window === "undefined" || !posthog?.__loaded) return;
     posthog.identify(id, props);
   } catch {
     // ignore

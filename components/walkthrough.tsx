@@ -326,9 +326,23 @@ export function WalkthroughSection() {
                         alt={s.alt}
                         width={s.w}
                         height={s.h}
-                        // Only the first slide is eager: it is the one visible
-                        // when the section scrolls in.
-                        priority={i === 0}
+                        // `loading="lazy"`, not `priority`.
+                        //
+                        // The first slide used to be marked `priority`, which
+                        // does not mean "load it before the other slides" — it
+                        // emits a <link rel=preload fetchpriority=high> in the
+                        // document head. This section sits several screens
+                        // below the hero, so that preload was pulling a
+                        // full-width screenshot (1200w on a phone, once the
+                        // device pixel ratio is applied) down the wire at the
+                        // highest priority, in parallel with the font and the
+                        // JavaScript the hero was still waiting on.
+                        //
+                        // Lazy is right for all five: the browser starts the
+                        // visible slide as the section approaches the viewport,
+                        // which is early enough, and the other four cost
+                        // nothing until then.
+                        loading="lazy"
                         sizes="(max-width: 1024px) 100vw, 58vw"
                         className={`${cls} h-auto`}
                         aria-hidden={hidden}

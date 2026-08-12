@@ -72,8 +72,27 @@ export function SiteFooter() {
           aria-label="Legal"
           className="flex flex-wrap items-center justify-center gap-x-6 text-sm"
         >
+          {/* prefetch={false} on the legal set.
+
+              next/link prefetches every link that enters the viewport, and the
+              footer puts six of them on screen at once — each one an RSC
+              payload for a page that a visitor arriving from an ad is very
+              unlikely to open. Measured on a cold mobile load, /privacy alone
+              was fetched four separate times (it is linked from both this row
+              and the cookie banner), for tens of kilobytes of a connection the
+              hero is still competing for.
+
+              These are compliance links, not funnel steps: they are reached
+              deliberately, and a normal navigation is fast enough for that.
+              The LEARN row above keeps its prefetch — /faq and /glossary are
+              real content destinations. */}
           {LEGAL.map((item) => (
-            <Link key={item.href} href={item.href} className={linkClass}>
+            <Link
+              key={item.href}
+              href={item.href}
+              prefetch={false}
+              className={linkClass}
+            >
               {item.label}
             </Link>
           ))}

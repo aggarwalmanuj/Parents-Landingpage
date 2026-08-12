@@ -1,5 +1,4 @@
 import Image from "next/image";
-import ReactDOM from "react-dom";
 import {
   Award,
   BookOpen,
@@ -250,18 +249,34 @@ function ChapterRule({ className = "my-12 sm:my-16" }: { className?: string }) {
 }
 
 export default function Home() {
-  // LCP preload. The hero video's poster is the largest element in the initial
-  // viewport on desktop, but a `poster` attribute is only discovered once the
-  // <video> is parsed and browsers fetch posters at low priority — so it loses
-  // the race to assets that matter less. ReactDOM.preload (not a rendered
-  // <link>) emits exactly one hint rather than two.
-  ReactDOM.preload("/video/vsl-parents-poster.jpg", {
-    as: "image",
-    fetchPriority: "high",
-  });
-
   return (
     <>
+      {/* LCP preload, desktop only.
+
+          The hero video's poster is the largest element in the initial viewport
+          on DESKTOP, and a `poster` attribute is only discovered once the
+          <video> is parsed and browsers fetch posters at low priority — so
+          without a hint it loses the race to assets that matter less.
+
+          On a phone it is a different picture entirely, and that is the traffic
+          this page is bought for. The hero stacks an eyebrow, a two-line
+          display headline and two subheads above the player, so at 412x915 the
+          poster is at or below the fold while the LCP element is the headline.
+          Fetching 63 KB at `fetchPriority: high` there does not make anything
+          visible sooner; it takes bandwidth from the font, the stylesheet and
+          the JavaScript that do, on the one connection they all share.
+
+          `media` is what keeps both cases right, and it is why this is a
+          rendered <link> rather than ReactDOM.preload — the latter has no
+          media option, so it cannot express "desktop only". React hoists this
+          into <head> exactly like any other preload. */}
+      <link
+        rel="preload"
+        as="image"
+        href="/video/vsl-parents-poster.jpg"
+        fetchPriority="high"
+        media="(min-width: 768px)"
+      />
       <SiteHeader />
       {/* FAQ, video, HowTo and publication JSON-LD: homepage only, because only
           this page renders the questions accordion, the VSL, and the steps they
