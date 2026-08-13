@@ -83,6 +83,30 @@ function readCookie(name: string): string | undefined {
 }
 
 /**
+ * The URL to hand off with BEFORE React hydrates.
+ *
+ * The page is statically prerendered, so the CDN serves its markup to everyone
+ * and the hero CTA is clickable before any JS runs (see the hero's
+ * paint-without-JS work). Anything that reaches the funnel from that first
+ * paint therefore has to be carried by the server-rendered href itself.
+ *
+ * `lp` is the only param that can be: it is a constant for this doorway, so
+ * emitting it is deterministic and cannot mismatch on hydration. That matters
+ * because the scorecard keys its parent branding off `lp=parents` - without it
+ * a fast clicker lands on the generic flow.
+ *
+ * The UTMs deliberately stay behind: their real values live in localStorage
+ * (first touch), and stamping the organic defaults here would relabel a genuine
+ * ad click as organic, which is worse than the funnel recording it as unknown
+ * for the few hundred ms until buildScorecardUrl() takes over.
+ */
+export function baseScorecardUrl(): string {
+  const dest = new URL(SCORECARD_BASE_URL);
+  dest.searchParams.set("lp", LP_SLUG);
+  return dest.toString();
+}
+
+/**
  * Build the full scorecard URL with every value we have. Values are set via
  * URLSearchParams (URL-encoded for us); any param we lack is omitted entirely,
  * never an empty param.

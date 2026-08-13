@@ -5,10 +5,10 @@ import { trackEvent, type CtaLocation } from "@/lib/analytics";
 import { getStoredFirstTouch } from "@/lib/attribution";
 import { trackCustom } from "@/lib/fbpixel";
 import {
+  baseScorecardUrl,
   buildScorecardUrl,
   CAMPAIGN_ID,
   LP_SLUG,
-  SCORECARD_BASE_URL,
 } from "@/lib/scorecard";
 
 type ScorecardCtaProps = {
@@ -35,15 +35,17 @@ export function ScorecardCta({
   className = "",
   tabIndex,
 }: ScorecardCtaProps) {
-  // SSR and the first hydration render emit the bare entry point (no mismatch,
-  // and a fast pre-hydration click still lands correctly); the client snapshot
-  // then enriches the href with stored attribution + the stable visitor ref.
+  // SSR and the first hydration render emit the entry point carrying `lp` (a
+  // constant, so no mismatch); the client snapshot then enriches the href with
+  // stored attribution + the stable visitor ref. `lp` has to be in the server
+  // href because this page is prerendered and the hero CTA is clickable before
+  // hydration - without it a fast click reaches the funnel unbranded.
   // Deliberately a same-tab anchor with NO rel="noreferrer": the scorecard reads
   // the referrer as a secondary signal (lp/ref stay the source of truth).
   const href = useSyncExternalStore(
     subscribe,
     buildScorecardUrl,
-    () => SCORECARD_BASE_URL
+    baseScorecardUrl
   );
 
   // Funnel-visibility ping. cta_click (with location) is the doc-specified
