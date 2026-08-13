@@ -153,9 +153,12 @@ const TESTIMONIALS = [
   },
 ];
 
-/* The line under every primary CTA. The measured completion figure is ten
-   minutes, confirmed by the owners. */
-const CTA_MICROCOPY = "Free · 5 questions · About 10 minutes · No credit card";
+/* The line under every primary CTA. V4 drops the duration from this bar: the
+   ten-minute figure is still true and still stated (in the "what arrives"
+   block, and on the assessment's own entry screen), but three constraints read
+   faster than four, and "no credit card" is the one that answers the real
+   hesitation. */
+const CTA_MICROCOPY = "Free · 5 questions · No credit card";
 
 const CTA_LABEL = "Get My Free Parenting Belief Score";
 const CTA_LABEL_SHORT = "Get My Free Score";
@@ -316,42 +319,51 @@ export default function Home() {
           <div className="spotlight-hero" aria-hidden />
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-7 pt-8 text-center sm:px-8 sm:pb-10 sm:pt-16">
             <Reveal>
+              {/* V4 eyebrow. Names the brand and the offer, so the chip that is
+                  the first line on the page says what this IS. The audience is
+                  no longer needed here - the headline's own first six words
+                  ("For parents of teens and young adults") carry it. */}
               <p className="cred-chip">
-                For parents of teens and young adults
+                AI Merge · Free Parenting Belief Score
               </p>
             </Reveal>
             <Reveal delay={80}>
-              {/* The whole hero argument, in nine words.
+              {/* Headline V4.
 
-                  It names the two people this page is about (you, your kids)
-                  and the one thing the visitor already feels (they are moving
-                  away), and it does it in their vocabulary rather than the
-                  product's. "Growing up / growing away" is the turn: the first
-                  clause is the thing every parent accepts, the second is the
-                  thing none of them planned for.
+                  It names the audience in its own first words rather than
+                  leaving that to the chip, states the want in the parent's
+                  vocabulary ("trust their own read again"), and closes on the
+                  fear that would otherwise stop them acting: that looking at
+                  this honestly will cost them the relationship. The italic
+                  clause is that objection, answered before it is raised.
 
-                  There is NO supporting paragraph under it, and that is
-                  deliberate. Everything a subhead would have said is already
-                  above the fold: the chip names the audience, the button names
-                  the offer ("Get My Free Parenting Belief Score"), and the
-                  microcopy under it carries the price, the length and the
-                  effort. A paragraph here only delays the video and the
-                  button, which are the two things that actually convert. */}
-              {/* Headline A2, from the approved hero-A2-mario-structure.html.
-                  Its five-part frame is Pain / Proof / Promise / Curiosity /
-                  Constraints; the H1 itself carries only the PROMISE clause and
-                  the CURIOSITY clause, which is what the two spans below are.
-                  The other three parts live in the chip, the trust line and the
-                  CTA microcopy, and are untouched here.
-
-                  The italic clause is the curiosity hook ("from one ordinary
-                  moment"), not a qualifier: it is what makes a promise about a
-                  whole relationship feel small enough to act on. */}
+                  Longer than A2 by design. The trade is deliberate: A2 sold a
+                  mechanism ("see what is driving the distance") to a reader who
+                  had not yet been told the page was for them. */}
               <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
-                How to see what is actually driving the distance with your
-                teenager{" "}
-                <span className="text-emphasis">from one ordinary moment.</span>
+                For parents of teens and young adults who want to trust their
+                own read again{" "}
+                <span className="text-emphasis">
+                  without it costing the relationship.
+                </span>
               </h1>
+            </Reveal>
+            <Reveal delay={140}>
+              {/* V4 promise line. The page had no subhead by design - the
+                  argument was that a paragraph only delays the video and the
+                  button. This one earns its place because it does something no
+                  other element above the fold does: it names the four markers,
+                  so "score" stops being an abstraction before the visitor is
+                  asked to spend ten minutes earning one.
+
+                  The four names are the product's own, verbatim, and match the
+                  dials further down the page and the live result screen in the
+                  walkthrough. */}
+              <p className="mt-5 max-w-2xl text-balance text-[17px] leading-[1.7] text-muted sm:mt-6 sm:text-body-lg sm:leading-[1.75]">
+                The score reads your side of that one moment, across four
+                markers: Direction Clarity, Identity Alignment, Decision
+                Readiness, Energy Alignment.
+              </p>
             </Reveal>
           </div>
 
