@@ -337,11 +337,20 @@ export default function Home() {
                   microcopy under it carries the price, the length and the
                   effort. A paragraph here only delays the video and the
                   button, which are the two things that actually convert. */}
+              {/* Headline A2, from the approved hero-A2-mario-structure.html.
+                  Its five-part frame is Pain / Proof / Promise / Curiosity /
+                  Constraints; the H1 itself carries only the PROMISE clause and
+                  the CURIOSITY clause, which is what the two spans below are.
+                  The other three parts live in the chip, the trust line and the
+                  CTA microcopy, and are untouched here.
+
+                  The italic clause is the curiosity hook ("from one ordinary
+                  moment"), not a qualifier: it is what makes a promise about a
+                  whole relationship feel small enough to act on. */}
               <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
-                Your kids are growing up.{" "}
-                <span className="text-emphasis">
-                  Are they growing away from you?
-                </span>
+                How to see what is actually driving the distance with your
+                teenager{" "}
+                <span className="text-emphasis">from one ordinary moment.</span>
               </h1>
             </Reveal>
           </div>
