@@ -153,12 +153,15 @@ const TESTIMONIALS = [
   },
 ];
 
-/* The line under every primary CTA. V4 drops the duration from this bar: the
-   ten-minute figure is still true and still stated (in the "what arrives"
-   block, and on the assessment's own entry screen), but three constraints read
-   faster than four, and "no credit card" is the one that answers the real
-   hesitation. */
-const CTA_MICROCOPY = "Free · 5 questions · No credit card";
+/* The line under every primary CTA.
+
+   Five constraints, not three. The two added ones are not filler: "looks at
+   you, not your child" and "no diagnosis" answer the exact objection this
+   page's own brief names as the one in a visitor's head on arrival ("this is
+   going to tell me I'm the problem"). Putting them ON the button is what stops
+   that objection surviving all the way to the click. */
+const CTA_MICROCOPY =
+  "Free · About 10 minutes · No credit card · Looks at you, not your child · No diagnosis";
 
 const CTA_LABEL = "Get My Free Parenting Belief Score";
 const CTA_LABEL_SHORT = "Get My Free Score";
@@ -317,52 +320,99 @@ export default function Home() {
           {/* One large soft orb centred behind the headline. Capped at 100vw in
               CSS so it can never add document width on a narrow phone. */}
           <div className="spotlight-hero" aria-hidden />
-          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-7 pt-8 text-center sm:px-8 sm:pb-10 sm:pt-16">
+          <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-5 pt-6 text-center sm:px-8 sm:pb-10 sm:pt-16">
             <Reveal>
               {/* V4 eyebrow. Names the brand and the offer, so the chip that is
                   the first line on the page says what this IS. The audience is
                   no longer needed here - the headline's own first six words
                   ("For parents of teens and young adults") carry it. */}
-              <p className="cred-chip">
-                AI Merge · Free Parenting Belief Score
+              {/* The CDC gap, as the eyebrow.
+
+                  Source: National Health Statistics Reports No. 206 (NCHS,
+                  July 2024), "Perceived Social and Emotional Support Among
+                  Teenagers: United States, July 2021-December 2022". The two
+                  figures are that report's, verbatim and unrounded: 76.9% of
+                  parents said their teen ALWAYS received the support they
+                  needed, against 27.5% of teens saying the same.
+
+                  It leads because it is the one thing on this page a visitor
+                  cannot argue with. The headline underneath asks "is the
+                  closeness slipping?" - a question a parent can dismiss about
+                  themselves. A national number saying most parents read this
+                  wrong is much harder to dismiss, and it reframes the whole
+                  page from "something may be wrong with you" to "this gap is
+                  ordinary, and it is measurable".
+
+                  Attribution stays ON the claim, not in a footnote. A bare
+                  percentage is a marketing number; a cited one is evidence.
+
+                  DO NOT round these to 77/28. They are quoted figures. */}
+              {/* Not the pill the chip component gives by default. A rounded
+                  chip reads as a badge - fine for "AI Merge · Free Score",
+                  wrong for the hardest claim on the page, which a visitor
+                  should read as evidence rather than as branding. So: a rule
+                  above it, the two figures in ink at the page's signal colour,
+                  and the prose around them in the quieter token. */}
+              <p className="mx-auto max-w-xl border-t border-line pt-4 text-[14px] leading-[1.6] text-faint sm:pt-5 sm:text-[15.5px] sm:leading-[1.7]">
+                <span className="mb-1.5 block text-[11px] uppercase tracking-[0.2em] text-signal">
+                  CDC data
+                </span>
+                <span className="text-ink">76.9% of parents</span> say their
+                teen always gets the emotional support they need.{" "}
+                <span className="text-ink">Only 27.5% of teens</span> say they
+                do.
               </p>
             </Reveal>
             <Reveal delay={80}>
-              {/* Headline V4.
+              {/* Headline: Option 1.
 
-                  It names the audience in its own first words rather than
-                  leaving that to the chip, states the want in the parent's
-                  vocabulary ("trust their own read again"), and closes on the
-                  fear that would otherwise stop them acting: that looking at
-                  this honestly will cost them the relationship. The italic
-                  clause is that objection, answered before it is raised.
+                  It follows the stat rather than competing with it. The stat
+                  says the gap is real and common; this says "and it may be
+                  yours", in the words a parent uses in their own head
+                  ("losing the closeness you used to have") rather than the
+                  product's.
 
-                  Longer than A2 by design. The trade is deliberate: A2 sold a
-                  mechanism ("see what is driving the distance") to a reader who
-                  had not yet been told the page was for them. */}
-              <h1 id="hero-headline" className="text-display mt-6 sm:mt-8">
-                For parents of teens and young adults who want to trust their
-                own read again{" "}
+                  "Parents of teens" opens it so the audience is named before
+                  the worry is, which keeps a visitor who is NOT the audience
+                  from reading a question aimed at someone else. */}
+              <h1 id="hero-headline" className="text-display mt-5 sm:mt-8">
+                Parents of teens: worried you&rsquo;re losing{" "}
                 <span className="text-emphasis">
-                  without it costing the relationship.
+                  the closeness you used to have?
                 </span>
               </h1>
             </Reveal>
             <Reveal delay={140}>
-              {/* V4 promise line. The page had no subhead by design - the
-                  argument was that a paragraph only delays the video and the
-                  button. This one earns its place because it does something no
-                  other element above the fold does: it names the four markers,
-                  so "score" stops being an abstraction before the visitor is
-                  asked to spend ten minutes earning one.
+              {/* The promise. Names the mechanism (a hidden belief), the cost
+                  (five questions), and the moment it applies to - the one the
+                  reader is already thinking about after the headline.
 
-                  The four names are the product's own, verbatim, and match the
-                  dials further down the page and the live result screen in the
-                  walkthrough. */}
-              <p className="mt-5 max-w-2xl text-balance text-[17px] leading-[1.7] text-muted sm:mt-6 sm:text-body-lg sm:leading-[1.75]">
-                The score reads your side of that one moment, across four
-                markers: Direction Clarity, Identity Alignment, Decision
-                Readiness, Energy Alignment.
+                  The four marker names that used to sit here are gone. They
+                  were product vocabulary arriving before the reader had agreed
+                  there was a problem; they are still named further down the
+                  page, on the dials, where a reader who has agreed will meet
+                  them. */}
+              <p className="mt-4 max-w-2xl text-balance text-[16px] leading-[1.65] text-muted sm:mt-6 sm:text-body-lg sm:leading-[1.75]">
+                Take the free 5-question Parenting Belief Score to uncover a
+                hidden belief that may be shaping how you respond in the very
+                moments you most want your teen to open up.
+              </p>
+            </Reveal>
+            <Reveal delay={190}>
+              {/* Proof line.
+
+                  "Documented changes already observed in real participants" is
+                  deliberately NOT here. This page's own proof section states
+                  plainly that no parent testimonials exist yet, and a claim of
+                  documented change above the fold would contradict it three
+                  screens later. The published methodology is verifiable today;
+                  the participant claim is not, so it waits.
+
+                  TODO(launch): if the documented-change evidence exists and can
+                  be cited, this line can carry it. */}
+              <p className="mt-4 hidden max-w-2xl text-balance text-[15px] leading-[1.7] text-faint sm:block">
+                Built on AI Merge, a personalised methodology published in the{" "}
+                <span className="text-muted">Mensa Research Journal</span>.
               </p>
             </Reveal>
           </div>
