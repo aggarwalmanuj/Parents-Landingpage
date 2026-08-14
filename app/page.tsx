@@ -8,9 +8,12 @@ import {
   Gauge,
   HeartHandshake,
   Lock,
+  MessageSquareText,
+  PenLine,
   Route,
   ShieldCheck,
   UserRoundCheck,
+  X,
 } from "lucide-react";
 import { FaqItem } from "@/components/faq-item";
 import { LandingAnalytics } from "@/components/landing-analytics";
@@ -28,6 +31,7 @@ import {
   videoNode,
 } from "@/components/structured-data";
 import { ClosenessDrift } from "@/components/visuals/closeness-drift";
+import { PerceptionGap } from "@/components/visuals/perception-gap";
 import { BeliefLoop } from "@/components/visuals/scenes";
 import { ScoreArch } from "@/components/visuals/score-arch";
 import { PillarDial } from "@/components/visuals/score-visuals";
@@ -42,30 +46,33 @@ import { ROUTES } from "@/lib/site";
    AI Merge · Free Parenting Belief Score doorway page.
 
    THE CONVERSION, IN ONE SENTENCE
-   A North American parent of a 12-25 year old, arriving cold from paid
-   social, who has noticed their child telling them less every year, takes the
-   free Parenting Belief Score. The objection in their head on arrival is
-   "this is going to tell me I'm the problem".
+   A North American parent of a TEENAGER, arriving cold from paid social, who
+   has noticed the closeness draining out of the relationship, takes the free
+   Parenting Belief Score. The objection in their head on arrival is "this is
+   going to tell me I'm the problem".
 
-   NARRATIVE (v4 — rebuilt to the management brief)
-   Hero (the loss, in one line) -> I the drift, drawn -> II the one part of it
-   they can still change -> III what the score IS, on an arch -> IV what
-   arrives -> V the product walked through -> VI who built it -> VII the
-   questions -> close.
+   NARRATIVE (v5 — the teen-messaging update)
+   Hero (audience, loss, offer, click) -> I recognition, in their own words ->
+   II the perception gap -> III what the score IS -> IV how it works -> V what
+   the number means -> VI what arrives -> VII the product walked through ->
+   VIII who built it -> IX the questions -> close.
 
-   WHAT CHANGED AND WHY, so it does not get "fixed" back:
-   - The old H1 was a two-clause abstraction about "your response" with a
-     three-line subhead under it. It described a mechanism to a reader who had
-     not yet agreed there was a problem. The H1 is now the problem itself, in
-     the reader's own vocabulary, and the subhead is one line.
-   - Seven of the old twelve sections were arguments the page was having with
-     itself (generic advice vs. your words; patterns in ordinary moments;
-     what's inside; a standalone four-step how-it-works that the walkthrough
-     already shows five steps of). They are gone. Each surviving section makes
-     ONE point and then asks for the click.
-   - The score used to be described only in prose and in screenshots. It now
-     has a graphic of its own — the arch — that states what a low number
-     means, what a high number means, and where the scale's midpoint sits.
+   WHAT CHANGED IN v5 AND WHY, so it does not get "fixed" back:
+   - AUDIENCE. The page said "your kids" and "12-25 year olds". It now says
+     teenagers, in the H1, in the metadata, and in every section's copy. A
+     visitor must be able to tell in one second that this page is about them.
+   - The hero gained back the three things it was missing: a line saying what
+     the offer IS (the free 5-question score), a credibility line, and a CTA
+     ABOVE the video rather than below it. The VSL stays, under the button.
+   - II is new: the perception gap, and the CDC figures behind it. It is the
+     page's only statistic and it is stated with its limits attached, because
+     the whole product rests on a parent being willing to believe a small
+     factual claim.
+   - IV is new: three steps, plainly. The walkthrough (VII) shows the real
+     screens, but a visitor deciding whether to start needs the shape of the
+     ask before they will scroll that far.
+   - IX's left rail is now the five reassurances a cautious parent needs
+     settled, each answered "No." — was four abstract "boundary" cards.
 
    REGISTER — unchanged, and non-negotiable:
    - The free Parenting Belief Score is the ONLY offer on this page. The
@@ -74,17 +81,73 @@ import { ROUTES } from "@/lib/site";
      page may imply they are included, and nothing may imply the score is
      anything other than free.
    - It examines THE PARENT'S pattern, never the child's. No section may
-     assess, score, diagnose, or infer the state of a child.
+     assess, score, diagnose, or infer the state of a teenager.
    - Educational and reflective — not diagnosis, treatment, or medical,
      psychological, legal, or family-therapy services.
    - Belief is never the sole cause. Development, circumstances, personality,
      health, finances, history and culture stay explicitly real.
+   - HEDGED VERBS ONLY where the product's claim is hedged: "may be shaping",
+     "may be influencing", "help surface", "make visible", "examine". Never
+     "uncover the belief", never "this will repair your relationship", never
+     anything that claims to know what a teenager thinks or feels.
    - The urgency on this page is the real one (a child grows up once, and the
      habits compound), stated as recognition. No countdowns, no invented
      scarcity, no promised child outcome.
 ========================================================================== */
 
-/* Block IV: what arrives, in the order it arrives.
+/* Block I: the recognition set. These are the sentences parents actually use,
+   and they are deliberately NOT presented as a checklist, a symptom list, or
+   anything a reader is meant to score themselves against — the footnote under
+   them says so in as many words. Their only job is "this page is about me". */
+const RECOGNITION = [
+  "We used to talk about everything.",
+  "Now I feel like I’m walking on eggshells.",
+  "I give them space, but they seem even farther away.",
+  "I try to help, and somehow it turns into an argument.",
+  "I don’t understand why the same conversations keep going wrong.",
+];
+
+/* Block IV: the three steps, in the order they happen. Kept deliberately
+   plain — no graphic, no screenshots. The walkthrough in VII is where the real
+   screens live; this is the shape of the ask, for a visitor who has not
+   decided to scroll that far yet. */
+const STEPS = [
+  {
+    Icon: PenLine,
+    n: "1",
+    title: "Describe one real moment",
+    body: "Tell us about an interaction with your teenager, in your own words. One moment, not your whole relationship.",
+  },
+  {
+    Icon: MessageSquareText,
+    n: "2",
+    title: "Answer 5 personalised questions",
+    body: "Built from what you just described, to explore what may be happening underneath your immediate response.",
+  },
+  {
+    Icon: Gauge,
+    n: "3",
+    title: "Receive your Parenting Belief Score",
+    body: "See the belief or pattern your answers surface, and how it may relate to the interaction you described.",
+  },
+];
+
+/* Block IV, the clarifier under the steps. Two columns, because the objection
+   a parent arrives with is answered faster by a list of what this ISN'T than
+   by another paragraph explaining what it is. */
+const SCORE_IS = [
+  "Personalised to the one moment you describe",
+  "Built from your own words, not a questionnaire",
+  "Focused on your side of the interaction",
+];
+const SCORE_IS_NOT = [
+  "Not an assessment of your teenager",
+  "Not a diagnosis, and not therapy",
+  "Not a parenting course",
+  "Not a verdict on whether you are a good parent",
+];
+
+/* Block VI: what arrives, in the order it arrives.
 
    The free score is the offer. The two below it are named without price,
    because price is the funnel's job — but the small print under the list is
@@ -111,7 +174,7 @@ const WHAT_ARRIVES = [
   },
 ];
 
-/* Block VI: prior professional work behind AI Merge. Pedigree, NOT
+/* Block VIII: prior professional work behind AI Merge. Pedigree, NOT
    endorsement — the disclaimer under the row states this, and it is mandatory
    whenever the strip is shown at all.
 
@@ -127,14 +190,14 @@ const TRUST_LOGOS = [
   { src: "/logos/un.png", alt: "United Nations" },
 ];
 
-/* Block VI: participant quotes.
+/* Block VIII: participant quotes.
 
    Both are from the broader AI Merge work, and the disclaimer under the cards
    says exactly that rather than implying they came from this free score.
 
    Chosen against one hard filter: each describes a shift the SPEAKER noticed
    in THEMSELVES. Nothing here claims another person changed — a parenting
-   testimonial promising a child would behave differently would break the
+   testimonial promising a teenager would behave differently would break the
    product's central claim on the one section meant to make it believable.
 
    TODO(launch): verify exact wording, name or approved anonymity, role, and
@@ -153,15 +216,62 @@ const TESTIMONIALS = [
   },
 ];
 
+/* Block IX: the five things a cautious parent wants settled before they will
+   type a private family moment into a stranger's website. Each is answered
+   "No." on purpose: the question a visitor is actually asking is a yes/no, and
+   a hedged answer to it reads as a yes.
+
+   Tinted in --signal rather than the four --pillar-N hues. Those four colours
+   identify the four SCORED DIMENSIONS and nothing else on this page; spending
+   them here would make teal mean "Direction Clarity" in one section and "your
+   child is not being assessed" in another. */
+const REASSURANCES = [
+  {
+    Icon: UserRoundCheck,
+    q: "Is this evaluating my child?",
+    a: "No. It looks at you, and at the interaction you describe in your own words.",
+  },
+  {
+    Icon: HeartHandshake,
+    q: "Is this a diagnosis?",
+    a: "No. It is not a medical or psychological diagnosis, and it is not treatment.",
+  },
+  {
+    Icon: Lock,
+    q: "Does my teenager have to take part?",
+    a: "No. Your teenager never needs to participate, and never needs to know.",
+  },
+  {
+    Icon: BookOpen,
+    q: "Is this another parenting course?",
+    a: "No. It is a short personalised assessment of one real interaction.",
+  },
+  {
+    Icon: ShieldCheck,
+    q: "Will I be judged?",
+    a: "No. The goal is curiosity and reflection, not a grade on your parenting.",
+  },
+];
+
 /* The line under every primary CTA.
 
    Five constraints, not three. The two added ones are not filler: "looks at
    you, not your child" and "no diagnosis" answer the exact objection this
    page's own brief names as the one in a visitor's head on arrival ("this is
    going to tell me I'm the problem"). Putting them ON the button is what stops
-   that objection surviving all the way to the click. */
+   that objection surviving all the way to the click.
+
+   REBASE NOTE: this is main's default (b92f83e), kept as the default. The
+   teen-narrative branch had carried a shorter default plus a hero-specific
+   override with exactly this string; with main's version global, that override
+   was redundant and is gone. Only the close still differs — see below. */
 const CTA_MICROCOPY =
   "Free · About 10 minutes · No credit card · Looks at you, not your child · No diagnosis";
+/* The close is the one place the reassurance changes, because the objection
+   live at that point is different: a visitor who has read the whole page is no
+   longer asking "is this about my child?" but "do I have to involve them?". */
+const CTA_MICROCOPY_FINAL =
+  "5 questions · About 10 minutes · Free · No credit card · Your teen never needs to participate";
 
 const CTA_LABEL = "Get My Free Parenting Belief Score";
 const CTA_LABEL_SHORT = "Get My Free Score";
@@ -191,9 +301,9 @@ function CtaBlock({
           <span className="hidden sm:inline">{CTA_LABEL}</span>
         </ScorecardCta>
       </span>
-      {/* px-2 + balance: at 390px the four dot-separated clauses ran the full
-          width and broke against the viewport edge. Balancing splits them into
-          two even lines instead of three ragged ones. */}
+      {/* px-2 + balance: at 390px the dot-separated clauses ran the full width
+          and broke against the viewport edge. Balancing splits them into even
+          lines instead of ragged ones. */}
       <p className="text-balance px-2 text-center text-sm text-faint">
         {microcopy}
       </p>
@@ -265,12 +375,13 @@ export default function Home() {
           without a hint it loses the race to assets that matter less.
 
           On a phone it is a different picture entirely, and that is the traffic
-          this page is bought for. The hero stacks an eyebrow, a two-line
-          display headline and two subheads above the player, so at 412x915 the
-          poster is at or below the fold while the LCP element is the headline.
-          Fetching 63 KB at `fetchPriority: high` there does not make anything
-          visible sooner; it takes bandwidth from the font, the stylesheet and
-          the JavaScript that do, on the one connection they all share.
+          this page is bought for. The hero stacks a statistic, a two-line
+          display headline, a subhead, a credibility line and the button above
+          the player, so at 412x915 the poster is well below the fold while the
+          LCP element is the headline. Fetching 63 KB at `fetchPriority: high`
+          there does not make anything visible sooner; it takes bandwidth from
+          the font, the stylesheet and the JavaScript that do, on the one
+          connection they all share.
 
           `media` is what keeps both cases right, and it is why this is a
           rendered <link> rather than ReactDOM.preload — the latter has no
@@ -292,7 +403,7 @@ export default function Home() {
       <PageStructuredData
         name="Free Parenting Belief Score"
         path={ROUTES.home.path}
-        description="Your child tells you less every year. See what may be shaping your side of the distance, in about 10 minutes. A free, personalised Parenting Belief Score built from your own words - reflective and educational, not a diagnosis, and not an assessment of your child."
+        description="Losing the closeness you had with your teenager? See what may be shaping your side of it, in about 10 minutes. A free, personalised Parenting Belief Score built from your own words - reflective and educational, not a diagnosis, and not an assessment of your teenager."
         updated={ROUTES.home.updated}
         faqs={toFaqEntries(ESSENTIAL_FAQS)}
         speakableSelectors={["#hero-headline", "#score-heading"]}
@@ -315,13 +426,21 @@ export default function Home() {
             The headline is the loss stated in the words a parent uses in their
             own head, not the words a product uses about itself. It is the
             whole reason the rest of the page gets read, so it carries no
-            qualifier, no mechanism, and no brand vocabulary. */}
+            qualifier, no mechanism, and no brand vocabulary.
+
+            Every Reveal above the fold carries `priority`, which swaps the
+            JS-gated transition for a CSS keyframe. Without it the entire hero
+            sits at opacity 0 until the client bundle downloads, parses and
+            hydrates — invisible on a cold mobile connection, and disqualified
+            from being the LCP element until that moment lands. This was fixed
+            once (238b387) and lost in the merge at dd0cd3c; it must not be
+            lost again. */}
         <section id="hero" className="relative overflow-hidden">
           {/* One large soft orb centred behind the headline. Capped at 100vw in
               CSS so it can never add document width on a narrow phone. */}
           <div className="spotlight-hero" aria-hidden />
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-5 pb-5 pt-6 text-center sm:px-8 sm:pb-10 sm:pt-16">
-            <Reveal>
+            <Reveal priority>
               {/* V4 eyebrow. Names the brand and the offer, so the chip that is
                   the first line on the page says what this IS. The audience is
                   no longer needed here - the headline's own first six words
@@ -340,12 +459,23 @@ export default function Home() {
                   audience.
 
                   TODO: re-add above the headline if compliance approves. The
-                  full treatment is in git history at b92f83e. */}
+                  full treatment is in git history at b92f83e.
+
+                  REBASE NOTE (this branch): the teen-narrative work had
+                  restored a compressed form of the statistic here, as a
+                  bordered stat block reading "CDC · NCHS data / 76.9% … 27.5%".
+                  It is deliberately NOT reinstated: 8c73e5f is a compliance
+                  decision held pending sign-off, and it postdates that work.
+                  The same two figures DO still appear below the fold in
+                  Section II with the full NCHS citation, sample sizes and
+                  mode-effect caveat — that section is flagged for the same
+                  sign-off, because it is the same agency being cited on the
+                  same paid funnel, just not above the fold. */}
               <p className="cred-chip">
                 AI Merge · Free Parenting Belief Score
               </p>
             </Reveal>
-            <Reveal delay={80}>
+            <Reveal priority delay={80}>
               {/* Headline: Option 1.
 
                   It follows the stat rather than competing with it. The stat
@@ -364,7 +494,7 @@ export default function Home() {
                 </span>
               </h1>
             </Reveal>
-            <Reveal delay={140}>
+            <Reveal priority delay={140}>
               {/* The promise. Names the mechanism (a hidden belief), the cost
                   (five questions), and the moment it applies to - the one the
                   reader is already thinking about after the headline.
@@ -380,7 +510,7 @@ export default function Home() {
                 moments you most want your teen to open up.
               </p>
             </Reveal>
-            <Reveal delay={190}>
+            <Reveal priority delay={190}>
               {/* Proof line.
 
                   "Documented changes already observed in real participants" is
@@ -391,7 +521,14 @@ export default function Home() {
                   the participant claim is not, so it waits.
 
                   TODO(launch): if the documented-change evidence exists and can
-                  be cited, this line can carry it. */}
+                  be cited, this line can carry it.
+
+                  REBASE NOTE (this branch): the teen-narrative work had this
+                  line carrying ", with changes documented among participants in
+                  the broader AI Merge work". It is deliberately NOT reinstated —
+                  b92f83e rejected exactly that claim above the fold, for the
+                  reason stated above, and that rejection postdates the work.
+                  Flagged for owner decision rather than silently resolved. */}
               <p className="mt-4 hidden max-w-2xl text-balance text-[15px] leading-[1.7] text-faint sm:block">
                 Built on AI Merge, a personalised methodology published in the{" "}
                 <span className="text-muted">Mensa Research Journal</span>.
@@ -399,6 +536,13 @@ export default function Home() {
             </Reveal>
           </div>
 
+          {/* REBASE NOTE: the CTA sits BELOW the player, which is main's order
+              (b92f83e / 8c73e5f). The teen-narrative branch had moved it above
+              the player to keep it inside the first screen — but that was
+              compensating for the CDC stat block this hero no longer carries.
+              With the stat gone, main's order is the verified one, and git's
+              auto-merge had silently dropped this CtaBlock entirely by taking
+              the branch's player-only div. Do not remove it again. */}
           <div className="mx-auto w-full max-w-4xl px-5 sm:px-8">
             <Reveal immediate>
               <VslPlayer />
@@ -416,14 +560,13 @@ export default function Home() {
           </Reveal>
         </section>
 
-        {/* ================== I · The drift ==================
+        {/* ================== I · Recognition ==================
             The FOMO engine, and the only section allowed to dwell on the pain.
 
-            It works by contrast: a photograph of the closeness that used to be
-            automatic, beside a drawing of what replaced it. The drawing is the
-            argument — distance is not an event, it is an accumulation — and it
-            is drawn rather than described because "two lines that never meet
-            again" is a shape, and prose is the worst carrier for a shape. */}
+            Three moves: the sentences parents actually say (so the visitor
+            knows the page is about them), the before-and-after (so the loss has
+            a shape), and the accumulation drawn (so it reads as a pattern
+            rather than an event). */}
         <section
           className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="drift-heading"
@@ -432,15 +575,50 @@ export default function Home() {
           <SectionViewTracker event="drift_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="I · What is actually happening"
+              mark="I · If any of this sounds familiar"
               id="drift-heading"
               lead="It never happens in one conversation."
               emphasis="It happens in a hundred ordinary ones."
-            />
+            >
+              <p className="text-lg leading-[1.8] text-muted">
+                Parents of teenagers describe it in different words. Usually it
+                sounds like one of these.
+              </p>
+            </ChapterHead>
 
             <ChapterRule />
 
-            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+            {/* Recognition, not diagnosis. No icons, no checkmarks, no ticks:
+                anything that reads as a list to score yourself against turns a
+                parent's "that's me" into "what's wrong with us", which is the
+                one reaction this page cannot afford. */}
+            <ul className="grid list-none gap-3 sm:grid-cols-2 sm:gap-4">
+              {RECOGNITION.map((line, i) => (
+                <Reveal
+                  as="li"
+                  key={line}
+                  delay={100 + i * 70}
+                  className={
+                    // Five items in a two-column grid leaves an orphan; the
+                    // last one spans both so the row reads as intentional.
+                    i === RECOGNITION.length - 1 ? "sm:col-span-2" : undefined
+                  }
+                >
+                  <blockquote className="h-full rounded-xl border border-line bg-card px-5 py-4 font-serif-italic text-[17px] leading-snug text-ink sm:text-lg">
+                    &ldquo;{line}&rdquo;
+                  </blockquote>
+                </Reveal>
+              ))}
+            </ul>
+
+            <Reveal delay={200}>
+              <p className="mt-6 text-sm leading-relaxed text-faint">
+                These are things parents say, not symptoms to check off. None of
+                them is a sign that something is wrong with your teenager.
+              </p>
+            </Reveal>
+
+            <div className="mt-14 grid items-center gap-10 sm:mt-16 lg:grid-cols-12 lg:gap-16">
               <Reveal as="figure" delay={150} className="min-w-0 lg:col-span-5">
                 {/* signal-halo puts the glow BEHIND the frame so the photo sits
                     in the page's light rather than on top of it. The halo's
@@ -504,31 +682,101 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================== II · The pattern ==================
+        {/* ================== II · The perception gap ==================
+            The page's one statistic, and the section that makes the case that
+            a parent cannot audit this from the inside.
+
+            The claim is bounded on purpose and the visual's caption bounds it
+            again: two groups answering separately, not matched households, and
+            therefore nothing at all about the visitor's own family. Overstate
+            this section and every careful sentence elsewhere on the page stops
+            being believed. */}
+        <section
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
+          aria-labelledby="gap-heading"
+        >
+          <div className="section-orbs" aria-hidden />
+          <SectionViewTracker event="gap_view" />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+            <ChapterHead
+              mark="II · The perception gap"
+              id="gap-heading"
+              lead="You were both in the same conversation."
+              emphasis="You did not both have the same experience of it."
+            >
+              <p className="text-lg leading-[1.8] text-muted">
+                This is not a failure of love or attention. It is the part of a
+                relationship neither side can see from where they are standing.
+              </p>
+            </ChapterHead>
+
+            <ChapterRule />
+
+            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+              <div className="min-w-0 lg:col-span-7">
+                <PerceptionGap />
+              </div>
+
+              <Reveal as="div" delay={150} className="min-w-0 lg:col-span-5">
+                {/* Both sentences name WHO was asked WHAT. The parents were
+                    asked about their own named teenager; the teenagers were
+                    asked about themselves. Collapsing that into "asked the same
+                    question" would quietly turn a proxy report into a second
+                    self-report, which is the specific error this section has
+                    to avoid. */}
+                <p className="text-lg leading-[1.8] text-muted">
+                  Asked how often their own teenager gets the social and
+                  emotional support they need, 76.9% of parents answered
+                  &ldquo;always&rdquo;. Asked the same question about
+                  themselves, 27.5% of teenagers did.
+                </p>
+                <p className="mt-5 text-lg leading-[1.8] text-muted">
+                  That does not mean most parents are wrong about their own
+                  child, and it cannot tell you anything about yours. Some of
+                  the distance is in how the two groups were surveyed. But the
+                  part that is not is worth sitting with: the read a parent has
+                  of the relationship and the experience a teenager is having of
+                  it can sit a long way apart - quietly, and without anyone
+                  doing a thing wrong.
+                </p>
+                <p className="mt-6 font-serif-italic text-xl leading-snug text-ink sm:text-2xl">
+                  A gap you cannot see is a gap you cannot close.
+                </p>
+              </Reveal>
+            </div>
+
+            <Reveal delay={260}>
+              <CtaBlock location="gap" className="mt-14" />
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ================== III · What the score is ==================
             The page's hinge, and the section that answers the objection the
             visitor arrived with. Two objections are granted as true, the
             question is narrowed to the parent's own pattern, and the loop is
             drawn. Everything after this depends on the reader accepting this
             framing, so it is short and it does not argue. */}
         <section
-          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
+          className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="pattern-heading"
         >
           <div className="section-orbs" aria-hidden />
           <SectionViewTracker event="pattern_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="II · The part you can change"
+              mark="III · What the score is"
               id="pattern-heading"
               lead="You cannot rewind their teenage years."
               emphasis="You can change what happens next time you speak."
             >
               <p className="text-lg leading-[1.8] text-muted">
-                So the Parenting Belief Score looks at one thing only: your own
-                pattern in one real moment.
+                So the Parenting Belief Score asks five personalised questions
+                about one real interaction, and helps surface a belief that may
+                be influencing how you respond to it.
               </p>
               <p className="mt-4 font-serif-italic text-xl text-ink">
-                It examines you, not your child.
+                It examines you, not your teenager.
               </p>
             </ChapterHead>
 
@@ -539,11 +787,11 @@ export default function Home() {
                 three, and this page is not arguing here. */}
             <ul className="grid list-none gap-3 sm:grid-cols-2 sm:gap-4">
               {[
-                "But the situation with my child is real.",
+                "But the situation with my teenager is real.",
                 "I’m not trying to control anything. I just want to stay close.",
               ].map((objection, i) => (
                 <Reveal as="li" key={objection} delay={150 + i * 80}>
-                  <blockquote className="flex h-full items-start gap-3 rounded-xl border border-line bg-surface px-5 py-4">
+                  <blockquote className="flex h-full items-start gap-3 rounded-xl border border-line bg-card px-5 py-4">
                     <Check
                       className="mt-1 h-4 w-4 shrink-0 text-signal"
                       strokeWidth={2}
@@ -584,9 +832,110 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================== III · The score ==================
-            The section the brief was written for.
+        {/* ================== IV · How it works ==================
+            Three steps and two lists. Deliberately the plainest section on the
+            page: a visitor who is still deciding needs the SHAPE of the ask,
+            and every graphic here would be one more thing between them and the
+            button. The real screens are in VII for whoever wants them. */}
+        <section
+          className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
+          aria-labelledby="how-heading"
+        >
+          <div className="section-orbs" aria-hidden />
+          <SectionViewTracker event="how_view" />
+          <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
+            <ChapterHead
+              mark="IV · How it works"
+              id="how-heading"
+              lead="Three steps,"
+              emphasis="about ten minutes."
+            />
 
+            <ChapterRule />
+
+            <ol className="grid list-none gap-5 md:grid-cols-3 md:gap-6">
+              {STEPS.map(({ Icon, n, title, body }, i) => (
+                <Reveal as="li" key={n} delay={i * 90}>
+                  <div className="flex h-full flex-col rounded-xl border border-line bg-surface p-6 sm:p-7">
+                    <span className="flex items-center gap-3">
+                      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line bg-card">
+                        <Icon
+                          className="h-4 w-4 text-signal"
+                          strokeWidth={1.75}
+                          aria-hidden
+                        />
+                      </span>
+                      <span className="font-serif text-2xl leading-none text-signal">
+                        {n}
+                      </span>
+                    </span>
+                    <span className="mt-5 block font-serif text-xl leading-snug text-ink sm:text-2xl">
+                      {title}
+                    </span>
+                    <span className="mt-2.5 block text-[15px] leading-[1.75] text-muted">
+                      {body}
+                    </span>
+                  </div>
+                </Reveal>
+              ))}
+            </ol>
+
+            {/* The clarifier. A parent's objection is answered faster by a
+                list of what this is NOT than by another paragraph about what
+                it is — and every line on the right is one a visitor would
+                otherwise have to open the FAQ to settle. */}
+            <div className="mt-12 grid gap-5 sm:mt-14 md:grid-cols-2 md:gap-6">
+              <Reveal delay={100}>
+                <div className="h-full rounded-xl border border-line bg-surface p-6 sm:p-7">
+                  <p className="eyebrow mb-5">What it is</p>
+                  <ul className="grid list-none gap-3">
+                    {SCORE_IS.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <Check
+                          className="mt-1 h-4 w-4 shrink-0 text-signal"
+                          strokeWidth={2}
+                          aria-hidden
+                        />
+                        <span className="min-w-0 text-[15px] leading-[1.7] text-muted">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+
+              <Reveal delay={160}>
+                <div className="h-full rounded-xl border border-line bg-surface p-6 sm:p-7">
+                  <p className="eyebrow mb-5">What it is not</p>
+                  <ul className="grid list-none gap-3">
+                    {SCORE_IS_NOT.map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        {/* Faint, not red. These are boundaries, not errors —
+                            a destructive hue here would read as a warning
+                            about the product rather than a clarification. */}
+                        <X
+                          className="mt-1 h-4 w-4 shrink-0 text-faint"
+                          strokeWidth={2}
+                          aria-hidden
+                        />
+                        <span className="min-w-0 text-[15px] leading-[1.7] text-muted">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            </div>
+
+            <Reveal delay={220}>
+              <CtaBlock location="how" className="mt-12" />
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ================== V · Your score ==================
             A parent is being asked to spend ten minutes describing a private
             family moment in exchange for a number. Before that trade can look
             worth making, the number has to MEAN something — so this section
@@ -600,14 +949,15 @@ export default function Home() {
           <SectionViewTracker event="score_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="III · Your score"
+              mark="V · Your score"
               id="score-heading"
               lead="One number for the thing"
               emphasis="you cannot see yourself."
             >
               <p className="text-lg leading-[1.8] text-muted">
-                Describe one real moment in your own words. Your score places
-                how much of that moment you are actually choosing.
+                Describe one real moment with your teenager in your own words.
+                Your score places how much of that moment you are actually
+                choosing.
               </p>
             </ChapterHead>
 
@@ -645,7 +995,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================== IV · What arrives ==================
+        {/* ================== VI · What arrives ==================
             The free score is the offer; the breakdown and the program are
             named as things that exist afterwards. No price appears on this
             page — that is the funnel's job — and nothing here implies they are
@@ -659,7 +1009,7 @@ export default function Home() {
           <SectionViewTracker event="what_arrives_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="IV · What arrives"
+              mark="VI · What arrives"
               id="arrives-heading"
               lead="Your score is on screen"
               emphasis="before you close the tab."
@@ -759,14 +1109,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* V · The walkthrough — the real assessment screens, so the ask has a
-            visible shape before the visitor commits. */}
+        {/* VII · The walkthrough — the real assessment screens, so the ask has
+            a visible shape before the visitor commits. */}
         <WalkthroughSection />
 
-        {/* ================== VI · Who built it ==================
+        {/* ================== VIII · Who built it ==================
             Founder, credentials, prior work and participant quotes, merged
-            into ONE trust section. They were three sections and three separate
-            scroll-stops making one point between them. */}
+            into ONE trust section, plus the plainest statement of what AI
+            Merge actually is. */}
         <section
           className="relative overflow-hidden border-t border-line bg-surface py-16 sm:py-24 lg:py-28"
           aria-labelledby="founder-heading"
@@ -775,7 +1125,7 @@ export default function Home() {
           <SectionViewTracker event="founder_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <ChapterHead
-              mark="VI · Who built it"
+              mark="VIII · Who built it"
               id="founder-heading"
               lead="I could see the moment."
               emphasis="I could not see what was driving it."
@@ -808,6 +1158,17 @@ export default function Home() {
                     reveal what was shaping my response. That gap is why I built
                     the Parenting Belief Score - using AI Merge, a methodology I
                     created and published in the Mensa Research Journal.
+                  </p>
+                  {/* What AI Merge IS, in one sentence a non-technical reader
+                      can repeat. It sits here rather than in the hero because
+                      the hero's job is the offer; this is the section where a
+                      visitor has asked "but what is this, actually". */}
+                  <p>
+                    AI Merge is a personalised methodology for examining the
+                    relationship between what a person believes, how they
+                    interpret a moment, and how they respond to it. Changes have
+                    been documented among participants in the broader AI Merge
+                    work.
                   </p>
                   <p className="font-serif-italic text-xl text-ink">
                     The result isn&rsquo;t meant to replace your judgment.
@@ -880,7 +1241,7 @@ export default function Home() {
                 identified a useful possible belief · made one
                 participant-controlled choice · repeated a different response ·
                 became less dependent on external guidance. Never use a
-                testimonial that promises child change. */}
+                testimonial that promises a change in a teenager. */}
             <ul className="mt-14 grid list-none gap-5 sm:mt-16 md:grid-cols-2">
               {TESTIMONIALS.map((t, i) => (
                 <Reveal as="li" key={t.name} delay={i * 80}>
@@ -970,7 +1331,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ================== VII · Questions ================== */}
+        {/* ================== IX · Questions ================== */}
         <section
           className="relative overflow-hidden border-t border-line py-16 sm:py-24 lg:py-28"
           aria-labelledby="faq-heading"
@@ -979,14 +1340,14 @@ export default function Home() {
           <SectionViewTracker event="faq_view" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-10 lg:px-16">
             <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              {/* Left rail: heading plus the four boundaries this page is built
-                  on, as cards. Sticky on desktop so they stay beside whichever
-                  question is open — which is the point: the four things a
-                  cautious parent most wants settled are the four things they
-                  should not have to open an accordion to find. */}
+              {/* Left rail: heading plus the five reassurances, as cards.
+                  Sticky on desktop so they stay beside whichever question is
+                  open — which is the point: the five things a cautious parent
+                  most wants settled are the five things they should not have to
+                  open an accordion to find. */}
               <div className="min-w-0 lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
                 <Reveal>
-                  <p className="eyebrow mb-6">VII · Questions</p>
+                  <p className="eyebrow mb-6">IX · Questions</p>
                   <h2 id="faq-heading" className="text-section">
                     Questions
                     <span className="block font-serif-italic">parents ask.</span>
@@ -994,51 +1355,20 @@ export default function Home() {
                 </Reveal>
 
                 <ul className="mt-9 grid list-none gap-3">
-                  {[
-                    {
-                      Icon: UserRoundCheck,
-                      color: "var(--pillar-1)",
-                      ink: "var(--pillar-1-ink)",
-                      label: "It examines you, not your child",
-                      body: "Nothing here assesses, scores, or diagnoses your child.",
-                    },
-                    {
-                      Icon: HeartHandshake,
-                      color: "var(--pillar-2)",
-                      ink: "var(--pillar-2-ink)",
-                      label: "Reflective, not clinical",
-                      body: "Educational - not diagnosis, treatment, or therapy.",
-                    },
-                    {
-                      Icon: Lock,
-                      color: "var(--pillar-3)",
-                      ink: "var(--pillar-3-ink)",
-                      label: "Free, no card",
-                      body: "Five questions, about ten minutes, your result immediately.",
-                    },
-                    {
-                      Icon: ShieldCheck,
-                      color: "var(--pillar-4)",
-                      ink: "var(--pillar-4-ink)",
-                      label: "You decide what fits",
-                      body: "The result is a possible belief, offered for you to judge.",
-                    },
-                  ].map(({ Icon, color, ink, label, body }, i) => (
-                    <Reveal as="li" key={label} delay={100 + i * 60}>
+                  {REASSURANCES.map(({ Icon, q, a }, i) => (
+                    <Reveal as="li" key={q} delay={100 + i * 60}>
                       <div
                         className="flex items-start gap-3.5 rounded-xl border bg-card p-4"
                         style={{
-                          // Border and tint take the GRAPHICS token (3:1 is the
-                          // bar for a non-text object); nothing here puts a
-                          // series colour on body copy.
-                          borderColor: `color-mix(in srgb, ${color} 26%, var(--border))`,
+                          borderColor:
+                            "color-mix(in srgb, var(--signal) 26%, var(--border))",
                         }}
                       >
                         <span
-                          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+                          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-signal"
                           style={{
-                            background: `color-mix(in srgb, ${color} 14%, transparent)`,
-                            color,
+                            background:
+                              "color-mix(in srgb, var(--signal) 14%, transparent)",
                           }}
                         >
                           <Icon
@@ -1048,17 +1378,11 @@ export default function Home() {
                           />
                         </span>
                         <span className="min-w-0">
-                          {/* The one coloured LABEL on the page, so it takes
-                              the lifted -ink token: at 14px on this ground the
-                              graphics hue would not clear 4.5:1. */}
-                          <span
-                            className="block text-sm font-medium"
-                            style={{ color: ink }}
-                          >
-                            {label}
+                          <span className="block text-sm font-medium text-fg">
+                            {q}
                           </span>
                           <span className="mt-1 block text-[13px] leading-relaxed text-muted">
-                            {body}
+                            {a}
                           </span>
                         </span>
                       </div>
@@ -1094,7 +1418,7 @@ export default function Home() {
             the eye a second place to stop. The photograph sits ABOVE the
             argument instead, as the payoff note the section is built to land
             on, and the copy makes a promise about the parent only — never
-            about how a child will respond. */}
+            about how a teenager will respond. */}
         <section
           className="relative overflow-hidden border-t border-line py-20 sm:py-28"
           aria-labelledby="final-heading"
@@ -1145,12 +1469,17 @@ export default function Home() {
 
             <Reveal delay={200}>
               <p className="mx-auto mt-8 max-w-xl text-body-lg text-muted">
-                Five questions, your own words, your score immediately.
+                If you miss feeling close to your teenager, start by examining
+                what is happening on your side of the interaction.
               </p>
             </Reveal>
 
             <Reveal delay={280}>
-              <CtaBlock location="final" className="mt-10" />
+              <CtaBlock
+                location="final"
+                microcopy={CTA_MICROCOPY_FINAL}
+                className="mt-10"
+              />
             </Reveal>
 
             <Reveal delay={340}>

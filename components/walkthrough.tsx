@@ -78,12 +78,17 @@ const STEPS: ReadonlyArray<Step> = [
   {
     n: "03",
     title: "Watch it reflect back",
-    meta: "As you go",
+    // The five reflections are generated once all five answers are in and are
+    // then shown one screen at a time, before the score. They are NOT
+    // interleaved between the questions - the funnel's route order is
+    // question-1..5 -> processing -> beat-1..5 -> summary - so neither the
+    // meta nor the body may imply reflection happens as you answer.
+    meta: "Once your answers are in",
     img: "/take/parents-03-reflection.jpg",
     w: 1920,
     h: 1200,
     alt: "A reflection screen reading the parent's own described moment back to them in composed language.",
-    what: "Between questions, what you have described is read back to you in plain language.",
+    what: "Once all five answers are in, they are read back to you in plain language, one reflection at a time.",
     why: "This is where most people feel seen: language for what they already knew but had not named.",
   },
   {
@@ -212,7 +217,7 @@ export function WalkthroughSection() {
         {/* Chapter head */}
         <Reveal as="div" className="grid items-end gap-8 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <p className="eyebrow mb-6">V · The walkthrough</p>
+            <p className="eyebrow mb-6">VII · The walkthrough</p>
             <h2 id="walkthrough-heading" className="text-section">
               See the whole thing
               <span className="block font-serif-italic">before you begin.</span>

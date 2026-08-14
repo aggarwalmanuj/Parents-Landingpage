@@ -92,14 +92,16 @@ export function SiteHeader() {
                   `hidden` one must not contribute width - `hidden` (not
                   `sm:inline` alone) is what guarantees that.
 
-                  Both now say "Parenting". This is the ONE CTA visible at every
-                  scroll depth, and it was the only CTA on the page omitting the
-                  word - so the button a visitor sees most often was the button
-                  doing least to tell them what page they are on. The phone
-                  label is "My Parenting Score" rather than the full string
-                  because the sticky row still has to survive a 320px viewport. */}
+                  The phone label is "My Free Score", not "My Parenting Score".
+                  Measured at 320px: the longer string rendered 170px wide
+                  inside a 154px button, so the text spilled past BOTH rounded
+                  ends and the arrow landed 8px from the viewport edge — on the
+                  one CTA that is visible at every scroll depth. It also makes
+                  the header agree with the rest of the page, where every
+                  sub-`sm` CTA reads "Get My Free Score"; the spec asks for one
+                  action wearing one label, not five near-misses. */}
               <span className="hidden sm:inline">Free Parenting Belief Score</span>
-              <span className="sm:hidden">My Parenting Score</span>
+              <span className="sm:hidden">My Free Score</span>
             </ScorecardCta>
           </span>
         </div>

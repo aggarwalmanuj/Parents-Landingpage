@@ -29,7 +29,7 @@ const OG_IMAGE = {
   // Mirrors the two headline lines in app/opengraph-image.tsx. That file
   // exports its own derived `alt`; this copy exists because sub-pages set
   // `openGraph` wholesale and would otherwise ship the card with no alt at all.
-  alt: "Your kids are growing up. Are they growing away?",
+  alt: "Worried you’re losing the closeness you had?",
   type: "image/png",
 } as const;
 

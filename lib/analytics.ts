@@ -16,11 +16,13 @@ import { LP_SLUG } from "./scorecard";
  *
  *   hero            — above the VSL
  *   drift           — I, the distance drawn as it accumulates
- *   pattern         — II, the part of it they can still change
- *   score           — III, what the number means (the arch)
- *   what_arrives    — IV, the score, the breakdown, the program
- *   founder         — VI, who built it + proof
- *   faq             — VII, questions parents ask
+ *   gap             — II, the perception gap (the CDC figures)
+ *   pattern         — III, what the score is / the part they can still change
+ *   how             — IV, the three steps
+ *   score           — V, what the number means (the arch)
+ *   what_arrives    — VI, the score, the breakdown, the program
+ *   founder         — VIII, who built it + proof
+ *   faq             — IX, questions parents ask
  *   final           — the closing CTA
  *   mobile_sticky   — the persistent mobile bar
  *   header          — the sticky header CTA
@@ -29,12 +31,20 @@ import { LP_SLUG } from "./scorecard";
  * `question`, `score_visual`, `recognition`, `whats_inside` and
  * `how_it_works`; any saved PostHog funnel or dashboard filtering on those
  * needs repointing rather than silently reporting zero.
+ *
+ * ADDED 2026-08-14 with the teen-messaging update: `gap` and `how`, for the
+ * two new sections. Nothing was renamed or removed this time, so every saved
+ * funnel keeps reporting — the two new placements simply appear alongside.
+ * `how` is deliberately NOT the retired `how_it_works`: reusing a dead name
+ * would silently merge the new section's clicks with a year of stale rows.
  */
 export type CtaLocation =
   | "header"
   | "hero"
   | "drift"
+  | "gap"
   | "pattern"
+  | "how"
   | "score"
   | "what_arrives"
   | "founder"
