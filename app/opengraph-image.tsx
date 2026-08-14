@@ -2,16 +2,16 @@ import { ImageResponse } from "next/og";
 
 // Copy is declared once so the same strings drive the render, the font
 // glyph-subsetting, and the `alt` text below. Matches the live hero headline.
-const EYEBROW = "Free Parenting Belief Score";
-// Mirrors the live H1. Line 2 is the shortened form of "Why does it feel like
-// they're growing away?" — at 78px the full question runs to roughly 1600px
-// inside a 1040px text column, so the card carries the same turn in fewer
-// words rather than shrinking the type until the card stops reading at
-// thumbnail size in a feed.
-const HEAD_LINE_1 = "Your kids are growing up.";
-const HEAD_LINE_2 = "Are they growing away?";
+// The audience moves into the eyebrow here rather than the headline: at 78px
+// the live H1's opening "Parents of teens:" would eat a whole line of a card
+// that is read at thumbnail size in a feed, and the eyebrow is uppercase 26px
+// where it costs almost nothing.
+const EYEBROW = "For parents of teens · Free Parenting Belief Score";
+// Mirrors the live H1's turn, shortened to fit the 1040px text column.
+const HEAD_LINE_1 = "Worried you’re losing";
+const HEAD_LINE_2 = "the closeness you had?";
 const SUBHEAD =
-  "A free, personalised Parenting Belief Score, built from your own words. Five questions, about 10 minutes, no credit card.";
+  "The free 5-question Parenting Belief Score helps surface a belief that may be shaping how you respond. It examines you, not your teenager.";
 const FOOTER = "AI Merge · TetraNoodle Technologies";
 
 // Route segment config. Node runtime so it can be generated at build time.

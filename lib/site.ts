@@ -54,7 +54,9 @@ export type RouteEntry = {
 };
 
 export const ROUTES: Record<RouteKey, RouteEntry> = {
-  home: { path: "/", updated: "2026-08-07", changeFrequency: "weekly", priority: 1 },
+  // 2026-08-14: the doorway's messaging was rewritten for parents of teens
+  // (new hero, perception-gap section, how-it-works section, reassurances).
+  home: { path: "/", updated: "2026-08-14", changeFrequency: "weekly", priority: 1 },
   // The two answer-engine pages carry the site's quotable Q&A and definition
   // corpus, so they rank above the legal set but below the doorway page.
   faq: { path: "/faq", updated: "2026-08-07", changeFrequency: "monthly", priority: 0.8 },

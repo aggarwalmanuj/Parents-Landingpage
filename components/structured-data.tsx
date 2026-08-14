@@ -329,15 +329,22 @@ export const videoNode = {
   isFamilyFriendly: true,
 };
 
-/** The four-step process rendered in the "How the Score Works" block. Google
- *  retired HowTo rich results in 2023, but the markup remains valid schema.org
- *  and is read by answer engines, which is the audience that matters here. */
+/** The three-step process rendered in Block IV ("How it works") on the
+ *  homepage. Google retired HowTo rich results in 2023, but the markup remains
+ *  valid schema.org and is read by answer engines, which is the audience that
+ *  matters here.
+ *
+ *  These steps MUST stay identical to the three visible steps in app/page.tsx.
+ *  The node previously described four steps, one of which ("Decide what fits")
+ *  had no visible counterpart at all after the standalone how-it-works section
+ *  was cut in the narrative rebuild — exactly the markup-without-content case
+ *  the scoping rule at the top of this file exists to prevent. */
 export const howToNode = {
   "@type": "HowTo",
   "@id": `${SITE}/#howto`,
   name: "How to get your free Parenting Belief Score",
   description:
-    "Four steps from one real parenting moment to a personalised Parenting Belief Score you can accept, refine, question, or reject.",
+    "Three steps from one real interaction with your teenager to a personalised Parenting Belief Score you can accept, refine, question, or reject.",
   // Now that the completion time is measured and stated on the page ("about 10
   // minutes"), the markup can carry it too. It must match the visible copy: a
   // duration asserted only in JSON-LD is a claim no reader can verify.
@@ -345,32 +352,26 @@ export const howToNode = {
   estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: 0 },
   supply: {
     "@type": "HowToSupply",
-    name: "One real parenting moment you can describe in your own words",
+    name: "One real interaction with your teenager you can describe in your own words",
   },
   step: [
     {
       "@type": "HowToStep",
       position: 1,
-      name: "Choose one moment",
-      text: "A recurring interaction, request, or decision you want to understand. One moment, not your whole relationship.",
+      name: "Describe one real moment",
+      text: "Tell us about an interaction with your teenager, in your own words. One moment, not your whole relationship.",
     },
     {
       "@type": "HowToStep",
       position: 2,
-      name: "Describe what happens",
-      text: "Five short questions, in your own words. No polished explanation is required and there is no perfect wording.",
+      name: "Answer 5 personalised questions",
+      text: "Built from what you just described, to explore what may be happening underneath your immediate response.",
     },
     {
       "@type": "HowToStep",
       position: 3,
-      name: "Receive your score",
-      text: "Built from the information you provide about your own experience. Delivered immediately, free, with no credit card required.",
-    },
-    {
-      "@type": "HowToStep",
-      position: 4,
-      name: "Decide what fits",
-      text: "Keep what feels accurate. Question what does not. You remain the authority on your own parenting.",
+      name: "Receive your Parenting Belief Score",
+      text: "See the belief or pattern your answers surface, and how it may relate to the interaction you described. Delivered immediately, free, with no credit card required.",
     },
   ],
 };

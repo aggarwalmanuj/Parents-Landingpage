@@ -217,7 +217,7 @@ export function WalkthroughSection() {
         {/* Chapter head */}
         <Reveal as="div" className="grid items-end gap-8 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <p className="eyebrow mb-6">V · The walkthrough</p>
+            <p className="eyebrow mb-6">VII · The walkthrough</p>
             <h2 id="walkthrough-heading" className="text-section">
               See the whole thing
               <span className="block font-serif-italic">before you begin.</span>

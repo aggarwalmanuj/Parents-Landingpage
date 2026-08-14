@@ -40,7 +40,12 @@ export function MobileStickyCta() {
           tabIndex={visible ? undefined : -1}
           className={`w-full min-h-11 ${visible ? "" : "pointer-events-none"}`}
         >
-          Get My Parenting Belief Score
+          {/* One action, one label. Every other CTA on the page says "Get My
+              Free ...", and this bar — the CTA a phone visitor sees most — was
+              the only one dropping the word "Free". The short form is the same
+              string the in-body CTAs use below `sm`, so the bar still survives
+              a 320px viewport. */}
+          Get My Free Score
         </ScorecardCta>
       </span>
     </div>

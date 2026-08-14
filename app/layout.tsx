@@ -47,15 +47,19 @@ export const metadata: Metadata = {
   // Sourced from lib/site.ts (single source of truth).
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Free Parenting Belief Score · AI Merge",
+    // Names the audience first: this doorway competes for a parent scanning a
+    // SERP or a share card, and "parents of teens" is the only word pair that
+    // tells them in one glance that the page is about them.
+    default: "Free Parenting Belief Score for Parents of Teens · AI Merge",
     template: "%s · AI Merge",
   },
   // Held near ~160 characters so Google can use it verbatim instead of
   // rewriting a truncated one. A description that runs to 220 gets cut
   // mid-sentence, which is exactly when Google substitutes its own snippet.
-  // Leads with the offer and the objection that decides the click.
+  // Leads with the loss, then the offer, then the objection that decides the
+  // click ("it examines you, not your teenager").
   description:
-    "Your kids are growing up - and telling you less. See what may be shaping your side of the distance. Free, personalised Parenting Belief Score. No credit card.",
+    "Losing the closeness you had with your teenager? Take the free 5-question Parenting Belief Score - it examines you, not your teen. About 10 minutes, no card.",
   applicationName: BRAND,
   // Authorship and publisher are the machine-readable half of E-E-A-T. The
   // JSON-LD Person/Organization graph asserts the same two entities, so the
@@ -87,9 +91,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Free Parenting Belief Score · AI Merge",
+    title: "Free Parenting Belief Score for Parents of Teens · AI Merge",
     description:
-      "Your kids are growing up. Why does it feel like they're growing away? A free, personalised Parenting Belief Score, built from your own words. It examines your pattern, not your child's - a reflective tool, not a diagnosis.",
+      "Worried you're losing the closeness you had with your teenager? A free, personalised Parenting Belief Score, built from your own words in about 10 minutes. It examines your pattern, not your teenager's - a reflective tool, not a diagnosis.",
     type: "website",
     url: "/",
     siteName: "AI Merge",
@@ -98,9 +102,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Parenting Belief Score · AI Merge",
+    title: "Free Parenting Belief Score for Parents of Teens · AI Merge",
     description:
-      "Your kids are growing up. Why does it feel like they're growing away? Free, personalised Parenting Belief Score, built from your own words. Reflective, not diagnostic.",
+      "Worried you're losing the closeness you had with your teenager? A free, personalised Parenting Belief Score, built from your own words. It examines you, not your teen. Reflective, not diagnostic.",
     // twitter:image is auto-injected from app/twitter-image.tsx.
   },
 };
