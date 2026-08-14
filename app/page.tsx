@@ -326,41 +326,23 @@ export default function Home() {
                   the first line on the page says what this IS. The audience is
                   no longer needed here - the headline's own first six words
                   ("For parents of teens and young adults") carry it. */}
-              {/* The CDC gap, as the eyebrow.
+              {/* The brand chip, restored. The CDC perception-gap statistic
+                  (76.9% of parents vs 27.5% of teens, NCHS report No. 206)
+                  briefly led here and was pulled pending sign-off: the figures
+                  are accurate and were verified against the primary source,
+                  but citing a federal health agency above the fold of a paid
+                  funnel is a compliance decision, not a copy one - it invites
+                  an implied-endorsement reading and extra ad-review scrutiny.
 
-                  Source: National Health Statistics Reports No. 206 (NCHS,
-                  July 2024), "Perceived Social and Emotional Support Among
-                  Teenagers: United States, July 2021-December 2022". The two
-                  figures are that report's, verbatim and unrounded: 76.9% of
-                  parents said their teen ALWAYS received the support they
-                  needed, against 27.5% of teens saying the same.
+                  Everything else from that revision stays. The headline no
+                  longer has the stat setting it up, so it now carries the
+                  recognition on its own, which is why it opens by naming the
+                  audience.
 
-                  It leads because it is the one thing on this page a visitor
-                  cannot argue with. The headline underneath asks "is the
-                  closeness slipping?" - a question a parent can dismiss about
-                  themselves. A national number saying most parents read this
-                  wrong is much harder to dismiss, and it reframes the whole
-                  page from "something may be wrong with you" to "this gap is
-                  ordinary, and it is measurable".
-
-                  Attribution stays ON the claim, not in a footnote. A bare
-                  percentage is a marketing number; a cited one is evidence.
-
-                  DO NOT round these to 77/28. They are quoted figures. */}
-              {/* Not the pill the chip component gives by default. A rounded
-                  chip reads as a badge - fine for "AI Merge · Free Score",
-                  wrong for the hardest claim on the page, which a visitor
-                  should read as evidence rather than as branding. So: a rule
-                  above it, the two figures in ink at the page's signal colour,
-                  and the prose around them in the quieter token. */}
-              <p className="mx-auto max-w-xl border-t border-line pt-4 text-[14px] leading-[1.6] text-faint sm:pt-5 sm:text-[15.5px] sm:leading-[1.7]">
-                <span className="mb-1.5 block text-[11px] uppercase tracking-[0.2em] text-signal">
-                  CDC data
-                </span>
-                <span className="text-ink">76.9% of parents</span> say their
-                teen always gets the emotional support they need.{" "}
-                <span className="text-ink">Only 27.5% of teens</span> say they
-                do.
+                  TODO: re-add above the headline if compliance approves. The
+                  full treatment is in git history at b92f83e. */}
+              <p className="cred-chip">
+                AI Merge · Free Parenting Belief Score
               </p>
             </Reveal>
             <Reveal delay={80}>
